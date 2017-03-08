@@ -1,7 +1,11 @@
-attribute vec3 vPosition;
-uniform   mat4 mMatrix;
+#version 140
+in vec3 vPosition;
+in vec3 vColor;
+
+out vec4 fColor;
 
 void main(void)
 {
-    gl_Position = vec4(0.4, 0.2, 0.4, 1.0);
+    gl_Position = vec4(vPosition, 1.0);
+    fColor = vec4(vColor, 1.0);
 }

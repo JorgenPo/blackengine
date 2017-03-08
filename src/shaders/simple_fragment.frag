@@ -1,6 +1,9 @@
-uniform vec4 fColor;
+#version 140
+
+in  vec4 fColor;
+out vec4 finColor;
 
 void main(void)
 {
-    gl_FragColor = vec4(1.0, 0.3, 0.1, 1.0);
+    finColor = fColor;
 }
