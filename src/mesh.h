@@ -38,27 +38,15 @@ public:
      * @author george popoff <popoff96@live.com>
      */
     Mesh(QOpenGLShaderProgram *program,
-         const std::vector<float> &position);
+         const std::vector<GLfloat> &position,
+         const std::vector<GLuint> &index,
+         const std::vector<GLclampf> &color);
 
-    void setPositionData(const std::vector<float> &position);
+    void setPositionData(const std::vector<GLfloat> &position);
 
-    /**
-     * @brief render Renders mesh with given
-     *  primitive type, starting offset and count of
-     *  vertices. If all parameters if empty then whole mesh
-     *  will be rendered with GL_TRIANGLES.
-     *
-     * @param primitive
-     *  OpenGL primitive type. Defaults to GL_TRIANGLE
-     *
-     * @param offset
-     *  Offset in vertices to start with
-     *
-     * @param count
-     *  Count of vertices to render
-     */
-    void render(int primitive = GL_TRIANGLE_STRIP,
-                int offset = 0, int count = -1);
+    void setIndexData(const std::vector<GLuint> &index);
+
+    void setColorData(const std::vector<GLclampf> &color);
 
     /**
      * @brief bind Binds vertex array buffer
@@ -69,16 +57,24 @@ public:
     void bind();
     void release();
 
+
     ~Mesh();
+
+    GLuint vertexCount() const { return m_vertexCount; }
+    bool isIndexed() const { return m_isIndexProvided; }
+
 private:
-    bool m_isDataProvided = false;
+    bool   m_isDataProvided  = false;
+    bool   m_isIndexProvided = false;
+    GLuint m_vertexCount;
 
     QOpenGLVertexArrayObject m_vao;
 
-    QOpenGLBuffer            m_positionVBO;
-    std::vector<float>       m_position;
+    QOpenGLBuffer m_positionVBO;
+    QOpenGLBuffer m_indexVBO;
+    QOpenGLBuffer m_colorVBO;
 
-    QOpenGLShaderProgram     *m_program;
+    QOpenGLShaderProgram *m_program;
 };
 
 
