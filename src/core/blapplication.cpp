@@ -1,19 +1,30 @@
 #include "blapplication.h"
+#include "blspectatorcamera.h"
 
 #include <QDebug>
+#include <QMouseEvent>
 #include <QSurfaceFormat>
 
 using std::make_unique;
 
-BLApplication::BLApplication(QWidget *parent)
-    : QOpenGLWidget(parent)
+BLApplication::BLApplication(QWindow *parent)
+    : QOpenGLWindow(NoPartialUpdate, parent),
+      m_camera(),
+      m_timer()
 {
     QSurfaceFormat format;
     format.setMajorVersion(3);
-    format.setMinorVersion(1);
-    //format.setProfile(QSurfaceFormat::CoreProfile);
+    format.setMinorVersion(3);
+    format.setDepthBufferSize(24);
+    format.setProfile(QSurfaceFormat::CoreProfile);
+
+    setWidth(800);
+    setHeight(600);
 
     this->setFormat(format);
+
+    m_camera = make_unique<black::SpectatorCamera>();
+    m_timer = make_unique<black::Timer>();
 
     connect(this, SIGNAL(frameSwapped()), this, SLOT(update()));
 }
@@ -23,8 +34,9 @@ BLApplication::~BLApplication()
     m_program.release();
     m_vShader.release();
     m_fShader.release();
-
-    m_triangleMesh.release();
+    m_camera.release();
+    m_cubeMesh.release();
+    m_timer.release();
 }
 
 void BLApplication::initializeGL()
@@ -68,42 +80,134 @@ void BLApplication::initializeGL()
     initModels();
 
     m_initialized = true;
+
+    m_timer->run();
 }
 
 void BLApplication::resizeGL(int w, int h)
 {
-    int side = qMin(w, w);
+    int side = qMin(w, h);
     glViewport((w - side) / 2, (h - side) / 2, side, side);
+
+    float ratio = w / (float) h;
+    m_camera->setAspectRatio(ratio);
 }
 
 void BLApplication::paintGL()
 {
+    static float dCoord = 0.0001f;
+
     if ( !m_initialized ) {
         return;
     }
 
-    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
 
-    QColor color("yellow");
+    glClearColor(1.0f, 0.8f, 0.9f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    QMatrix4x4 mvpMatrix;
+    mvpMatrix.setToIdentity();
+    mvpMatrix.scale(0.2f);
+    mvpMatrix.rotate(dCoord * 100.0f, 0.0f, 1.0f, 0.0f);
+
+    mvpMatrix = m_camera->perspective() * m_camera->view() * mvpMatrix;
 
     m_program->bind();
+    m_program->setUniformValue("mMatrix", mvpMatrix);
 
-    m_program->setAttributeValue(PROGRAM_VERTEX_COL, color);
+    m_program->setUniformValue("lightPos", m_camera->position());
 
-    m_triangleMesh->render();
+    m_cubeMesh->bind();
 
+    if ( m_cubeMesh->isIndexed() ) {
+        glDrawElements(GL_TRIANGLE_STRIP, m_cubeMesh->vertexCount(), GL_UNSIGNED_INT, 0);
+    } else {
+        glDrawArrays(GL_LINES, 0, m_cubeMesh->vertexCount());
+    }
+
+    m_cubeMesh->release();
+
+    mvpMatrix.setToIdentity();
+    mvpMatrix = m_camera->perspective() * m_camera->view() * mvpMatrix;
+
+    m_program->setUniformValue("mMatrix", mvpMatrix);
+
+    m_axisMesh->bind();
+
+    if ( m_axisMesh->isIndexed() ) {
+        glDrawElements(GL_TRIANGLE_STRIP, m_axisMesh->vertexCount(), GL_UNSIGNED_INT, 0);
+    } else {
+        glDrawArrays(GL_LINES, 0, m_axisMesh->vertexCount());
+    }
+
+    m_axisMesh->release();
     m_program->release();
+
+    dCoord += 0.002f;
+
+    m_timer->update();
+
+    qDebug() << "mpf = " << m_timer->mpf();
+    qDebug() << "fps = " << m_timer->fps();
 }
 
 void BLApplication::initModels()
 {
 
-    m_triangleMesh = make_unique<black::Mesh>(m_program.get());
+    m_cubeMesh = make_unique<black::Mesh>(m_program.get());
 
-    m_triangleMesh->setPositionData({
-        0.5f,  0.5f,  0.0f,
-        1.0f,  0.0f, 0.0f,
-        0.0f,  0.0f, 0.0f
+    m_cubeMesh->setPositionData({
+        0.2f, 0.2f, 0.0f,
+        0.8f, 0.2f, 0.0f,
+        0.8f, 0.8f, 0.0f,
+        0.2f, 0.8f, 0.0f,
+        0.2f, 0.8f, 0.8f,
+        0.8f, 0.8f, 0.8f,
+        0.2f, 0.2f, 0.8f,
+        0.8f, 0.2f, 0.8f
     });
+
+//    m_cubeMesh->setColorData({
+//        0.2f, 0.2f, 0.0f,
+//        0.8f, 0.2f, 0.0f,
+//        0.8f, 0.8f, 0.0f,
+//        0.2f, 0.8f, 0.0f,
+//        0.2f, 0.8f, 0.8f,
+//        0.8f, 0.8f, 0.8f,
+//        0.2f, 0.2f, 0.8f,
+//        0.8f, 0.2f, 0.8f
+//    });
+
+    m_cubeMesh->setIndexData({
+        0, 2, 3, 0, 1, 2, // Front
+        1, 5, 2, 1, 7, 5, // Right
+        7, 0, 6, 7, 1, 0, // Bottom
+        7, 4, 5, 7, 6, 4, // Far
+        6, 3, 4, 6, 0, 3, // Left
+        3, 5, 4, 3, 2, 5, // Top
+                             });
+
+    // Renders axis to the screen
+    m_axisMesh = make_unique<black::Mesh>(m_program.get());
+
+    m_axisMesh->setPositionData({
+       0.0f, 0.0f, 0.0f,
+       0.0f, 1.0f, 0.0f,
+       0.0f, 0.0f, 0.0f,
+       1.0f, 0.0f, 0.0f,
+       0.0f, 0.0f, 0.0f,
+       0.0f, 0.0f, 1.0f,
+                                });
+}
+
+void BLApplication::wheelEvent(QWheelEvent *event)
+{
+    m_camera->handleWheel(event);
+}
+
+void BLApplication::keyPressEvent(QKeyEvent *event)
+{
+    m_camera->handleKeyboard(event);
 }
