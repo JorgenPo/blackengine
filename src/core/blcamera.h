@@ -1,0 +1,81 @@
+#ifndef BLCAMERA_H
+#define BLCAMERA_H
+
+#include <QMatrix4x4>
+#include <QMouseEvent>
+
+namespace black {
+
+/**
+ * @brief The Camera class is
+ *  base class for all camera
+ *  types in engine.
+ */
+class Camera {
+
+public:
+
+    Camera(float fov, float ratio, float near, float far);
+
+    virtual ~Camera();
+
+    // Setters
+    void setPerspective(float fov, float ratio,
+                        float near, float far);
+
+    void setPerspective(const QMatrix4x4 &perspective);
+
+    void setFov(float fov);
+    void setAspectRatio(float ratio);
+    void setNearPlane(float near);
+    void setFarPlane(float far);
+
+    void setView(const QVector3D &position,
+                 const QVector3D &lookAt,
+                 const QVector3D &up);
+
+    void setView(const QMatrix4x4 &view);
+
+    void setPosition(const QVector3D &position);
+    void setLookAt(const QVector3D &lookAt);
+    void setUpVector(const QVector3D &upVector);
+
+    // Getters
+    float fov() const { return m_fov; }
+    float ratio() const { return m_ratio; }
+    float near() const { return m_near; }
+    float far() const { return m_far; }
+
+    QMatrix4x4 perspective() const { return m_perspective; }
+    QMatrix4x4 view() const { return m_view; }
+
+    QVector3D position() const { return m_position; }
+    QVector3D lookAt() const { return m_lookAt; }
+    QVector3D upVector() const { return m_upVector; }
+
+    virtual void handleKeyboard(QKeyEvent *e);
+    virtual void handleMouse(QMouseEvent *e);
+    virtual void handleWheel(QWheelEvent *e);
+
+protected:
+    QMatrix4x4 m_perspective;
+
+    float m_fov;
+    float m_ratio;
+    float m_near;
+    float m_far;
+
+    QMatrix4x4 m_view;
+
+    QVector3D  m_position;
+    QVector3D  m_lookAt;
+    QVector3D  m_upVector;
+
+    float m_pitch; // x rotation
+    float m_yaw;   // y rotation
+    float m_roll;  // z rotation
+};
+
+} // end of black namespace
+
+#endif // BLCAMERA_H
