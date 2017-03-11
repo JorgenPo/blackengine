@@ -1,5 +1,4 @@
-#include "mesh.h"
-#include "GL/gl.h"
+#include "blmesh.h"
 
 namespace black {
 

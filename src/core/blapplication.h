@@ -8,10 +8,10 @@
 #include <QOpenGLShaderProgram>
 #include <QOpenGLShader>
 
-#include "src/mesh.h"
+#include "src/core/blmesh.h"
+#include "src/core/blcamera.h"
 
-#include "blcamera.h"
-#include "bltimer.h"
+#include "src/utils/bltimer.h"
 
 using std::unique_ptr;
 

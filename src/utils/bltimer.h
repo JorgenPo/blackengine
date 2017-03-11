@@ -7,6 +7,19 @@ using namespace std::chrono;
 
 namespace black {
 
+/**
+ * @brief The Timer class.
+ *  Counts milliseconds per frame to
+ * compute fps and other metrics for the application.
+ * Based on std::chrono gives awesome perfomance and
+ * presice to you!
+ *
+ * @author george popoff <popoff96@live.com>
+ * @date 11.03.2017
+ *
+ * @version 1.0 Fully working class.
+ *
+ */
 class Timer {
     using Clock = high_resolution_clock;
     using Time = high_resolution_clock::time_point;

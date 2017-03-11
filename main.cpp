@@ -1,5 +1,5 @@
 #include "src/core/blapplication.h"
-#include "src/mesh.h"
+#include "src/core/blmesh.h"
 
 #include <QApplication>
 
