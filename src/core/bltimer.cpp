@@ -3,7 +3,7 @@
 namespace black {
 
 Timer::Timer()
-    : m_lastTime(), m_mpf(), m_fps()
+    : m_tickCount(), m_lastTime(), m_mpf(), m_fps()
 {
 
 }
@@ -14,18 +14,18 @@ void Timer::run()
     m_startTime = Clock::now();
 }
 
-void Timer::update()
+void Timer::tick()
 {
+    ++m_tickCount;
+
     if ( !m_isStarted ) {
         run();
     }
 
     if ( system_clock::to_time_t(m_lastTime) ) {
-        double time = system_clock::to_time_t(Clock::now()) -
-                system_clock::to_time_t(m_lastTime);
+        Duration time = duration_cast<milliseconds>(Clock::now() - m_lastTime);
 
-        // TODO: check for laggy time
-        m_mpf = (time + m_mpf) / 2.0;
+        m_mpf = time;
     }
 
     m_lastTime = Clock::now();
@@ -33,18 +33,18 @@ void Timer::update()
 
 float Timer::mpf() const
 {
-    return m_mpf;
+    return m_mpf.count();
 }
 
 double Timer::uptime() const
 {
-    return system_clock::to_time_t(Clock::now()) -
-           system_clock::to_time_t(m_startTime);
+    return duration_cast<milliseconds>(
+                Clock::now() - m_startTime).count();
 }
 
 float Timer::fps() const
 {
-    return 1000.0 / mpf();
+    return 1000.0f / static_cast<float>(m_mpf.count());
 }
 
 }

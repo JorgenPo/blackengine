@@ -95,6 +95,8 @@ void BLApplication::resizeGL(int w, int h)
 
 void BLApplication::paintGL()
 {
+    m_timer->tick();
+
     static float dCoord = 0.0001f;
 
     if ( !m_initialized ) {
@@ -113,6 +115,8 @@ void BLApplication::paintGL()
     mvpMatrix.rotate(dCoord * 100.0f, 0.0f, 1.0f, 0.0f);
 
     mvpMatrix = m_camera->perspective() * m_camera->view() * mvpMatrix;
+
+    //m_camera->setUpVector(mvpMatrix * m_camera->upVector());
 
     m_program->bind();
     m_program->setUniformValue("mMatrix", mvpMatrix);
@@ -146,8 +150,6 @@ void BLApplication::paintGL()
     m_program->release();
 
     dCoord += 0.002f;
-
-    m_timer->update();
 
     qDebug() << "mpf = " << m_timer->mpf();
     qDebug() << "fps = " << m_timer->fps();

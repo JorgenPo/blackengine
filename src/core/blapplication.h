@@ -38,7 +38,6 @@ protected:
 private:
     void initModels();
 
-
 private:
     unique_ptr<QOpenGLShaderProgram> m_program;
     unique_ptr<QOpenGLShader> m_vShader;

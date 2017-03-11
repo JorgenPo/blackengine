@@ -8,14 +8,15 @@ using namespace std::chrono;
 namespace black {
 
 class Timer {
-    typedef high_resolution_clock Clock;
-    typedef system_clock::time_point Time;
+    using Clock = high_resolution_clock;
+    using Time = high_resolution_clock::time_point;
+    using Duration = milliseconds;
 
 public:
     Timer();
 
     void run();
-    void update();
+    void tick();
 
     // Getters
     float fps() const;
@@ -24,11 +25,12 @@ public:
     double uptime() const;
 
 private:
+    double m_tickCount;
     bool m_isStarted = false;
 
     Time m_startTime;
     Time m_lastTime;
-    double m_mpf;
+    Duration m_mpf;
     float m_fps;
 };
 
