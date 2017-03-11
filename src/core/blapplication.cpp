@@ -158,38 +158,7 @@ void BLApplication::paintGL()
 void BLApplication::initModels()
 {
 
-    m_cubeMesh = make_unique<black::Mesh>(m_program.get());
-
-    m_cubeMesh->setPositionData({
-        0.2f, 0.2f, 0.0f,
-        0.8f, 0.2f, 0.0f,
-        0.8f, 0.8f, 0.0f,
-        0.2f, 0.8f, 0.0f,
-        0.2f, 0.8f, 0.8f,
-        0.8f, 0.8f, 0.8f,
-        0.2f, 0.2f, 0.8f,
-        0.8f, 0.2f, 0.8f
-    });
-
-//    m_cubeMesh->setColorData({
-//        0.2f, 0.2f, 0.0f,
-//        0.8f, 0.2f, 0.0f,
-//        0.8f, 0.8f, 0.0f,
-//        0.2f, 0.8f, 0.0f,
-//        0.2f, 0.8f, 0.8f,
-//        0.8f, 0.8f, 0.8f,
-//        0.2f, 0.2f, 0.8f,
-//        0.8f, 0.2f, 0.8f
-//    });
-
-    m_cubeMesh->setIndexData({
-        0, 2, 3, 0, 1, 2, // Front
-        1, 5, 2, 1, 7, 5, // Right
-        7, 0, 6, 7, 1, 0, // Bottom
-        7, 4, 5, 7, 6, 4, // Far
-        6, 3, 4, 6, 0, 3, // Left
-        3, 5, 4, 3, 2, 5, // Top
-                             });
+    m_cubeMesh = make_unique<black::CubeMesh>(m_program.get());
 
     // Renders axis to the screen
     m_axisMesh = make_unique<black::Mesh>(m_program.get());
@@ -201,7 +170,7 @@ void BLApplication::initModels()
        1.0f, 0.0f, 0.0f,
        0.0f, 0.0f, 0.0f,
        0.0f, 0.0f, 1.0f,
-                                });
+    });
 }
 
 void BLApplication::wheelEvent(QWheelEvent *event)
