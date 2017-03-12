@@ -30,6 +30,12 @@ class ResourceManager
     using guid_t = std::string;
 
 public:
+    static ResourceManager* m_instance;
+
+    static ResourceManager* getInstance();
+
+    static void setResourcePath(string path);
+
     /**
      * @brief Loads resource with given file path.
      *
