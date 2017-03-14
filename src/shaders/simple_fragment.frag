@@ -1,9 +1,11 @@
 #version 330
 
-in  vec4 fColor;
+in  vec2 fTexCoords;
 out vec4 finColor;
+
+uniform sampler2D textureSampler;
 
 void main(void)
 {
-    finColor = fColor;
+    finColor = texture(textureSampler, fTexCoords);
 }
