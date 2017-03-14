@@ -27,21 +27,23 @@ namespace black {
  */
 class ResourceManager
 {
+public:
     using guid_t = std::string;
 
 public:
-    static ResourceManager* m_instance;
-
-    static ResourceManager* getInstance();
-
-    static void setResourcePath(string path);
+    static ResourceManager& getInstance() {
+        //TODO: change this hardcoded constant to normal
+        // constant from Constants::
+        static ResourceManager instance("resources/");
+        return instance;
+    }
 
     /**
      * @brief Loads resource with given file path.
      *
      * @param path resource file path
      */
-    template<class T> void load(std::string path);
+    template<class T> string load(std::string path);
 
     /**
      * @brief Returns a resource with given file path.
@@ -75,10 +77,14 @@ private:
 // TEMPLATE FUNCTIONS
 
 template<class T>
-void ResourceManager::load(std::string path)
+string ResourceManager::load(std::string path)
 {
-    auto res = std::make_shared<T>(m_resourcesPath + path);
+    auto res = std::make_shared<T>();
+    res->load(m_resourcesPath + path);
+
     m_resources[path] = res;
+
+    return path;
 }
 
 template<class T>
