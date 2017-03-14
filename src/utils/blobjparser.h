@@ -21,8 +21,12 @@ namespace black {
  * Probably needs some optimizations and benchmarking.
  *
  * @author george popoff <popoff96@live.com>
- * @date 15.03.2017
- * @version 1.0 working version. maybe not too much fast.
+ *
+ * @version 1.1 15.03.2017
+ * Support for obj files without texture coordinates
+ *
+ * @version 1.0 15.03.2017
+ * Working version. maybe not too much fast.
  */
 class OBJParser
 {
