@@ -169,7 +169,9 @@ void Mesh::load(string file)
             this->setIndexData(parser.indices());
         }
 
-        this->setTextureCoords(parser.texCoordinates());
+        if ( parser.hasTexture() ) {
+            this->setTextureCoords(parser.texCoordinates());
+        }
     } catch(std::string e) {
         std::cerr << "Failed to load a mesh from " << file << "!\n";
         std::cerr << "Error: " << e << '\n';
