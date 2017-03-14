@@ -17,9 +17,9 @@ BLApplication::BLApplication(QWindow *parent)
     : QOpenGLWindow(NoPartialUpdate, parent),
       m_camera(),
       m_timer(),
-      m_brickTexture(),
       m_stallMesh(),
-      m_bodyMesh()
+      m_bodyMesh(),
+      m_brickTexture()
 {
     QSurfaceFormat format;
     format.setMajorVersion(3);
@@ -118,7 +118,7 @@ void BLApplication::paintGL()
 
     QMatrix4x4 mvpMatrix;
     mvpMatrix.setToIdentity();
-    mvpMatrix.scale(0.2f);
+    //mvpMatrix.scale(0.02f);
     mvpMatrix.rotate(dCoord * 100.0f, 0.0f, 1.0f, 0.0f);
 
     mvpMatrix = m_camera->perspective() * m_camera->view() * mvpMatrix;
@@ -126,17 +126,17 @@ void BLApplication::paintGL()
     m_program->bind();
     m_program->setUniformValue("mMatrix", mvpMatrix);
 
-    m_stallMesh->bind();
-    m_brickTexture->bind();
+    m_bodyMesh->bind();
+    //m_brickTexture->bind();
 
-    if ( m_stallMesh->isIndexed() ) {
-        glDrawElements(GL_TRIANGLE_STRIP, m_stallMesh->vertexCount(), GL_UNSIGNED_INT, 0);
+    if ( m_bodyMesh->isIndexed() ) {
+        glDrawElements(GL_TRIANGLE_STRIP, m_bodyMesh->vertexCount(), GL_UNSIGNED_INT, 0);
     } else {
-        glDrawArrays(GL_TRIANGLES, 0, m_stallMesh->vertexCount());
+        glDrawArrays(GL_TRIANGLES, 0, m_bodyMesh->vertexCount());
     }
 
-    m_stallMesh->release();
-    m_brickTexture->release();
+    m_bodyMesh->release();
+    //m_brickTexture->release();
 
     mvpMatrix.setToIdentity();
     mvpMatrix = m_camera->perspective() * m_camera->view() * mvpMatrix;
