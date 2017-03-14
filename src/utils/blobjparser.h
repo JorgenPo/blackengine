@@ -10,11 +10,29 @@
 
 namespace black {
 
+/**
+ * @brief The OBJParser class parses
+ * a model from OBJ file format and produces
+ * vectors of data such as positions, normals, indices and other.
+ *
+ * Check a file header and throws an exception if file given has a
+ * wrong format.
+ *
+ * Probably needs some optimizations and benchmarking.
+ *
+ * @author george popoff <popoff96@live.com>
+ * @date 15.03.2017
+ * @version 1.0 working version. maybe not too much fast.
+ */
 class OBJParser
 {
 public:
     OBJParser();
 
+    /**
+     * @brief Parses a obj file
+     * @param file OBJ File path
+     */
     void parseObj(std::string file);
 
     const std::vector<float>& positions() const { return m_vVertex; }
