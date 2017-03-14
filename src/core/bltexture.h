@@ -34,8 +34,11 @@ public:
      * @param path file path to find a texture file.
      *  must contain a file type.
      */
-    Texture(string path);
+    Texture();
     ~Texture();
+
+    void bind();
+    void release();
 
     // Interface for manager
 private:
