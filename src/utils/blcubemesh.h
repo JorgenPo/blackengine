@@ -13,13 +13,16 @@ namespace black {
  * mesh without colour.
  *
  * @author george popoff <popoff96@live.com>
- * @date 12.03.2017
- * @version 1.0 First working version
+ *
+ * @version 1.1 15.03.2017
+ * Texture support
+ * @version 1.0 12.03.2017
+ * First working version
  */
 class CubeMesh : public Mesh
 {
 public:
-    CubeMesh(QOpenGLShaderProgram *program);
+    CubeMesh();
 };
 
 }
