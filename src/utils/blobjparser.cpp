@@ -16,7 +16,9 @@ OBJParser::OBJParser()
       m_vTexture(),
       m_vIndex(),
 
-      m_file()
+      m_file(),
+
+      m_hasTexture(true)
 {
 
 }
@@ -33,10 +35,13 @@ void OBJParser::parseObj(std::string path)
 
     std::string line;
 
-    getline(m_file, line);       // First header line
-    getline(m_file, line);       // Second header line must be www.blender.org
+    std::string header1;
+    getline(m_file, header1); // First header line
 
-    if ( line.find("www.blender.org") == std::string::npos ) {
+    std::string header2;
+    getline(m_file, header2); // Second header line
+
+    if ( header1.find("OBJ") == std::string::npos ) {
         std::cerr << "Failed to load model " << path << ": wrong obj file!" << '\n';
 
         //TODO: exceptions
@@ -58,6 +63,10 @@ void OBJParser::parseObj(std::string path)
     m_vNormal.reserve(m_normals.size());
     m_vTexture.reserve(m_uvCoords.size());
     m_vIndex.reserve(m_indices.size());
+
+    if ( m_uvCoords.size() == 0 ) {
+        m_hasTexture = false;
+    }
 
     while (true) {
        if ( !readFace() ) {
@@ -176,9 +185,10 @@ bool OBJParser::readFace()
         return true;
     }
 
+    std::string delimiter = m_hasTexture ? "/" : "//";
     for (int i = 0; i < 3; ++i) {
         m_file >> group; // x\y\z group
-        splitString(group, "/", splited, 3);
+        splitString(group, delimiter, splited, 3);
 
         readFaceElement(splited);
     }
@@ -194,12 +204,17 @@ void OBJParser::readFaceElement(const std::string splited[])
     m_vVertex.push_back(m_vertices[index * 3 + 1]);
     m_vVertex.push_back(m_vertices[index * 3 + 2]);
 
-    index = std::stoi(splited[1]) - 1;
-    m_vTexture.push_back(m_uvCoords[index * 2]);
-    m_vTexture.push_back(m_uvCoords[index * 2 + 1]);
-    m_vTexture.push_back(m_uvCoords[index * 2 + 2]);
+    if ( m_hasTexture ) {
+        index = std::stoi(splited[1]) - 1;
+        m_vTexture.push_back(m_uvCoords[index * 2]);
+        m_vTexture.push_back(m_uvCoords[index * 2 + 1]);
+        m_vTexture.push_back(m_uvCoords[index * 2 + 2]);
 
-    index = std::stoi(splited[2]) - 1;
+        index = std::stoi(splited[2]) - 1;
+    } else { // If there are no texture coord (1//1)
+        index = std::stoi(splited[1]) - 1;
+    }
+
     m_vNormal.push_back(m_normals[index * 3]);
     m_vNormal.push_back(m_normals[index * 3 + 1]);
     m_vNormal.push_back(m_normals[index * 3 + 2]);

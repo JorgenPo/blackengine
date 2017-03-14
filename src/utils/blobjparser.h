@@ -43,6 +43,8 @@ public:
     size_t indicesCount() const { return m_vIndex.size(); }
     size_t verticesCount() const { return m_vVertex.size(); }
 
+    bool hasTexture() const { return m_hasTexture; }
+
 private:
     void splitString(std::string str, std::string delimiter, std::string *out, int size);
 
@@ -71,6 +73,8 @@ private:
     std::vector<uint>  m_vIndex;
 
     std::ifstream m_file;
+
+    bool m_hasTexture;
 };
 
 }
