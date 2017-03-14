@@ -15,12 +15,16 @@
 #include "src/utils/blcubemesh.h"
 #include "src/utils/bltimer.h"
 
+#include "bltexture.h"
+
 using std::unique_ptr;
+using std::shared_ptr;
 
 class BLApplication : public QOpenGLWindow, public QOpenGLFunctions {
 
     static const int PROGRAM_VERTEX_POS = 0;
     static const int PROGRAM_VERTEX_COL = 1;
+    static const int PROGRAM_VERTEX_TEX = 2;
 
 public:
     BLApplication(QWindow *parent = nullptr);
@@ -39,6 +43,8 @@ protected:
 
 private:
     void initModels();
+    void loadResources();
+    void prepareToRender();
 
 private:
     unique_ptr<QOpenGLShaderProgram> m_program;
@@ -55,6 +61,13 @@ private:
     unique_ptr<black::Camera> m_camera;
 
     unique_ptr<black::Timer> m_timer;
+
+    // Handled by rm
+    black::Mesh* m_stallMesh;
+    black::Mesh* m_bodyMesh;
+
+    black::Texture* m_brickTexture;
+
     // QWindow interface
 protected:
     void wheelEvent(QWheelEvent *) override;

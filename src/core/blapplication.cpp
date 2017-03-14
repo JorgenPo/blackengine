@@ -1,16 +1,25 @@
 #include "blapplication.h"
+#include "blresourcemanager.h"
 #include "blspectatorcamera.h"
+#include "bltexture.h"
 
 #include <QDebug>
 #include <QMouseEvent>
 #include <QSurfaceFormat>
 
+#include <GL/gl.h>
+
 using std::make_unique;
+using std::make_shared;
+using namespace black;
 
 BLApplication::BLApplication(QWindow *parent)
     : QOpenGLWindow(NoPartialUpdate, parent),
       m_camera(),
-      m_timer()
+      m_timer(),
+      m_brickTexture(),
+      m_stallMesh(),
+      m_bodyMesh()
 {
     QSurfaceFormat format;
     format.setMajorVersion(3);
@@ -23,8 +32,8 @@ BLApplication::BLApplication(QWindow *parent)
 
     this->setFormat(format);
 
-    m_camera = make_unique<black::SpectatorCamera>();
-    m_timer = make_unique<black::Timer>();
+    m_camera = make_unique<SpectatorCamera>();
+    m_timer = make_unique<Timer>();
 
     connect(this, SIGNAL(frameSwapped()), this, SLOT(update()));
 }
@@ -67,6 +76,7 @@ void BLApplication::initializeGL()
 
     m_program->bindAttributeLocation("vPosition", PROGRAM_VERTEX_POS);
     m_program->bindAttributeLocation("vColor", PROGRAM_VERTEX_COL);
+    m_program->bindAttributeLocation("vTexCoords", PROGRAM_VERTEX_TEX);
 
     if ( !m_program->link() ) {
         qDebug() << m_vShader->log();
@@ -77,6 +87,7 @@ void BLApplication::initializeGL()
 
     m_program->bind();
 
+    loadResources();
     initModels();
 
     m_initialized = true;
@@ -103,11 +114,7 @@ void BLApplication::paintGL()
         return;
     }
 
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
-
-    glClearColor(1.0f, 0.8f, 0.9f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    prepareToRender();
 
     QMatrix4x4 mvpMatrix;
     mvpMatrix.setToIdentity();
@@ -116,22 +123,20 @@ void BLApplication::paintGL()
 
     mvpMatrix = m_camera->perspective() * m_camera->view() * mvpMatrix;
 
-    //m_camera->setUpVector(mvpMatrix * m_camera->upVector());
-
     m_program->bind();
     m_program->setUniformValue("mMatrix", mvpMatrix);
 
-    m_program->setUniformValue("lightPos", m_camera->position());
+    m_stallMesh->bind();
+    m_brickTexture->bind();
 
-    m_cubeMesh->bind();
-
-    if ( m_cubeMesh->isIndexed() ) {
-        glDrawElements(GL_TRIANGLE_STRIP, m_cubeMesh->vertexCount(), GL_UNSIGNED_INT, 0);
+    if ( m_stallMesh->isIndexed() ) {
+        glDrawElements(GL_TRIANGLE_STRIP, m_stallMesh->vertexCount(), GL_UNSIGNED_INT, 0);
     } else {
-        glDrawArrays(GL_LINES, 0, m_cubeMesh->vertexCount());
+        glDrawArrays(GL_TRIANGLES, 0, m_stallMesh->vertexCount());
     }
 
-    m_cubeMesh->release();
+    m_stallMesh->release();
+    m_brickTexture->release();
 
     mvpMatrix.setToIdentity();
     mvpMatrix = m_camera->perspective() * m_camera->view() * mvpMatrix;
@@ -143,7 +148,7 @@ void BLApplication::paintGL()
     if ( m_axisMesh->isIndexed() ) {
         glDrawElements(GL_TRIANGLE_STRIP, m_axisMesh->vertexCount(), GL_UNSIGNED_INT, 0);
     } else {
-        glDrawArrays(GL_LINES, 0, m_axisMesh->vertexCount());
+        glDrawArrays(GL_LINE_STRIP, 0, m_axisMesh->vertexCount());
     }
 
     m_axisMesh->release();
@@ -158,10 +163,10 @@ void BLApplication::paintGL()
 void BLApplication::initModels()
 {
 
-    m_cubeMesh = make_unique<black::CubeMesh>(m_program.get());
+    m_cubeMesh = make_unique<CubeMesh>();
 
-    // Renders axis to the screen
-    m_axisMesh = make_unique<black::Mesh>(m_program.get());
+    //Renders axis to the screen
+    m_axisMesh = make_unique<Mesh>();
 
     m_axisMesh->setPositionData({
        0.0f, 0.0f, 0.0f,
@@ -171,6 +176,33 @@ void BLApplication::initModels()
        0.0f, 0.0f, 0.0f,
        0.0f, 0.0f, 1.0f,
     });
+}
+
+void BLApplication::loadResources()
+{
+    // TODO: maybe Separate loading and init models
+
+    auto& rm = ResourceManager::getInstance();
+
+    auto guid = rm.load<Texture>("textures/bricks_xxl.jpg");
+    m_brickTexture = rm.get<Texture>(guid);
+
+    guid = rm.load<Mesh>("models/stall.obj");
+    m_stallMesh = rm.get<Mesh>(guid);
+
+    guid = rm.load<Mesh>("models/body.obj");
+    m_bodyMesh = rm.get<Mesh>(guid);
+}
+
+void BLApplication::prepareToRender()
+{
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+
+    glEnable(GL_CULL_FACE);
+
+    glClearColor(1.0f, 0.8f, 0.9f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void BLApplication::wheelEvent(QWheelEvent *event)
