@@ -1,29 +1,43 @@
 #ifndef MESH_H
 #define MESH_H
 
+#include "blresource.h"
+#include "blresourcemanager.h"
+
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLBuffer>
 #include <QDebug>
 #include <QOpenGLShaderProgram>
+#include <QOpenGLFunctions>
 
 #include <vector>
 #include <string>
 
 namespace black {
 
-class Mesh
+/**
+ * @brief The Mesh class
+ * Vertices data. Represents actualy VBO and
+ * all vbo's.
+ */
+class Mesh : public Resource, private QOpenGLFunctions //TODO: REMOVE THIS WHEN GLOBAL CLASSES WILL BE HERE
 {
+    friend class ResourceManager;
 public:
     /**
      * @brief Creates a empty vao object
      *
-     * @version 0.2
+     * @version 0.4 15.03.2017
+     *  Texture support. Shader was removed from dependencies.
+     *  Now class inherit QOpenGLFunctions, probably temporary solution.
      *
-     * @throw NoSupportedException
+     * @version 0.2 07.03.2017
+     * First working version
+     *
      * @date 07.03.2017
      * @author george popoff <popoff96@live.com>
      */
-    Mesh(QOpenGLShaderProgram *program);
+    Mesh();
 
     /**
      * @brief Creates vao object and
@@ -37,16 +51,16 @@ public:
      * @date 07.03.2017
      * @author george popoff <popoff96@live.com>
      */
-    Mesh(QOpenGLShaderProgram *program,
-         const std::vector<GLfloat> &position,
-         const std::vector<GLuint> &index,
-         const std::vector<GLclampf> &color);
+    Mesh(const std::vector<GLfloat> &position,
+         const std::vector<GLclampf> &textureCoords);
 
     void setPositionData(const std::vector<GLfloat> &position);
 
     void setIndexData(const std::vector<GLuint> &index);
 
     void setColorData(const std::vector<GLclampf> &color);
+
+    void setTextureCoords(const std::vector<GLclampf> &coords);
 
     /**
      * @brief bind Binds vertex array buffer
@@ -63,6 +77,10 @@ public:
     GLuint vertexCount() const { return m_vertexCount; }
     bool isIndexed() const { return m_isIndexProvided; }
 
+    // Resource interface
+private:
+    void load(string file) override;
+
 private:
     bool   m_isDataProvided  = false;
     bool   m_isIndexProvided = false;
@@ -73,6 +91,7 @@ private:
     QOpenGLBuffer m_positionVBO;
     QOpenGLBuffer m_indexVBO;
     QOpenGLBuffer m_colorVBO;
+    QOpenGLBuffer m_textureVBO;
 
     QOpenGLShaderProgram *m_program;
 };
