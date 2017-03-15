@@ -48,6 +48,7 @@ public:
     size_t verticesCount() const { return m_vVertex.size(); }
 
     bool hasTexture() const { return m_hasTexture; }
+    bool quads() const { return m_quads; }
 
 private:
     void splitString(std::string str, std::string delimiter, std::string *out, int size);
@@ -79,6 +80,8 @@ private:
     std::ifstream m_file;
 
     bool m_hasTexture;
+    bool m_quads;
+
 };
 
 }

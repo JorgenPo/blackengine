@@ -18,7 +18,8 @@ OBJParser::OBJParser()
 
       m_file(),
 
-      m_hasTexture(true)
+      m_hasTexture(true),
+      m_quads(false)
 {
 
 }
@@ -172,7 +173,7 @@ bool OBJParser::readFace()
 {
     std::string type;
     std::string group;
-    std::string splited[3];
+    std::string splited[4];
 
     m_file >> type;
 
@@ -185,12 +186,27 @@ bool OBJParser::readFace()
         return true;
     }
 
+    int i = 0;
     std::string delimiter = m_hasTexture ? "/" : "//";
-    for (int i = 0; i < 3; ++i) {
-        m_file >> group; // x\y\z group
+    for (i = 0; i < 4; ++i) {
+
+        // x\y\z group
+        if ( !(m_file >> group) ) {
+            break;
+        }
+
+        if ( group == "f" ) {
+            m_file.unget();
+            break;
+        }
+
         splitString(group, delimiter, splited, 3);
 
         readFaceElement(splited);
+    }
+
+    if ( i == 4 ) {
+        m_quads = true;
     }
 
     return true;
