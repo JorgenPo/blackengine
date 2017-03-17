@@ -11,8 +11,8 @@ Mesh::Mesh()
       m_vao(),
       m_positionVBO(QOpenGLBuffer::VertexBuffer),
       m_indexVBO(QOpenGLBuffer::IndexBuffer),
-      m_colorVBO(QOpenGLBuffer::VertexBuffer),
-      m_textureVBO(QOpenGLBuffer::VertexBuffer)
+      m_textureVBO(QOpenGLBuffer::VertexBuffer),
+      m_normalVBO(QOpenGLBuffer::VertexBuffer)
 {
     if ( !m_vao.create() ) {
         throw NotSupportedException("Vertex Array Objects");
@@ -33,6 +33,10 @@ Mesh::Mesh()
     }
 
     if ( !m_textureVBO.create() ) {
+        throw NotSupportedException("OpenGL buffers");
+    }
+
+    if ( !m_normalVBO.create() ) {
         throw NotSupportedException("OpenGL buffers");
     }
 
@@ -64,8 +68,8 @@ void Mesh::setPositionData(const std::vector<GLfloat> &position)
     m_positionVBO.allocate(position.data(),
                         position.size() * sizeof(GLfloat));
 
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, 0, 0);
+    glEnableVertexAttribArray(Constants::VERTEX_ATTR_POSITION);
+    glVertexAttribPointer(Constants::VERTEX_ATTR_POSITION, 3, GL_FLOAT, GL_TRUE, 0, 0);
 
     m_positionVBO.release();
     m_vao.release();
@@ -104,8 +108,8 @@ void Mesh::setColorData(const std::vector<GLclampf> &color)
     m_colorVBO.allocate(color.data(),
                         color.size() * sizeof(GLclampf));
 
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_TRUE, 0, 0);
+    glEnableVertexAttribArray(Constants::VERTEX_ATTR_COLOR);
+    glVertexAttribPointer(Constants::VERTEX_ATTR_COLOR, 3, GL_FLOAT, GL_TRUE, 0, 0);
 
     m_colorVBO.release();
     m_vao.release();
@@ -123,10 +127,29 @@ void Mesh::setTextureCoords(const std::vector<GLclampf> &coords)
     m_textureVBO.allocate(coords.data(),
                         coords.size() * sizeof(GLclampf));
 
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_TRUE, 0, 0);
+    glEnableVertexAttribArray(Constants::VERTEX_ATTR_TEXCOORDS);
+    glVertexAttribPointer(Constants::VERTEX_ATTR_TEXCOORDS, 2, GL_FLOAT, GL_TRUE, 0, 0);
 
     m_textureVBO.release();
+    m_vao.release();
+}
+
+void Mesh::setNormalData(const std::vector<float> &normals)
+{
+    m_vao.bind();
+
+    if ( !m_normalVBO.bind() ) {
+        throw NotSupportedException("Vertex Buffer");
+    }
+
+    m_normalVBO.setUsagePattern(QOpenGLBuffer::StaticDraw);
+    m_normalVBO.allocate(normals.data(),
+                        normals.size() * sizeof(float));
+
+    glEnableVertexAttribArray(Constants::VERTEX_ATTR_NORMAL);
+    glVertexAttribPointer(Constants::VERTEX_ATTR_NORMAL, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+    m_normalVBO.release();
     m_vao.release();
 }
 
@@ -153,6 +176,7 @@ Mesh::~Mesh()
     m_indexVBO.destroy();
     m_colorVBO.destroy();
     m_textureVBO.destroy();
+    m_normalVBO.destroy();
 }
 
 // LOADING MESH FROM FILE
@@ -172,6 +196,9 @@ void Mesh::load(string file)
         if ( parser.hasTexture() ) {
             this->setTextureCoords(parser.texCoordinates());
         }
+
+        this->setNormalData(parser.normals());
+
     } catch(std::string e) {
         std::cerr << "Failed to load a mesh from " << file << "!\n";
         std::cerr << "Error: " << e << '\n';

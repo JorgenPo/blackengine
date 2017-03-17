@@ -8,7 +8,7 @@ Camera::Camera(float fov, float ratio, float near, float far)
       m_view(), m_position(0.0f, 0.4f, 1.0f),
       m_lookAt(), m_upVector(0, 1, 0)
 {
-    qDebug() << "lookat: " << m_lookAt;
+    Logger::getInstance() << "lookat: " << m_lookAt;
     setPerspective(fov, ratio, near, far);
     setView(m_position, m_lookAt, m_upVector);
 }

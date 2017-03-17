@@ -7,6 +7,8 @@
 #include <string>
 #include <memory>
 
+#include "blconstants.h"
+
 namespace black {
 
 /**
@@ -34,7 +36,7 @@ public:
     static ResourceManager& getInstance() {
         //TODO: change this hardcoded constant to normal
         // constant from Constants::
-        static ResourceManager instance("resources/");
+        static ResourceManager instance(Constants::RES_PATH);
         return instance;
     }
 

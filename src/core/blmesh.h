@@ -6,7 +6,6 @@
 
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLBuffer>
-#include <QDebug>
 #include <QOpenGLShaderProgram>
 #include <QOpenGLFunctions>
 
@@ -62,6 +61,8 @@ public:
 
     void setTextureCoords(const std::vector<GLclampf> &coords);
 
+    void setNormalData(const std::vector<float> &normals);
+
     /**
      * @brief bind Binds vertex array buffer
      *  to the current context to be used as
@@ -90,8 +91,10 @@ private:
 
     QOpenGLBuffer m_positionVBO;
     QOpenGLBuffer m_indexVBO;
-    QOpenGLBuffer m_colorVBO;
     QOpenGLBuffer m_textureVBO;
+    QOpenGLBuffer m_normalVBO;
+
+    QOpenGLBuffer m_colorVBO;
 
     QOpenGLShaderProgram *m_program;
 };

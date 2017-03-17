@@ -7,6 +7,7 @@
 #include <QOpenGLFunctions>
 #include <QOpenGLShaderProgram>
 #include <QOpenGLShader>
+#include <bllight.h>
 
 
 #include "src/core/blmesh.h"
@@ -16,15 +17,12 @@
 #include "src/utils/bltimer.h"
 
 #include "bltexture.h"
+#include "blconstants.h"
 
 using std::unique_ptr;
 using std::shared_ptr;
 
 class BLApplication : public QOpenGLWindow, public QOpenGLFunctions {
-
-    static const int PROGRAM_VERTEX_POS = 0;
-    static const int PROGRAM_VERTEX_COL = 1;
-    static const int PROGRAM_VERTEX_TEX = 2;
 
 public:
     BLApplication(QWindow *parent = nullptr);
@@ -65,8 +63,11 @@ private:
     // Handled by rm
     black::Mesh* m_stallMesh;
     black::Mesh* m_bodyMesh;
+    black::Mesh* m_monkeyMesh;
 
     black::Texture* m_brickTexture;
+
+    unique_ptr<black::Light> m_lightSource;
 
     // QWindow interface
 protected:
