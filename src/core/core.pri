@@ -8,7 +8,6 @@ HEADERS += $$PWD/blapplication.h \
     $$PWD/bltexture.h \
     $$PWD/blresourcemanager.h \
     $$PWD/blconstants.h \
-    $$PWD/bllogger.h
 
 SOURCES += $$PWD/blapplication.cpp \
         $$PWD/blmesh.cpp \
@@ -16,4 +15,3 @@ SOURCES += $$PWD/blapplication.cpp \
     $$PWD/blmodel.cpp \
     $$PWD/bltexture.cpp \
     $$PWD/blresourcemanager.cpp \
-    $$PWD/bllogger.cpp
