@@ -1,4 +1,5 @@
 #include "blresourcemanager.h"
+#include "src/utils/bllogger.h"
 
 namespace black {
 
@@ -12,6 +13,7 @@ ResourceManager(std::string resPath)
 ResourceManager::~ResourceManager()
 {
     for ( auto &resource : m_resources ) {
+        Logger::getInstance() << "unloading resource " << resource.first << '\n';
         unload(resource.first);
     }
 }

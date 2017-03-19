@@ -23,8 +23,12 @@ namespace black {
  * directory path called guid.
  *
  * @author george popoff <popoff96@live.com>
- * @date 12.03.2017
- * @version 1.0 Working version
+ *
+ * @version 1.0 12.03.2017
+ *  Working version
+ * @version 1.1 19.03.2017
+ *  Full support of smart pointers.
+ *  Support of full pathes as well as relative.
  *
  */
 class ResourceManager
@@ -45,7 +49,7 @@ public:
      *
      * @param path resource file path
      */
-    template<class T> string load(std::string path);
+    template<class T> string load(std::string path, bool relative = true);
 
     /**
      * @brief Returns a resource with given file path.
@@ -53,7 +57,7 @@ public:
      *
      * @param guid resource guid to get
      */
-    template<class T> T* get(guid_t guid);
+    template<class T> std::shared_ptr<T> get(guid_t guid, bool relative = true);
 
     /**
      * @brief Unloading resource by given guid.
@@ -79,26 +83,42 @@ private:
 // TEMPLATE FUNCTIONS
 
 template<class T>
-string ResourceManager::load(std::string path)
+string ResourceManager::load(std::string path, bool relative)
 {
     auto res = std::make_shared<T>();
-    res->load(m_resourcesPath + path);
+
+    guid_t guid = path;
+
+    // Allow relative and non-relative path
+    // cause when loading nested resources there are
+    // problems with relative path
+    if ( relative ) {
+        guid = path;
+        path = m_resourcesPath + path;
+    }
+
+    res->load(path);
 
     m_resources[path] = res;
 
-    return path;
+    return guid;
 }
 
 template<class T>
-T* ResourceManager::get(guid_t guid)
+std::shared_ptr<T> ResourceManager::get(guid_t guid, bool relative)
 {
+    // If relative - guid += resource path
+    if ( relative ) {
+        guid = m_resourcesPath + guid;
+    }
+
     try {
         m_resources.at(guid);
     } catch (std::out_of_range e) {
-        load<T>(m_resourcesPath + guid);
+        load<T>(guid, false); // Full path already
     }
 
-    return dynamic_cast<T*>(m_resources[guid].get());
+    return std::dynamic_pointer_cast<T>(m_resources[guid]);
 }
 
 }
