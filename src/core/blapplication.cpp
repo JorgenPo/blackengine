@@ -3,6 +3,7 @@
 #include "blspectatorcamera.h"
 #include "bltexture.h"
 #include "bllogger.h"
+
 #include <QMouseEvent>
 #include <QSurfaceFormat>
 
@@ -47,7 +48,14 @@ BLApplication::~BLApplication()
     m_fShader.release();
     m_camera.release();
     m_cubeMesh.release();
+    m_axisMesh.release();
     m_timer.release();
+    m_lightSource.release();
+
+    m_stallMesh.reset();
+    m_bodyMesh.reset();
+    m_monkeyMesh.reset();
+    m_brickTexture.reset();
 }
 
 void BLApplication::initializeGL()
@@ -119,12 +127,7 @@ void BLApplication::paintGL()
 
     prepareToRender();
 
-    QMatrix4x4 mvpMatrix;
-    mvpMatrix.setToIdentity();
-    //mvpMatrix.scale(0.05f);
-    //mvpMatrix.rotate(dCoord * 100.0f, 0.0f, 1.0f, 0.0f);
-
-    mvpMatrix = m_camera->perspective() * m_camera->view() * mvpMatrix;
+    QMatrix4x4 mvpMatrix = m_camera->perspective() * m_camera->view() * m_stallMesh->getModelMatrix();
 
     m_program->bind();
     m_program->setUniformValue("mMatrix", mvpMatrix);
@@ -136,17 +139,7 @@ void BLApplication::paintGL()
     m_program->setUniformValue("vLightPos", m_lightSource->position());
     m_program->setUniformValue("fLightColor", m_lightSource->color());
 
-    m_stallMesh->bind();
-    m_brickTexture->bind();
-
-    if ( m_stallMesh->isIndexed() ) {
-        glDrawElements(GL_QUADS, m_stallMesh->vertexCount(), GL_UNSIGNED_INT, 0);
-    } else {
-        glDrawArrays(GL_TRIANGLES, 0, m_stallMesh->vertexCount());
-    }
-
-    m_stallMesh->release();
-    m_brickTexture->release();
+    m_stallMesh->render();
 
     mvpMatrix.setToIdentity();
     mvpMatrix = m_camera->perspective() * m_camera->view() * mvpMatrix;
@@ -166,8 +159,8 @@ void BLApplication::paintGL()
 
     dCoord += 0.002f;
 
-    Logger::getInstance() << "mpf = " << m_timer->mpf();
-    Logger::getInstance() << "fps = " << m_timer->fps();
+    Logger::getInstance() << "mpf = " << m_timer->mpf() << '\n';
+    Logger::getInstance() << "fps = " << m_timer->fps() << '\n';
 }
 
 void BLApplication::initModels()
@@ -199,17 +192,20 @@ void BLApplication::loadResources()
 
     auto& rm = ResourceManager::getInstance();
 
-    auto guid = rm.load<Texture>("textures/bricks_xxl.jpg");
+    auto guid = rm.load<Texture>("textures/default.jpg");
+
+    guid = rm.load<Texture>("textures/bricks_xxl.jpg");
     m_brickTexture = rm.get<Texture>(guid);
 
-    guid = rm.load<Mesh>("models/stall.obj");
-    m_stallMesh = rm.get<Mesh>(guid);
+    guid = rm.load<Model>("models/stall.obj");
+    m_stallMesh = rm.get<Model>(guid);
+    m_stallMesh->setTexture(m_brickTexture);
 
-    guid = rm.load<Mesh>("models/body_triangulated.obj");
-    m_bodyMesh = rm.get<Mesh>(guid);
+    guid = rm.load<Model>("models/body_triangulated.obj");
+    m_bodyMesh = rm.get<Model>(guid);
 
-    guid = rm.load<Mesh>("models/monkey.obj");
-    m_monkeyMesh = rm.get<Mesh>(guid);
+    guid = rm.load<Model>("models/monkey.obj");
+    m_monkeyMesh = rm.get<Model>(guid);
 }
 
 void BLApplication::prepareToRender()

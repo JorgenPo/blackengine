@@ -18,6 +18,7 @@
 
 #include "bltexture.h"
 #include "blconstants.h"
+#include "blmodel.h"
 
 using std::unique_ptr;
 using std::shared_ptr;
@@ -52,8 +53,6 @@ private:
     unique_ptr<black::CubeMesh> m_cubeMesh;
     unique_ptr<black::Mesh> m_axisMesh;
 
-    QOpenGLVertexArrayObject  m_vao;
-
     bool m_initialized = false;
 
     unique_ptr<black::Camera> m_camera;
@@ -61,11 +60,11 @@ private:
     unique_ptr<black::Timer> m_timer;
 
     // Handled by rm
-    black::Mesh* m_stallMesh;
-    black::Mesh* m_bodyMesh;
-    black::Mesh* m_monkeyMesh;
+    std::shared_ptr<black::Model> m_stallMesh;
+    std::shared_ptr<black::Model> m_bodyMesh;
+    std::shared_ptr<black::Model> m_monkeyMesh;
 
-    black::Texture* m_brickTexture;
+    std::shared_ptr<black::Texture> m_brickTexture;
 
     unique_ptr<black::Light> m_lightSource;
 
