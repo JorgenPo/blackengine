@@ -62,15 +62,11 @@ public:
      */
     void error(std::string str) const;
 
-    /**
-     * @brief Write error information
-     */
-    void test(std::string str) const;
 
     /**
      * @brief Write info information
      */
-    void info() const;
+    void info(std::string str) const;
 
     void setLogStream(std::ostream* stream)   {  m_logStream = stream; }
     void setDebugStream(std::ostream* stream) {  m_debugStream = stream; }
@@ -78,10 +74,10 @@ public:
     void setInfoStream(std::ostream* stream)  {  m_logStream = stream; }
 
 private:
-    static std::ostream* m_logStream;
-    static std::ostream* m_debugStream;
-    static std::ostream* m_errorStream;
-    static std::ostream* m_infoStream;
+    std::ostream* m_logStream;
+    std::ostream* m_debugStream;
+    std::ostream* m_errorStream;
+    std::ostream* m_infoStream;
 
 };
 
