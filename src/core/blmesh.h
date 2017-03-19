@@ -19,7 +19,7 @@ namespace black {
  * Vertices data. Represents actualy VBO and
  * all vbo's.
  */
-class Mesh : public Resource, private QOpenGLFunctions //TODO: REMOVE THIS WHEN GLOBAL CLASSES WILL BE HERE
+class Mesh : public Resource, protected QOpenGLFunctions //TODO: REMOVE THIS WHEN GLOBAL CLASSES WILL BE HERE
 {
     friend class ResourceManager;
 public:
