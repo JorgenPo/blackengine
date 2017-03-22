@@ -10,11 +10,18 @@ namespace black {
  * @brief The Camera class is
  *  base class for all camera
  *  types in engine.
+ *
+ * @version 1.0 22.03.2017
+ * Working camera.
+ *
+ * @author george popoff <popoff96@live.com>
+ *
  */
 class Camera {
 
 public:
 
+    Camera();
     Camera(float fov, float ratio, float near, float far);
 
     virtual ~Camera();
@@ -40,14 +47,31 @@ public:
     void setLookAt(const QVector3D &lookAt);
     void setUpVector(const QVector3D &upVector);
 
+    void move(const QVector3D &moveVector);
+    void moveRight(float dist);
+    void moveLeft(float dist);
+    void moveDown(float dist);
+    void moveUp(float dist);
+    void moveForward(float dist);
+    void moveBack(float dist);
+
+    void setRotate(const QVector3D& rotation);
+    void setPitch(float pitch);
+    void setYaw(float yaw);
+    void setRoll(float roll);
+
+    void setPitchConstraint(float max);
+    void setYawConstraint(float max);
+    void setRollConstraint(float max);
+
     // Getters
     float fov() const { return m_fov; }
     float ratio() const { return m_ratio; }
     float near() const { return m_near; }
     float far() const { return m_far; }
 
-    QMatrix4x4 perspective() const { return m_perspective; }
-    QMatrix4x4 view() const { return m_view; }
+    QMatrix4x4 perspective();
+    QMatrix4x4 view();
 
     QVector3D position() const { return m_position; }
     QVector3D lookAt() const { return m_lookAt; }
@@ -56,6 +80,9 @@ public:
     virtual void handleKeyboard(QKeyEvent *e);
     virtual void handleMouse(QMouseEvent *e);
     virtual void handleWheel(QWheelEvent *e);
+
+private:
+    void updateLookAt();
 
 protected:
     QMatrix4x4 m_perspective;
@@ -74,6 +101,13 @@ protected:
     float m_pitch; // x rotation
     float m_yaw;   // y rotation
     float m_roll;  // z rotation
+
+    float m_pitchConstraint;
+    float m_yawConstraint;
+    float m_rollConstraint;
+
+    bool m_needUpdateView;
+    bool m_needUpdatePerspective;
 };
 
 } // end of black namespace
