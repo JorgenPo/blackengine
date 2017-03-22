@@ -10,6 +10,8 @@ Model::Model()
       m_rotation(), m_matModel(),
       m_needUpdate()
 {
+    initializeOpenGLFunctions();
+
     m_texture = std::shared_ptr<Texture>(ResourceManager::getInstance()
             .get<Texture>("textures/default.jpg"));
 }

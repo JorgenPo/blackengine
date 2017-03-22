@@ -22,20 +22,20 @@ class Camera {
 public:
 
     Camera();
-    Camera(float fov, float ratio, float near, float far);
+    Camera(float fov, float ratio, float nearPlane, float farPlane);
 
     virtual ~Camera();
 
     // Setters
     void setPerspective(float fov, float ratio,
-                        float near, float far);
+                        float nearPlane, float farPlane);
 
     void setPerspective(const QMatrix4x4 &perspective);
 
     void setFov(float fov);
     void setAspectRatio(float ratio);
-    void setNearPlane(float near);
-    void setFarPlane(float far);
+    void setNearPlane(float nearPlane);
+    void setFarPlane(float farPlane);
 
     void setView(const QVector3D &position,
                  const QVector3D &lookAt,
@@ -67,8 +67,8 @@ public:
     // Getters
     float fov() const { return m_fov; }
     float ratio() const { return m_ratio; }
-    float near() const { return m_near; }
-    float far() const { return m_far; }
+    float nearPlane() const { return m_near; }
+    float farPlane() const { return m_far; }
 
     QMatrix4x4 perspective();
     QMatrix4x4 view();

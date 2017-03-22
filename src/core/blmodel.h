@@ -25,7 +25,7 @@ namespace black {
  * @version 1.0 19.03.2017
  *  Working version of Model class
  */
-class Model : public Resource
+class Model : public Resource, private QOpenGLFunctions
 {
     friend class ResourceManager;
 public:
