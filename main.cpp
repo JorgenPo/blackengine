@@ -11,6 +11,9 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
+    QCursor::setPos(Constants::WIDTH / 2, Constants::HEIGHT / 2);
+    QApplication::setOverrideCursor(Qt::BlankCursor);
+
     BLApplication application;
     application.show();
 
