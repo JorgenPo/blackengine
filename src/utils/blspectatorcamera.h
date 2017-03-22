@@ -6,6 +6,16 @@
 
 namespace black {
 
+/**
+ * @brief The SpectatorCamera class
+ *  Freely movable fps camera.
+ *
+ * @version 1.0 22.03.2017
+ * Working version. Some bugs.
+ *
+ * @author george popoff <popoff96@live.com>
+ *
+ */
 class SpectatorCamera : public Camera
 {
 public:
