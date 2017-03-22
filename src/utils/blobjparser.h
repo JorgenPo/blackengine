@@ -22,6 +22,9 @@ namespace black {
  *
  * @author george popoff <popoff96@live.com>
  *
+ * @version 1.2.5 22.03.2017
+ * Fixed bug when object file contains multiple usemtl statements.
+ *
  * @version 1.2 15.03.2017
  * Support for quad faces
  *

@@ -195,7 +195,8 @@ bool OBJParser::readFace()
             break;
         }
 
-        if ( group == "f" ) {
+        // TODO: remove this kostyl
+        if ( group == "f" || group == "usemtl" ) {
             m_file.unget();
             break;
         }
