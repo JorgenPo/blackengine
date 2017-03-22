@@ -39,7 +39,7 @@ protected:
 
     // QWidget interface
     virtual void keyPressEvent(QKeyEvent *event);
-
+    virtual void mouseMoveEvent(QMouseEvent *);
 private:
     void initModels();
     void loadResources();
@@ -63,6 +63,7 @@ private:
     std::shared_ptr<black::Model> m_stallMesh;
     std::shared_ptr<black::Model> m_bodyMesh;
     std::shared_ptr<black::Model> m_monkeyMesh;
+    std::shared_ptr<black::Model> m_houseModel;
 
     std::shared_ptr<black::Texture> m_brickTexture;
 
