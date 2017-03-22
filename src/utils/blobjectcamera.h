@@ -1,5 +1,5 @@
-#ifndef BLSPECTATORCAMERA_H
-#define BLSPECTATORCAMERA_H
+#ifndef BL_OBJECTCAMERA_H
+#define BL_OBJECTCAMERA_H
 
 #include "src/core/blcamera.h"
 
@@ -9,13 +9,13 @@ namespace black {
  * @brief The SpectatorCamera class represents
  *  freely movable camera
  */
-class SpectatorCamera : public Camera {
+class ObjectCamera : public Camera {
 
 public:
 
-    SpectatorCamera();
+    ObjectCamera();
 
-    ~SpectatorCamera();
+    ~ObjectCamera();
 
     // Camera interface
     float velocity() const;

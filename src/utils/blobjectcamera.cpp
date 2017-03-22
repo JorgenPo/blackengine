@@ -1,21 +1,22 @@
-#include "blspectatorcamera.h"
+#include <blobjectcamera.h>
+#include <blconstants.h>
 
 namespace black {
 
 // TODO: REMOVE HARDCODED WIDTH / HEIGHT
-SpectatorCamera::SpectatorCamera()
-    : Camera(60.0f, 16.0f / 9.0f, 0.1f, 100.0f),
+ObjectCamera::ObjectCamera()
+    : Camera(),
       m_velocity(0.05f)
 {
 
 }
 
-SpectatorCamera::~SpectatorCamera()
+ObjectCamera::~ObjectCamera()
 {
 
 }
 
-void SpectatorCamera::handleKeyboard(QKeyEvent *e)
+void ObjectCamera::handleKeyboard(QKeyEvent *e)
 {
     switch (e->key()) {
     case Qt::Key_W:
@@ -41,12 +42,12 @@ void SpectatorCamera::handleKeyboard(QKeyEvent *e)
     setView(m_position, m_lookAt, m_upVector);
 }
 
-void SpectatorCamera::handleMouse(QMouseEvent *e)
+void ObjectCamera::handleMouse(QMouseEvent *e)
 {
     Q_UNUSED(e);
 }
 
-void SpectatorCamera::handleWheel(QWheelEvent *e)
+void ObjectCamera::handleWheel(QWheelEvent *e)
 {
     int degree = e->delta() / 8;
 
@@ -55,12 +56,12 @@ void SpectatorCamera::handleWheel(QWheelEvent *e)
     setView(m_position, m_lookAt, m_upVector);
 }
 
-float SpectatorCamera::velocity() const
+float ObjectCamera::velocity() const
 {
     return m_velocity;
 }
 
-void SpectatorCamera::setVelocity(float velocity)
+void ObjectCamera::setVelocity(float velocity)
 {
     m_velocity = velocity;
 }
