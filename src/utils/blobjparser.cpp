@@ -24,7 +24,7 @@ OBJParser::OBJParser()
 
 }
 
-void OBJParser::parseObj(std::string path)
+void OBJParser::parse(std::string path)
 {
     m_file.open(path);
     if ( !m_file.is_open() ) {

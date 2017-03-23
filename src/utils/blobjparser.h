@@ -43,7 +43,7 @@ public:
      * @brief Parses a obj file
      * @param file OBJ File path
      */
-    void parseObj(std::string file);
+    void parse(std::string file);
 
     const std::vector<float>& positions() const { return m_vVertex; }
     const std::vector<float>& normals() const { return m_vNormal; }
