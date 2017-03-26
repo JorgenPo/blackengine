@@ -22,6 +22,9 @@ namespace black {
  *
  * @author george popoff <popoff96@live.com>
  *
+ * @version 1.3 26.03.2017
+ * Fixed bug with texture coodinates. Now looks good.
+ *
  * @version 1.2.5 22.03.2017
  * Fixed bug when object file contains multiple usemtl statements.
  *

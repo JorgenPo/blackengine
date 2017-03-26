@@ -141,10 +141,13 @@ void OBJParser::readTexture()
 {
     float fnumber;
 
+    // 1.0f - fnumber on y fix 26.03.17
+    // blender texture starts on bottom left
+    // opengl texture starts on top left
     m_file >> fnumber;
     m_uvCoords.push_back(fnumber);
     m_file >> fnumber;
-    m_uvCoords.push_back(fnumber);
+    m_uvCoords.push_back(1.0f - fnumber);
 }
 
 void OBJParser::readNormal()
@@ -225,7 +228,6 @@ void OBJParser::readFaceElement(const std::string splited[])
         index = std::stoi(splited[1]) - 1;
         m_vTexture.push_back(m_uvCoords[index * 2]);
         m_vTexture.push_back(m_uvCoords[index * 2 + 1]);
-        m_vTexture.push_back(m_uvCoords[index * 2 + 2]);
 
         index = std::stoi(splited[2]) - 1;
     } else { // If there are no texture coord (1//1)
