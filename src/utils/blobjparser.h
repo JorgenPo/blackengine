@@ -22,6 +22,9 @@ namespace black {
  *
  * @author george popoff <popoff96@live.com>
  *
+ * @version 1.3.5 28.03.2017
+ * Now reads information about material file.
+ *
  * @version 1.3 26.03.2017
  * Fixed bug with texture coodinates. Now looks good.
  *
@@ -59,6 +62,8 @@ public:
     bool hasTexture() const { return m_hasTexture; }
     bool quads() const { return m_quads; }
 
+    std::string matFile() const;
+
 private:
     void splitString(std::string str, std::string delimiter, std::string *out, int size);
 
@@ -85,6 +90,7 @@ private:
     std::vector<float> m_vNormal;
     std::vector<float> m_vTexture;
     std::vector<uint>  m_vIndex;
+    std::string m_matFile;
 
     std::ifstream m_file;
 

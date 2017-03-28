@@ -15,6 +15,7 @@ OBJParser::OBJParser()
       m_vNormal(),
       m_vTexture(),
       m_vIndex(),
+      m_matFile(),
 
       m_file(),
 
@@ -114,6 +115,8 @@ bool OBJParser::readVertex()
         } else if ( type == "f" ) {   // End of list
             m_file.unget();
             return false;
+        } else if ( type == "mtllib" ) {
+            m_file >> m_matFile;
         } else { // Skip this line
             getline(m_file, type);
             return true;
@@ -237,6 +240,11 @@ void OBJParser::readFaceElement(const std::string splited[])
     m_vNormal.push_back(m_normals[index * 3]);
     m_vNormal.push_back(m_normals[index * 3 + 1]);
     m_vNormal.push_back(m_normals[index * 3 + 2]);
+}
+
+std::string OBJParser::matFile() const
+{
+    return m_matFile;
 }
 
 }
