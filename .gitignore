@@ -1,5 +1,3 @@
-*.pro
-*.pro.user
 *.autosave
 /releases
 /resources/*
