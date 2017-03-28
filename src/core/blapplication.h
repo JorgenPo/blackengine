@@ -57,8 +57,9 @@ private:
 
     bool m_initialized = false;
 
-    std::unique_ptr<black::Camera> m_camera;
-
+    black::Camera* m_currentCamera;
+    std::unique_ptr<black::Camera> m_specCamera;
+    std::unique_ptr<black::Camera> m_objCamera;
     std::unique_ptr<black::Timer> m_timer;
 
     // Handled by rm

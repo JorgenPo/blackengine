@@ -21,7 +21,7 @@ using namespace black;
 
 BLApplication::BLApplication(QWindow *parent)
     : QOpenGLWindow(NoPartialUpdate, parent),
-      m_camera(),
+      m_specCamera(),
       m_timer(),
       m_stallMesh(),
       m_bodyMesh(),
@@ -39,7 +39,9 @@ BLApplication::BLApplication(QWindow *parent)
 
     this->setFormat(format);
 
-    m_camera = make_unique<SpectatorCamera>();
+    m_specCamera = make_unique<SpectatorCamera>();
+    m_objCamera = make_unique<ObjectCamera>();
+    m_currentCamera = m_specCamera.get();
     m_timer = make_unique<Timer>();
 
     this->setMouseGrabEnabled(true);
@@ -50,7 +52,7 @@ BLApplication::BLApplication(QWindow *parent)
 BLApplication::~BLApplication()
 {
     m_program.release();
-    m_camera.release();
+    m_specCamera.release();
     m_cubeMesh.release();
     m_axisMesh.release();
     m_timer.release();
@@ -107,7 +109,7 @@ void BLApplication::resizeGL(int w, int h)
     glViewport((w - side) / 2, (h - side) / 2, side, side);
 
     float ratio = w / (float) h;
-    m_camera->setAspectRatio(ratio);
+    m_specCamera->setAspectRatio(ratio);
 }
 
 void BLApplication::paintGL()
@@ -123,8 +125,8 @@ void BLApplication::paintGL()
     prepareToRender();
 
     m_program->bind();
-    m_program->setPerspectiveMatrix(m_camera->perspective());
-    m_program->setViewMatrix(m_camera->view());
+    m_program->setPerspectiveMatrix(m_currentCamera->perspective());
+    m_program->setViewMatrix(m_currentCamera->view());
 
     float r = 50.0f;
     m_lightSource->setPosition({sin(dCoord * 8.0f) * r, 100.0f, cos(dCoord * 8.0f) * r});
@@ -166,7 +168,7 @@ void BLApplication::paintGL()
 
     /* AXIS MESH */
     mvpMatrix.setToIdentity();
-    mvpMatrix = m_camera->perspective() * m_camera->view() * mvpMatrix;
+    mvpMatrix = m_specCamera->perspective() * m_specCamera->view() * mvpMatrix;
 
     mvpMatrix.setToIdentity();
 
@@ -187,8 +189,8 @@ void BLApplication::paintGL()
     glDisable(GL_CULL_FACE);
 
     m_skyBoxModel->setScale(1000.0f);
-    m_diffuseShader->setPerspectiveMatrix(m_camera->perspective());
-    m_diffuseShader->setViewMatrix(m_camera->view());
+    m_diffuseShader->setPerspectiveMatrix(m_specCamera->perspective());
+    m_diffuseShader->setViewMatrix(m_specCamera->view());
     m_diffuseShader->setModelMatrix(m_skyBoxModel->modelMatrix());
     m_skyBoxModel->render();
 
@@ -291,15 +293,26 @@ void BLApplication::prepareToRender()
 
 void BLApplication::wheelEvent(QWheelEvent *event)
 {
-    m_camera->handleWheel(event);
+    m_currentCamera->handleWheel(event);
 }
 
 void BLApplication::keyPressEvent(QKeyEvent *event)
 {
-    m_camera->handleKeyboard(event);
+    switch(event->key()) {
+    case Qt::Key_F1:
+        m_currentCamera = m_specCamera.get();
+        break;
+    case Qt::Key_F2:
+        m_currentCamera = m_objCamera.get();
+        break;
+    default:
+        break;
+    }
+
+    m_currentCamera->handleKeyboard(event);
 }
 
 void BLApplication::mouseMoveEvent(QMouseEvent *event)
 {
-    m_camera->handleMouse(event);
+    m_currentCamera->handleMouse(event);
 }

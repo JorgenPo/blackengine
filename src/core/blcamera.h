@@ -28,6 +28,7 @@ class Camera {
 public:
 
     Camera();
+    Camera(const Camera &camera);
     Camera(float fov, float ratio, float nearPlane, float farPlane);
 
     virtual ~Camera();

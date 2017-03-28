@@ -20,16 +20,16 @@ void ObjectCamera::handleKeyboard(QKeyEvent *e)
 {
     switch (e->key()) {
     case Qt::Key_W:
-        m_position.setY(m_position.y() + m_velocity);
+        this->moveForward(m_velocity);
         break;
     case Qt::Key_S:
-        m_position.setY(m_position.y() - m_velocity);
+        this->moveBack(m_velocity);
         break;
     case Qt::Key_D:
-        m_yaw -= m_velocity * 100;
+        this->setYaw(m_yaw - m_velocity * 100);
         break;
     case Qt::Key_A:
-        m_yaw += m_velocity * 100;
+        this->setYaw(m_yaw + m_velocity * 100);
         break;
     default:
         break;
