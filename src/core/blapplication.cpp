@@ -1,9 +1,12 @@
+#include "blmaterial.h"
+
 #include <blapplication.h>
 #include <blresourcemanager.h>
 #include <blobjectcamera.h>
 #include <bltexture.h>
 #include <bllogger.h>
 #include <blspectatorcamera.h>
+#include <diffuseshader.h>
 
 #include <QMouseEvent>
 #include <QSurfaceFormat>
@@ -47,8 +50,6 @@ BLApplication::BLApplication(QWindow *parent)
 BLApplication::~BLApplication()
 {
     m_program.release();
-    m_vShader.release();
-    m_fShader.release();
     m_camera.release();
     m_cubeMesh.release();
     m_axisMesh.release();
@@ -66,37 +67,28 @@ void BLApplication::initializeGL()
 
     initializeOpenGLFunctions();
 
-    m_vShader = make_unique<QOpenGLShader>(
-                QOpenGLShader::Vertex);
-    m_fShader = make_unique<QOpenGLShader>(
-                QOpenGLShader::Fragment);
+    auto& rm = ResourceManager::getInstance();
 
-    m_vShader->compileSourceFile("shaders/simple_vertex.vert");
-    m_fShader->compileSourceFile("shaders/simple_fragment.frag");
-
-    if ( !m_vShader->isCompiled() ) {
-        Logger::getInstance() << m_vShader->log().toStdString();
+    // Load shaders and init variables
+    try {
+    m_vShader = rm.get<Shader>("shaders/simple_vertex.vert");
+    m_fShader = rm.get<Shader>("shaders/simple_fragment.frag");
+    } catch(std::string e) { // TODO: exceptions
+        Logger::getInstance() << m_vShader->log() << std::endl;
+        Logger::getInstance() << m_fShader->log() << std::endl;
         exit(1);
     }
-    if ( !m_fShader->isCompiled() ) {
-        Logger::getInstance() << m_fShader->log().toStdString();
-        exit(2);
+
+    try {
+        m_program = make_unique<ShaderProgram>(m_vShader, m_fShader);
+    } catch(std::string e) { // TODO: exceptions
+        exit(1);
     }
 
-    m_program = make_unique<QOpenGLShaderProgram>(this);
-    m_program->addShader(m_vShader.get());
-    m_program->addShader(m_fShader.get());
-
-    m_program->bindAttributeLocation("vPosition", Constants::VERTEX_ATTR_POSITION);
-    m_program->bindAttributeLocation("vColor", Constants::VERTEX_ATTR_COLOR);
-    m_program->bindAttributeLocation("vTexCoords", Constants::VERTEX_ATTR_TEXCOORDS);
-    m_program->bindAttributeLocation("vNormal", Constants::VERTEX_ATTR_NORMAL);
-
-    if ( !m_program->link() ) {
-        Logger::getInstance() << m_vShader->log().toStdString();
-        Logger::getInstance() << m_fShader->log().toStdString();
-        Logger::getInstance() << m_program->log().toStdString();
-        exit(3);
+    try {
+        m_diffuseShader = make_unique<DiffuseShader>();
+    } catch(std::string e) { // TODO: exceptions
+        exit(1);
     }
 
     m_program->bind();
@@ -131,53 +123,52 @@ void BLApplication::paintGL()
     prepareToRender();
 
     m_program->bind();
+    m_program->setPerspectiveMatrix(m_camera->perspective());
+    m_program->setViewMatrix(m_camera->view());
 
-    double r = 10.0;
-
-    m_lightSource->setPosition(m_camera->position());
+    float r = 50.0f;
+    m_lightSource->setPosition({sin(dCoord * 8.0f) * r, 100.0f, cos(dCoord * 8.0f) * r});
     m_lightSource->setColor({1.0f, 1.0f, 1.0f});
 
-    m_program->setUniformValue("vLightPos", m_lightSource->position());
-    m_program->setUniformValue("fLightColor", m_lightSource->color());
+    m_program->setLight(m_lightSource.get());
 
-    /* Monkey mask */
+    /* LAND MODEL */
+    m_program->setModelMatrix(m_landModel->modelMatrix());
+    m_program->setMaterial(m_landModel->material());
+    m_landModel->render();
+
+//    /* PLANE MODEL */
+//    m_planeModel->setScale(dCoord);
+//    m_program->setWorldMatrix(m_camera->perspective() * m_camera->view() * m_planeModel->modelMatrix());
+//    m_planeModel->render();
+
     QMatrix4x4 mvpMatrix;
-    mvpMatrix = m_camera->perspective() * m_camera->view() * mvpMatrix;
 
-    m_program->setUniformValue("mMatrix", mvpMatrix);
-
+    /* BODY MODEL */
+    m_program->setModelMatrix(m_bodyMesh->modelMatrix());
+    m_program->setMaterial(m_bodyMesh->material());
     m_bodyMesh->render();
 
     /* Monkey mask */
-    mvpMatrix.translate(-1.0f, 17.0f, 1.0f);
-    mvpMatrix.scale(1.5f);
-    m_program->setUniformValue("mMatrix", mvpMatrix);
-
+    m_program->setModelMatrix(m_monkeyMesh->modelMatrix());
+    m_program->setMaterial(m_monkeyMesh->material());
     m_monkeyMesh->render();
 
     /* Stall mesh */
-
-    mvpMatrix.setToIdentity();
-    mvpMatrix.translate(0, 0, 10.0f);
-    mvpMatrix.rotate(180.0f, 0, 1.0f, 0);
-    mvpMatrix.scale(4.5f);
-
-    mvpMatrix = m_camera->perspective() * m_camera->view() * mvpMatrix;
-    m_program->setUniformValue("mMatrix", mvpMatrix);
-
+    m_program->setModelMatrix(m_stallMesh->modelMatrix());
+    m_program->setMaterial(m_stallMesh->material());
     m_stallMesh->render();
 
     /* HOUSE MODEL */
-    mvpMatrix.setToIdentity();
-    mvpMatrix.translate(0, 0, -20.0f);
-
-    mvpMatrix = m_camera->perspective() * m_camera->view() * mvpMatrix;
-    m_program->setUniformValue("mMatrix", mvpMatrix);
-
+    m_program->setModelMatrix(m_houseModel->modelMatrix());
+    m_program->setMaterial(m_houseModel->material());
     m_houseModel->render();
 
+    /* AXIS MESH */
     mvpMatrix.setToIdentity();
     mvpMatrix = m_camera->perspective() * m_camera->view() * mvpMatrix;
+
+    mvpMatrix.setToIdentity();
 
     m_axisMesh->bind();
 
@@ -189,6 +180,19 @@ void BLApplication::paintGL()
 
     m_axisMesh->release();
     m_program->release();
+
+    m_diffuseShader->bind();
+
+    /* SKY BOX */
+    glDisable(GL_CULL_FACE);
+
+    m_skyBoxModel->setScale(1000.0f);
+    m_diffuseShader->setPerspectiveMatrix(m_camera->perspective());
+    m_diffuseShader->setViewMatrix(m_camera->view());
+    m_diffuseShader->setModelMatrix(m_skyBoxModel->modelMatrix());
+    m_skyBoxModel->render();
+
+    m_diffuseShader->release();
 
     dCoord += 0.002f;
 
@@ -234,8 +238,27 @@ void BLApplication::loadResources()
     guid = rm.load<Texture>("textures/wood.jpg");
     guid = rm.load<Texture>("textures/logo.jpg");
     guid = rm.load<Texture>("textures/grass_stone.jpg");
+    guid = rm.load<Texture>("textures/wallpaper.bmp");
+    guid = rm.load<Texture>("textures/table_wood.bmp");
+    guid = rm.load<Texture>("textures/brick_damaged.jpg");
+    guid = rm.load<Texture>("textures/sky_box/winter.jpg");
+
+    /* MATERIALS */
+    guid = rm.load<Material>("materials/default.mtl");
 
     /* MODELS */
+    guid = rm.load<Model>("models/cube_textured.obj");
+    m_cubeModel = rm.get<Model>(guid);
+    m_cubeModel->setTexture(rm.get<Texture>("textures/brick_damaged.jpg"));
+
+    guid = rm.load<Model>("models/skybox.obj");
+    m_skyBoxModel = rm.get<Model>(guid);
+    m_skyBoxModel->setTexture(rm.get<Texture>("textures/sky_box/winter.jpg"));
+
+    guid = rm.load<Model>("models/plane.obj");
+    m_planeModel = rm.get<Model>(guid);
+    m_planeModel->setTexture(rm.get<Texture>("textures/logo.jpg"));
+
     guid = rm.load<Model>("models/stall.obj");
     m_stallMesh = rm.get<Model>(guid);
     m_stallMesh->setTexture(rm.get<Texture>("textures/grass_stone.jpg"));
@@ -248,7 +271,11 @@ void BLApplication::loadResources()
 
     guid = rm.load<Model>("models/house_triangulated.obj");
     m_houseModel = rm.get<Model>(guid);
-    m_houseModel->setTexture(rm.get<Texture>("textures/wood.jpg"));
+    m_houseModel->setTexture(rm.get<Texture>("textures/wallpaper.bmp"));
+
+    guid = rm.load<Model>("models/land.obj");
+    m_landModel = rm.get<Model>(guid);
+    m_landModel->setTexture(rm.get<Texture>("textures/grass2.jpg"));
 }
 
 void BLApplication::prepareToRender()
