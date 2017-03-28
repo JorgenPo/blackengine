@@ -1,6 +1,7 @@
 #include "blmesh.h"
 
-#include "blobjparser.h"
+#include <src/utils/blobjparser.h>
+#include <src/core/blconstants.h>
 
 #include <iostream>
 
@@ -12,7 +13,8 @@ Mesh::Mesh()
       m_positionVBO(QOpenGLBuffer::VertexBuffer),
       m_indexVBO(QOpenGLBuffer::IndexBuffer),
       m_textureVBO(QOpenGLBuffer::VertexBuffer),
-      m_normalVBO(QOpenGLBuffer::VertexBuffer)
+      m_normalVBO(QOpenGLBuffer::VertexBuffer),
+      m_program()
 {
     if ( !m_vao.create() ) {
         throw NotSupportedException("Vertex Array Objects");
@@ -25,10 +27,6 @@ Mesh::Mesh()
     }
 
     if ( !m_indexVBO.create() ) {
-        throw NotSupportedException("OpenGL buffers");
-    }
-
-    if ( !m_colorVBO.create() ) {
         throw NotSupportedException("OpenGL buffers");
     }
 
@@ -96,25 +94,6 @@ void Mesh::setIndexData(const std::vector<GLuint> &index)
     m_vao.release();
 }
 
-void Mesh::setColorData(const std::vector<GLclampf> &color)
-{
-    m_vao.bind();
-
-    if ( !m_colorVBO.bind() ) {
-        throw NotSupportedException("Vertex Buffer");
-    }
-
-    m_colorVBO.setUsagePattern(QOpenGLBuffer::StaticDraw);
-    m_colorVBO.allocate(color.data(),
-                        color.size() * sizeof(GLclampf));
-
-    glEnableVertexAttribArray(Constants::VERTEX_ATTR_COLOR);
-    glVertexAttribPointer(Constants::VERTEX_ATTR_COLOR, 3, GL_FLOAT, GL_TRUE, 0, 0);
-
-    m_colorVBO.release();
-    m_vao.release();
-}
-
 void Mesh::setTextureCoords(const std::vector<GLclampf> &coords)
 {
     m_vao.bind();
@@ -174,36 +153,8 @@ Mesh::~Mesh()
     m_vao.destroy();
     m_positionVBO.destroy();
     m_indexVBO.destroy();
-    m_colorVBO.destroy();
     m_textureVBO.destroy();
     m_normalVBO.destroy();
 }
 
-// LOADING MESH FROM FILE
-void Mesh::load(string file)
-{
-    OBJParser parser;
-
-    try {
-        parser.parseObj(file);
-
-        this->setPositionData(parser.positions());
-
-        if ( parser.indicesCount() != 0 ) {
-            this->setIndexData(parser.indices());
-        }
-
-        if ( parser.hasTexture() ) {
-            this->setTextureCoords(parser.texCoordinates());
-        }
-
-        this->setNormalData(parser.normals());
-
-    } catch(std::string e) {
-        std::cerr << "Failed to load a mesh from " << file << "!\n";
-        std::cerr << "Error: " << e << '\n';
-        //throw exception;
-    }
-}
-
-}
+} // end of black namespace
