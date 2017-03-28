@@ -60,6 +60,8 @@ void MtlParser::parse(std::string file)
 
     std::string matName;
     std::string type;
+
+    std::streampos oldpos;
     float value;
     while ( m_file >> line ) {
         while ( line != "newmtl" ) { }
@@ -73,9 +75,10 @@ void MtlParser::parse(std::string file)
         // Material name
         m_file >> matName;
 
+        oldpos = m_file.tellg();
         while ( m_file >> type ) {
             if ( type == "newmtl" ) { // Continue with next material
-                m_file.unget();
+                m_file.seekg(oldpos);  // TODO: OPTIMIZE
                 break;
             }
 
@@ -90,6 +93,8 @@ void MtlParser::parse(std::string file)
             } else if ( type == "Ks" ) {
                 spectacular = getVector();
             }
+
+            oldpos = m_file.tellg();
         }
 
         m_materials[matName] = Material(ambient, diffuse, spectacular, shineFactor);

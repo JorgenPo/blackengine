@@ -14,6 +14,9 @@ namespace black {
  * Parses a .mtl files. File can contain one or more
  * materials.
  *
+ * @version 1.0.1 28.03.2017
+ * Fix a bug when reading multiple mtl from one file
+ *
  * @version 1.0 23.03.2017
  * Working version. Can parse all materials in .mtl file.
  *
