@@ -1,5 +1,7 @@
 #include "bltexture.h"
 
+#include <src/utils/bllogger.h>
+
 #include <QImage>
 #include <QDebug>
 
@@ -12,11 +14,11 @@ Texture::Texture()
 
 void Texture::load(string file)
 {
-    qDebug() << "loading" << file.c_str();
+    Logger::getInstance() << "Loading " << file << " texture..." << std::endl;
 
     m_texture = std::make_unique<QOpenGLTexture>(QImage(QString(file.c_str())).mirrored());
 
-    qDebug() << "loaded: " << m_texture->width() << "x" << m_texture->height();
+     Logger::getInstance() << " Done! " << std::endl;
 }
 
 Texture::~Texture()
