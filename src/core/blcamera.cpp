@@ -8,8 +8,8 @@ namespace black {
 
 Camera::Camera()
     : m_perspective(), m_fov(45.0f), m_ratio(Constants::ASPECT_RATIO),
-      m_near(0.1f), m_far(1000.0f), m_view(), m_position(0, 0, 3.0f),
-      m_lookAt(0, 0, -1.0f), m_upVector(0, 1.0f, 0),
+      m_near(0.1f), m_far(5000.0f), m_view(), m_position(0, 0, 3.0f),
+      m_lookAt(0, 0, 1.0f), m_upVector(0, 1.0f, 0),
       m_needUpdateView(), m_needUpdatePerspective()
 {
     setPerspective(m_fov, m_ratio, m_near, m_far);
@@ -94,9 +94,13 @@ void Camera::moveBack(float dist)
 
 void Camera::setRotate(const QVector3D &rotation)
 {
-    m_pitch = qMin(rotation.x(), m_pitchConstraint);
-    m_yaw   = qMin(rotation.y(), m_yawConstraint);
-    m_roll  = qMin(rotation.z(), m_rollConstraint);
+    // TODO: constraints
+    //m_pitch = std::min( std::max( m_pitch, -m_pitchConstraint ), m_pitchConstraint );
+    //m_yaw = std::min( std::max( m_yaw, -m_yawConstraint ), m_yawConstraint );
+    //m_roll = std::min( std::max( m_roll, -m_rollConstraint ), m_rollConstraint );
+    m_pitch = rotation.x();
+    m_yaw = rotation.y();
+    m_roll = rotation.z();
     updateLookAt();
 }
 
@@ -120,9 +124,9 @@ void Camera::handleWheel(QWheelEvent *e)
 
 void Camera::updateLookAt()
 {
-    float z = qCos(qDegreesToRadians(m_pitch)) * qCos(qDegreesToRadians(m_yaw));
-    float y = -qSin(qDegreesToRadians(m_pitch));
-    float x = -qCos(qDegreesToRadians(m_pitch)) * qSin(qDegreesToRadians(m_yaw));
+    float z = qCos(qDegreesToRadians(-m_pitch)) * qCos(qDegreesToRadians(m_yaw));
+    float y = -qSin(qDegreesToRadians(-m_pitch));
+    float x = -qCos(qDegreesToRadians(-m_pitch)) * qSin(qDegreesToRadians(m_yaw));
 
     m_lookAt = { x, y, z };
     m_lookAt.normalize();

@@ -4,12 +4,18 @@
 #include <QMatrix4x4>
 #include <QMouseEvent>
 
+#include <algorithm>
+
 namespace black {
 
 /**
  * @brief The Camera class is
  *  base class for all camera
  *  types in engine.
+ *
+ * @version 1.1 28.03.2017
+ * Changed algorythm of rotations (pitch, yaw, roll).
+ * Now are using trigonometry rules. Working well.
  *
  * @version 1.0 22.03.2017
  * Working camera.
