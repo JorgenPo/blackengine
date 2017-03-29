@@ -85,7 +85,7 @@ void MtlParser::parse(std::string file)
             if ( type == "Ns" ) {
                 m_file >> value;
 
-                shineFactor = value / 1000.0f;
+                shineFactor = value;
             } else if ( type == "Ka" ) {
                 ambient = getVector();
             } else if ( type == "Kd" ) {
