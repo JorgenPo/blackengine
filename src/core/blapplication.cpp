@@ -40,7 +40,7 @@ BLApplication::BLApplication(QWindow *parent)
     this->setFormat(format);
 
     m_specCamera = make_unique<SpectatorCamera>();
-    m_objCamera = make_unique<ObjectCamera>();
+    m_objCamera = make_unique<SpectatorCamera>();
     m_currentCamera = m_specCamera.get();
     m_timer = make_unique<Timer>();
 
@@ -58,10 +58,20 @@ BLApplication::~BLApplication()
     m_timer.release();
     m_lightSource.release();
 
+    /* Models */
     m_stallMesh.reset();
     m_bodyMesh.reset();
     m_monkeyMesh.reset();
+    m_houseModel.reset();
+    m_landModel.reset();
+    m_cubeMesh.reset();
+    m_planeModel.reset();
+    m_skyBoxModel.reset();
+    m_flyingIslandModel.reset();
+
     m_brickTexture.reset();
+
+
 }
 
 void BLApplication::initializeGL()
@@ -73,8 +83,8 @@ void BLApplication::initializeGL()
 
     // Load shaders and init variables
     try {
-    m_vShader = rm.get<Shader>("shaders/simple_vertex.vert");
-    m_fShader = rm.get<Shader>("shaders/simple_fragment.frag");
+        m_vShader = rm.get<Shader>("shaders/simple_vertex.vert");
+        m_fShader = rm.get<Shader>("shaders/simple_fragment.frag");
     } catch(std::string e) { // TODO: exceptions
         Logger::getInstance() << m_vShader->log() << std::endl;
         Logger::getInstance() << m_fShader->log() << std::endl;
@@ -125,19 +135,25 @@ void BLApplication::paintGL()
     prepareToRender();
 
     m_program->bind();
-    m_program->setPerspectiveMatrix(m_currentCamera->perspective());
-    m_program->setViewMatrix(m_currentCamera->view());
+    m_program->setCamera(m_currentCamera);
 
     float r = 50.0f;
     m_lightSource->setPosition({sin(dCoord * 8.0f) * r, 100.0f, cos(dCoord * 8.0f) * r});
-    m_lightSource->setColor({1.0f, 1.0f, 1.0f});
 
     m_program->setLight(m_lightSource.get());
 
     /* LAND MODEL */
+    m_landModel->setPositionY(-15.0f);
     m_program->setModelMatrix(m_landModel->modelMatrix());
     m_program->setMaterial(m_landModel->material());
     m_landModel->render();
+
+    glCullFace(GL_FRONT);
+    m_flyingIslandModel->setPosition(450.0f, -20.0f, 80.0f);
+    m_program->setModelMatrix(m_flyingIslandModel->modelMatrix());
+    m_program->setMaterial(m_flyingIslandModel->material());
+    m_flyingIslandModel->render();
+    glCullFace(GL_BACK);
 
 //    /* PLANE MODEL */
 //    m_planeModel->setScale(dCoord);
@@ -189,8 +205,7 @@ void BLApplication::paintGL()
     glDisable(GL_CULL_FACE);
 
     m_skyBoxModel->setScale(1000.0f);
-    m_diffuseShader->setPerspectiveMatrix(m_specCamera->perspective());
-    m_diffuseShader->setViewMatrix(m_specCamera->view());
+    m_diffuseShader->setCamera(m_currentCamera);
     m_diffuseShader->setModelMatrix(m_skyBoxModel->modelMatrix());
     m_skyBoxModel->render();
 
@@ -219,10 +234,7 @@ void BLApplication::initModels()
        0.0f, 0.0f, 1.0f,
     });
 
-    std::array<float, 3> position = { 0.0f, 10.0f, 0.0f };
-    std::array<float, 3> color = { 1.0f, 0.2f, 0.2f };
-
-    m_lightSource = make_unique<Light>(position, color);
+    m_lightSource = make_unique<Light>();
 }
 
 void BLApplication::loadResources()
@@ -243,7 +255,8 @@ void BLApplication::loadResources()
     guid = rm.load<Texture>("textures/wallpaper.bmp");
     guid = rm.load<Texture>("textures/table_wood.bmp");
     guid = rm.load<Texture>("textures/brick_damaged.jpg");
-    guid = rm.load<Texture>("textures/sky_box/winter.jpg");
+    guid = rm.load<Texture>("textures/sky_box/stormyday.jpg");
+    guid = rm.load<Texture>("textures/sand.jpg");
 
     /* MATERIALS */
     guid = rm.load<Material>("materials/default.mtl");
@@ -255,7 +268,7 @@ void BLApplication::loadResources()
 
     guid = rm.load<Model>("models/skybox.obj");
     m_skyBoxModel = rm.get<Model>(guid);
-    m_skyBoxModel->setTexture(rm.get<Texture>("textures/sky_box/winter.jpg"));
+    m_skyBoxModel->setTexture(rm.get<Texture>("textures/sky_box/stormyday.jpg"));
 
     guid = rm.load<Model>("models/plane.obj");
     m_planeModel = rm.get<Model>(guid);
@@ -277,7 +290,11 @@ void BLApplication::loadResources()
 
     guid = rm.load<Model>("models/land.obj");
     m_landModel = rm.get<Model>(guid);
-    m_landModel->setTexture(rm.get<Texture>("textures/grass2.jpg"));
+    m_landModel->setTexture(rm.get<Texture>("textures/sand.jpg"));
+
+    guid = rm.load<Model>("models/flying_island.obj");
+    m_flyingIslandModel = rm.get<Model>(guid);
+    m_flyingIslandModel->setTexture(rm.get<Texture>("textures/sand.jpg"));
 }
 
 void BLApplication::prepareToRender()

@@ -71,6 +71,7 @@ private:
     std::shared_ptr<black::Model> m_cubeModel;
     std::shared_ptr<black::Model> m_planeModel;
     std::shared_ptr<black::Model> m_skyBoxModel;
+    std::shared_ptr<black::Model> m_flyingIslandModel;
 
     std::shared_ptr<black::Texture> m_brickTexture;
 
