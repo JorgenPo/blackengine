@@ -1,6 +1,8 @@
 #ifndef BLSHADERPROGRAM_H
 #define BLSHADERPROGRAM_H
 
+#include "blcamera.h"
+
 #include <src/core/blshader.h>
 #include <src/core/blmaterial.h>
 
@@ -49,13 +51,15 @@ public:
     virtual bool supportBuffers() const { return true; }
     virtual bool supportLight() const { return true; }
     virtual bool supportMaterials() const { return true; }
-    virtual bool supportMatrices() const { return true; }
+    virtual bool supportModelMatrix() const { return true; }
+    virtual bool supportCameraPosition() const { return true; }
+    virtual bool supportCamera() const { return true; }
 
     // Can be overriden, but by default
     // do this work by self
     virtual void setModelMatrix(const QMatrix4x4& model);
-    virtual void setViewMatrix(const QMatrix4x4& view);
-    virtual void setPerspectiveMatrix(const QMatrix4x4& persective);
+
+    virtual void setCamera(const Camera *camera);
 
     virtual void setLight(const Light* light);
     virtual void setMaterial(std::shared_ptr<Material> material);

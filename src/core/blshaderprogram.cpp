@@ -53,39 +53,39 @@ bool ShaderProgram::link()
 
 void ShaderProgram::setModelMatrix(const QMatrix4x4 &model)
 {
-    if ( !supportMatrices() ) {
+    if ( !supportModelMatrix() ) {
         return;
     }
 
     this->setUniformValue("mModel", model);
 }
 
-void ShaderProgram::setViewMatrix(const QMatrix4x4 &view)
+void ShaderProgram::setCamera(const Camera* camera)
 {
-    if ( !supportMatrices() ) {
+    if ( !supportCamera() ) {
         return;
     }
 
-    this->setUniformValue("mView", view);
-}
+    setUniformValue("mView", camera->view());
+    setUniformValue("mPerspective", camera->perspective());
 
-void ShaderProgram::setPerspectiveMatrix(const QMatrix4x4 &persective)
-{
-    if ( !supportMatrices() ) {
+    if ( !supportCameraPosition() ) {
         return;
     }
 
-    this->setUniformValue("mPerspective", persective);
+    this->setUniformValue("cameraPos", camera->position());
 }
 
-void ShaderProgram::setLight(const Light *light)
+void ShaderProgram::setLight(const Light* light)
 {
     if ( !supportLight() ) {
         return;
     }
 
-    this->setUniformValue("vLightPos", light->position());
-    this->setUniformValue("fLightColor", light->color());
+    this->setUniformValue("lightPosition", light->position());
+    this->setUniformValue("light.ambient", light->ambient());
+    this->setUniformValue("light.diffuse", light->diffuse());
+    this->setUniformValue("light.spectacular", light->spectacular());
 }
 
 void ShaderProgram::setMaterial(std::shared_ptr<Material> material)
@@ -94,9 +94,10 @@ void ShaderProgram::setMaterial(std::shared_ptr<Material> material)
         return;
     }
 
-    this->setUniformValue("matAmbient", material->ambient());
-    this->setUniformValue("matDiffuse", material->diffuse());
-    this->setUniformValue("matSpectacular", material->spectacular());
+    this->setUniformValue("material.ambient", material->ambient());
+    this->setUniformValue("material.diffuse", material->diffuse());
+    this->setUniformValue("material.spectacular", material->spectacular());
+    this->setUniformValue("material.shineFactor", material->shineFactor());
 }
 
 std::string ShaderProgram::log() const
