@@ -77,8 +77,10 @@ public:
     float nearPlane() const { return m_near; }
     float farPlane() const { return m_far; }
 
-    QMatrix4x4 perspective();
-    QMatrix4x4 view();
+    const QMatrix4x4& perspective();
+    const QMatrix4x4& view();
+    const QMatrix4x4& perspective() const;
+    const QMatrix4x4& view() const;
 
     QVector3D position() const { return m_position; }
     QVector3D lookAt() const { return m_lookAt; }

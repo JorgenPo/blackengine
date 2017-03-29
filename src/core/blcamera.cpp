@@ -188,7 +188,7 @@ void Camera::setRollConstraint(float max)
     m_rollConstraint = max;
 }
 
-QMatrix4x4 Camera::perspective()
+const QMatrix4x4 &Camera::perspective()
 {
     if ( m_needUpdatePerspective ) {
         this->setPerspective(m_fov, m_ratio, m_near, m_far);
@@ -198,13 +198,23 @@ QMatrix4x4 Camera::perspective()
     return m_perspective;
 }
 
-QMatrix4x4 Camera::view()
+const QMatrix4x4 &Camera::view()
 {
     if ( m_needUpdateView ) {
         this->setView(m_position, m_lookAt, m_upVector);
         m_needUpdateView = false;
     }
 
+    return m_view;
+}
+
+const QMatrix4x4& Camera::perspective() const
+{
+    return m_perspective;
+}
+
+const QMatrix4x4& Camera::view() const
+{
     return m_view;
 }
 
