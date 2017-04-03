@@ -44,10 +44,12 @@ public:
 private:
     // Resource interface
     void load(string file) override;
+public:
+    std::string defaultName() override { return std::string("default.jpg"); }
+    std::string folderName()  override { return std::string("textures");    }
 
 private:
     pointer m_texture;
-
 };
 
 }

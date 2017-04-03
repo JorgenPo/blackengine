@@ -14,7 +14,8 @@ namespace black {
  * that wants to be loaded must implement it's interface.
  *
  * @author george popoff <popoff96@live.com>
- * @date 12.03.2017
+ * @version 1.0.5 02.04.2017
+ *
  * @version 1.0 Working version
  *
  * @abstract
@@ -29,6 +30,8 @@ public:
      * @param file file path string
      */
     virtual void load(string file) = 0;
+    virtual std::string defaultName() = 0;
+    virtual std::string folderName() = 0;
 
     virtual ~Resource() {}
 };

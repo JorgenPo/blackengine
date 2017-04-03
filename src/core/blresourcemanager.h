@@ -6,10 +6,16 @@
 #include <map>
 #include <string>
 #include <memory>
+#include <QFileInfo>
 
 #include "blconstants.h"
+#include <blfileexceptions.h>
+#include <bllogger.h>
 
 namespace black {
+
+/* Exceptions forward. See bellow. */
+class ResourceLoadException;
 
 /**
  * @brief The ResourceManager class
@@ -23,6 +29,7 @@ namespace black {
  * directory path called guid.
  *
  * @author george popoff <popoff96@live.com>
+ * @version 1.1.5 02.04.2017
  *
  * @version 1.0 12.03.2017
  *  Working version
@@ -38,8 +45,6 @@ public:
 
 public:
     static ResourceManager& getInstance() {
-        //TODO: change this hardcoded constant to normal
-        // constant from Constants::
         static ResourceManager instance(Constants::RES_PATH);
         return instance;
     }
@@ -93,11 +98,31 @@ string ResourceManager::load(std::string path, bool relative)
     // cause when loading nested resources there are
     // problems with relative path
     if ( relative ) {
-        guid = path;
         path = m_resourcesPath + path;
     }
 
-    res->load(path);
+    // Cut absolute path
+    size_t resourcePos = path.find("resources");
+    if ( resourcePos != std::string::npos ) {
+        path = path.substr(resourcePos);
+        guid = path.substr(10); // minus resources/ string
+    }
+
+    try {
+        if ( path.empty() ) {
+            throw NoSuchFileException(" ");
+        }
+
+        res->load(path);
+    } catch(AbstractException &e) {
+        try {
+            // Force loading
+            this->get<T>(res->folderName() + "/" + res->defaultName());
+            return res->folderName() + "/" + res->defaultName();
+        } catch(...) {
+            throw ResourceLoadException(guid, e.message());
+        }
+    }
 
     m_resources[path] = res;
 
@@ -113,13 +138,36 @@ std::shared_ptr<T> ResourceManager::get(guid_t guid, bool relative)
     }
 
     try {
+        if ( guid.empty() ) {
+            // Loading default resource
+            guid = m_resourcesPath + load<T>(guid, false);
+        }
+
         m_resources.at(guid);
-    } catch (std::out_of_range e) {
-        load<T>(guid, false); // Full path already
+    } catch (...) {
+        try {
+            guid = m_resourcesPath + load<T>(guid, false); // Full path already
+        } catch(ResourceLoadException &e) {
+            // Haven't an idea what to do...
+            Logger::getInstance("error") << "CAN'T LOAD RESOURCE " << guid << "! AND NO DEFAULT PROVIDEN!" << std::endl;
+            throw e;
+        }
     }
 
     return std::dynamic_pointer_cast<T>(m_resources[guid]);
 }
 
+class ResourceLoadException : AbstractException {
+
+public:
+    ResourceLoadException(ResourceManager::guid_t guid, std::string message);
+
+    // AbstractException interface
+    std::__cxx11::string message() const throw() override;
+
+private:
+    std::string m_guid;
+    std::string m_message;
+};
 }
 #endif // BLRESOURCEMANAGER_H

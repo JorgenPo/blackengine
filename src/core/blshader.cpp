@@ -43,7 +43,7 @@ QOpenGLShader *Shader::shader()
 
 void Shader::load(std::string file)
 {
-    Logger::getInstance() << "Loading " << file << " shader..." << std::endl;
+    Logger::getInstance() << "Loading " << file << " shader...";
 
     size_t dotPos = file.find_last_of(".");
 

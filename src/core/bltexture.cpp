@@ -14,11 +14,11 @@ Texture::Texture()
 
 void Texture::load(string file)
 {
-    Logger::getInstance() << "Loading " << file << " texture..." << std::endl;
+    Logger::getInstance() << "Loading " << file << " texture...";
 
     m_texture = std::make_unique<QOpenGLTexture>(QImage(QString(file.c_str())).mirrored());
 
-     Logger::getInstance() << " Done! " << std::endl;
+    Logger::getInstance() << " Done! " << std::endl;
 }
 
 Texture::~Texture()

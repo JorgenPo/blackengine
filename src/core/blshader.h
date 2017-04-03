@@ -45,6 +45,9 @@ protected:
     // Resource interface
 private:
     void load(std::string file) override;
+public:
+    std::string defaultName() override { return std::string("default.vert"); }
+    std::string folderName()  override { return std::string("shaders");      }
 
 private:
     QOpenGLShader* m_shader;
