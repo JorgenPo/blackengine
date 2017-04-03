@@ -12,10 +12,9 @@ namespace black {
  *
  * @brief The Logger class
  *
- * @version 1.0 First version
+ * @version 1.1 02.04.2017
  *
  * @author george popoff <popoff96@live.com>
- * @date 17.03.2017
  */
 class Logger {
 
@@ -37,13 +36,15 @@ public:
         static Logger logger;
 
         if ( type == "debug" ) {
+            *logger.m_debugStream << std::endl;
             return *logger.m_debugStream;
         } else if ( type == "error" ) {
+            *logger.m_errorStream << std::endl;
             return *logger.m_errorStream;
         } else if ( type == "info" ) {
-            return *logger.m_infoStream;
+            return *logger.m_infoStream << std::endl;
         } else {
-            return *logger.m_logStream;
+            return *logger.m_logStream << std::endl;
         }
     }
     /**
