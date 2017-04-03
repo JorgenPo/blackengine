@@ -12,6 +12,7 @@ out vec4 finColor;
 
 /* Textures */
 uniform sampler2D textureSampler;
+uniform bool enableTextures;
 
 /* Light */
 struct Light {
@@ -50,6 +51,12 @@ void main(void)
     float spec = pow(max(dot(unitToCamera, reflectedRay), 0.0), material.shineFactor);
     vec3 spectacular = light.spectacular * (material.spectacular * spec);
 
+    vec4 color = vec4(1.0);
+
     /* Final color */
-    finColor = vec4(ambient + diffuse + spectacular, 1.0) * texture(textureSampler, fTexCoords);
+    if ( enableTextures ) {
+        color = texture(textureSampler, fTexCoords);
+    }
+
+    finColor = vec4(ambient + diffuse + spectacular, 1.0) * color;
 }

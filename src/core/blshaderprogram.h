@@ -23,6 +23,14 @@ namespace black {
  * and can be seen like a ideal, most powerful shader program.
  * All children of this shader can disable some features.
  *
+ * @version 1.1.1 4.03.2017
+ * Add oportunity to turn on and off textures in shaders.
+ *
+ * @version 1.1 29.03.2017
+ * Move to structures of light and material.
+ * Make possible to attach camera to shader
+ * (view and proj. matrices and position)
+ *
  * @version 1.0 27.03.2017
  * First working version.
  *
@@ -64,6 +72,11 @@ public:
     virtual void setLight(const Light* light);
     virtual void setMaterial(std::shared_ptr<Material> material);
 
+    virtual void enableTextures();
+    virtual void disableTextures();
+
+    virtual bool bind();
+
     /* QOpenGLShader */
     virtual std::string log() const;
 
@@ -72,6 +85,7 @@ public:
 
 private:
     virtual void bindLocations();
+    virtual void defaultUniforms();
 
 protected:
     std::shared_ptr<Shader> m_vertex;

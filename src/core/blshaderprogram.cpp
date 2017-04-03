@@ -9,7 +9,6 @@ ShaderProgram::ShaderProgram()
     : QOpenGLShaderProgram(),
       m_vertex(), m_fragment()
 {
-
 }
 
 ShaderProgram::ShaderProgram(std::shared_ptr<Shader> vertex,
@@ -100,6 +99,32 @@ void ShaderProgram::setMaterial(std::shared_ptr<Material> material)
     this->setUniformValue("material.shineFactor", material->shineFactor());
 }
 
+void ShaderProgram::enableTextures()
+{
+    if ( !this->supportTextures() ) {
+        return;
+    }
+
+    this->setUniformValue("enableTextures", true);
+}
+
+void ShaderProgram::disableTextures()
+{
+    if ( !this->supportTextures() ) {
+        return;
+    }
+
+    this->setUniformValue("enableTextures", false);
+}
+
+bool ShaderProgram::bind()
+{
+    bool res = QOpenGLShaderProgram::bind();
+    defaultUniforms();
+
+    return res;
+}
+
 std::string ShaderProgram::log() const
 {
     return QOpenGLShaderProgram::log().toStdString();
@@ -113,6 +138,11 @@ void ShaderProgram::bindLocations()
     this->bindAttributeLocation("vPosition", Constants::VERTEX_ATTR_POSITION);
     this->bindAttributeLocation("vNormal", Constants::VERTEX_ATTR_NORMAL);
     this->bindAttributeLocation("vTexCoords", Constants::VERTEX_ATTR_TEXCOORDS);
+}
+
+void ShaderProgram::defaultUniforms()
+{
+    this->enableTextures();
 }
 
 std::shared_ptr<Shader> ShaderProgram::fragment() const
