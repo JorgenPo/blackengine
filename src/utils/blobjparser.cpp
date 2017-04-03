@@ -1,6 +1,6 @@
 #include "blobjparser.h"
 
-#include <exception>
+#include <blfileexceptions.h>
 #include <iostream>
 
 namespace black {
@@ -29,10 +29,7 @@ void OBJParser::parse(std::string path)
 {
     m_file.open(path);
     if ( !m_file.is_open() ) {
-        std::cerr << "Failed to load model " << path << ": file not found!" << '\n';
-
-        //TODO: exceptions
-        throw "Bad file";
+        throw NoSuchFileException(path);
     }
 
     std::string line;
@@ -44,10 +41,7 @@ void OBJParser::parse(std::string path)
     getline(m_file, header2); // Second header line
 
     if ( header1.find("OBJ") == std::string::npos ) {
-        std::cerr << "Failed to load model " << path << ": wrong obj file!" << '\n';
-
-        //TODO: exceptions
-        throw "Bad file";
+        throw WrongFileException(path, ".obj");
     }
 
     std::string type; // Type of a data (v for vertices, vn for normals and so on)
@@ -56,8 +50,7 @@ void OBJParser::parse(std::string path)
     try {
         while (readVertex()) {}
     } catch(std::exception &e) {
-        std::cerr << "Failed to load model " << path << ": " <<  e.what() << '\n';
-        throw e;
+        throw ParseException(path, e.what());
     }
 
     // Sorting data
@@ -201,7 +194,6 @@ bool OBJParser::readFace()
             break;
         }
 
-        // TODO: remove this kostyl
         if ( group == "f" || group == "usemtl" ) {
             m_file.unget();
             break;

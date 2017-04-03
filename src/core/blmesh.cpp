@@ -147,9 +147,6 @@ void Mesh::release()
 
 Mesh::~Mesh()
 {
-    // Destoy vao, release data
-    // TODO: maybe remove this? destructor of Qt object
-    //  do this.
     m_vao.destroy();
     m_positionVBO.destroy();
     m_indexVBO.destroy();

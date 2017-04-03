@@ -3,7 +3,6 @@
 
 namespace black {
 
-// TODO: REMOVE HARDCODED WIDTH / HEIGHT
 ObjectCamera::ObjectCamera()
     : Camera(),
       m_velocity(0.05f)
