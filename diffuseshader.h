@@ -15,7 +15,7 @@ public:
     bool supportBuffers() const override { return false; }
     bool supportLight() const override  { return false; }
     bool supportMaterials() const override { return false; }
-    bool supportMatrices() const override { return true; }
+    bool supportCamera() const override { return true; }
 };
 
 #endif // DIFFUSESHADER_H

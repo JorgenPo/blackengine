@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
     QApplication::setOverrideCursor(Qt::BlankCursor);
 
     BLApplication application;
-    application.show();
+    application.showFullScreen();
 
     return a.exec();
 }

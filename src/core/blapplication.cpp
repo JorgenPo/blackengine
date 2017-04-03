@@ -162,6 +162,8 @@ void BLApplication::paintGL()
 
     QMatrix4x4 mvpMatrix;
 
+    m_program->disableTextures();
+
     /* BODY MODEL */
     m_program->setModelMatrix(m_bodyMesh->modelMatrix());
     m_program->setMaterial(m_bodyMesh->material());
@@ -172,15 +174,17 @@ void BLApplication::paintGL()
     m_program->setMaterial(m_monkeyMesh->material());
     m_monkeyMesh->render();
 
+    /* HOUSE MODEL */
+    m_program->setModelMatrix(m_houseModel->modelMatrix());
+    m_program->setMaterial(m_houseModel->material());
+    m_houseModel->render();
+
     /* Stall mesh */
     m_program->setModelMatrix(m_stallMesh->modelMatrix());
     m_program->setMaterial(m_stallMesh->material());
     m_stallMesh->render();
 
-    /* HOUSE MODEL */
-    m_program->setModelMatrix(m_houseModel->modelMatrix());
-    m_program->setMaterial(m_houseModel->material());
-    m_houseModel->render();
+    m_program->enableTextures();
 
     /* AXIS MESH */
     mvpMatrix.setToIdentity();
@@ -239,24 +243,10 @@ void BLApplication::initModels()
 
 void BLApplication::loadResources()
 {
-    // TODO: maybe Separate loading and init models
-
     auto& rm = ResourceManager::getInstance();
 
     /* TEXTURES */
     auto guid = rm.load<Texture>("textures/default.jpg");
-
-    guid = rm.load<Texture>("textures/bricks_xxl.jpg");
-    m_brickTexture = rm.get<Texture>(guid);
-
-    guid = rm.load<Texture>("textures/wood.jpg");
-    guid = rm.load<Texture>("textures/logo.jpg");
-    guid = rm.load<Texture>("textures/grass_stone.jpg");
-    guid = rm.load<Texture>("textures/wallpaper.bmp");
-    guid = rm.load<Texture>("textures/table_wood.bmp");
-    guid = rm.load<Texture>("textures/brick_damaged.jpg");
-    guid = rm.load<Texture>("textures/sky_box/stormyday.jpg");
-    guid = rm.load<Texture>("textures/sand.jpg");
 
     /* MATERIALS */
     guid = rm.load<Material>("materials/default.mtl");
@@ -264,19 +254,15 @@ void BLApplication::loadResources()
     /* MODELS */
     guid = rm.load<Model>("models/cube_textured.obj");
     m_cubeModel = rm.get<Model>(guid);
-    m_cubeModel->setTexture(rm.get<Texture>("textures/brick_damaged.jpg"));
 
     guid = rm.load<Model>("models/skybox.obj");
     m_skyBoxModel = rm.get<Model>(guid);
-    m_skyBoxModel->setTexture(rm.get<Texture>("textures/sky_box/stormyday.jpg"));
 
     guid = rm.load<Model>("models/plane.obj");
     m_planeModel = rm.get<Model>(guid);
-    m_planeModel->setTexture(rm.get<Texture>("textures/logo.jpg"));
 
     guid = rm.load<Model>("models/stall.obj");
     m_stallMesh = rm.get<Model>(guid);
-    m_stallMesh->setTexture(rm.get<Texture>("textures/grass_stone.jpg"));
 
     guid = rm.load<Model>("models/body_triangulated.obj");
     m_bodyMesh = rm.get<Model>(guid);
@@ -286,15 +272,12 @@ void BLApplication::loadResources()
 
     guid = rm.load<Model>("models/house_triangulated.obj");
     m_houseModel = rm.get<Model>(guid);
-    m_houseModel->setTexture(rm.get<Texture>("textures/wallpaper.bmp"));
 
     guid = rm.load<Model>("models/land.obj");
     m_landModel = rm.get<Model>(guid);
-    m_landModel->setTexture(rm.get<Texture>("textures/sand.jpg"));
 
     guid = rm.load<Model>("models/flying_island.obj");
     m_flyingIslandModel = rm.get<Model>(guid);
-    m_flyingIslandModel->setTexture(rm.get<Texture>("textures/sand.jpg"));
 }
 
 void BLApplication::prepareToRender()
