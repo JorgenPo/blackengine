@@ -34,32 +34,11 @@ public:
     BadParameterException(std::string paramName, std::string functionName);
 
     // AbstractException interface
-    virtual std::string message() const override;
+    virtual std::string message() const throw() override;
 
 private:
     std::string m_param;
     std::string m_function;
-};
-
-/**
- * @brief The WrongFileException class
- * This exception is saying that a file seemed to
- * have a wrong format.
- *
- * @author george popoff 2.04.2017
- * @version 1.0
- */
-class WrongFileException : public AbstractException
-{
-public:
-    WrongFileException(std::string file, std::string desiredFormatName);
-
-    // AbstractException interface
-    virtual std::string message() const override;
-
-private:
-    std::string m_file;
-    std::string m_desiredFormat;
 };
 
 /**
@@ -75,7 +54,7 @@ class InternalException : public AbstractException
 {
 public:
     // AbstractException interface
-    virtual std::string message() const override;
+    virtual std::string message() const throw() override;
 };
 
 
