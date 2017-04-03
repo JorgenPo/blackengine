@@ -7,17 +7,19 @@ namespace black {
 
 Material::Material()
     : m_ambient(), m_diffuse(), m_spectacular(),
-      m_shineFactor(0.5)
+      m_shineFactor(0.5), m_texture()
 {
 
 }
 
-Material::Material(const QVector3D &ambient,
+Material::Material(const std::shared_ptr<Texture> &texture,
+                   const QVector3D &ambient,
                    const QVector3D &diffuse,
                    const QVector3D &spectacular,
                    float shineFactor)
     : m_ambient(ambient), m_diffuse(diffuse),
-      m_spectacular(spectacular), m_shineFactor(shineFactor)
+      m_spectacular(spectacular), m_shineFactor(shineFactor),
+      m_texture(texture)
 {
 
 }
@@ -70,8 +72,19 @@ void Material::load(string file)
     m_diffuse = parser.getDiffuse();
     m_spectacular = parser.getSpectacular();
     m_shineFactor = parser.getShineFactor();
+    m_texture = parser.getTexture();
 
     Logger::getInstance() << " Done! " << std::endl;
+}
+
+std::shared_ptr<Texture> Material::texture() const
+{
+    return m_texture;
+}
+
+void Material::setTexture(const std::shared_ptr<Texture> &texture)
+{
+    m_texture = texture;
 }
 
 float Material::shineFactor() const

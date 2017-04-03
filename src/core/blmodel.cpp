@@ -2,6 +2,7 @@
 
 #include <blobjparser.h>
 #include <src/utils/bllogger.h>
+#include <blfileexceptions.h>
 
 #include <iostream>
 
@@ -17,8 +18,6 @@ Model::Model()
 
     initializeOpenGLFunctions();
 
-    m_texture = rm.get<Texture>("textures/default.jpg");
-
     m_material = rm.get<Material>("materials/default.mtl");
 }
 
@@ -30,7 +29,7 @@ Model::Model(std::string file)
 
 Model::~Model()
 {
-    m_texture.reset();
+    m_material.reset();
 }
 
 void Model::load(string file)
@@ -55,9 +54,7 @@ void Model::load(string file)
         m_mesh->setNormalData(parser.normals());
 
     } catch(std::string e) {
-        std::cerr << "Failed to load a mesh from " << file << "!\n";
-        std::cerr << "Error: " << e << '\n';
-        throw "failed"; // TODO: exceptions
+        throw ParseException(file, e);
     }
 
     m_initialized = true;
@@ -65,16 +62,8 @@ void Model::load(string file)
     auto &rm = ResourceManager::getInstance();
 
     // Get mesh material
-    std::shared_ptr<Material> mat;
-    std::string matDir = "materials/";
-
-    try {
-        mat = rm.get<Material>(matDir + parser.matFile());
-        m_material = mat;
-        mat.reset();
-    } catch(...) {
-        // That's all right. Default material used.
-    }
+    m_material = std::make_shared<Material>();
+    m_material = rm.get<Material>( m_material->folderName() + "/" + parser.matFile() );
 
     Logger::getInstance() << " Done! " << std::endl;
 }
@@ -121,7 +110,10 @@ void Model::render()
     }
 
     m_mesh->bind();
-    m_texture->bind();
+
+    if ( m_material->texture() != nullptr ) {
+        m_material->texture()->bind();
+    }
 
     if ( m_mesh->isIndexed() ) {
         glDrawElements(GL_TRIANGLES, m_mesh->vertexCount(), GL_UNSIGNED_INT, 0);
@@ -129,7 +121,10 @@ void Model::render()
         glDrawArrays(GL_TRIANGLES, 0, m_mesh->vertexCount());
     }
 
-    m_texture->release();
+    if ( m_material->texture() != nullptr ) {
+        m_material->texture()->release();
+    }
+
     m_mesh->release();
 }
 
@@ -221,12 +216,12 @@ void Model::setScaleZ(float dz)
 
 std::shared_ptr<Texture> Model::texture() const
 {
-    return m_texture;
+    return m_material->texture();
 }
 
 void Model::setTexture(const std::shared_ptr<Texture> &texture)
 {
-    m_texture = texture;
+    m_material->setTexture(texture);
 }
 
 

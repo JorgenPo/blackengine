@@ -21,7 +21,8 @@ namespace black {
  * providing very useful method render() to draw whole model
  * using opengl pipeline
  *
- * @author george popoff <popoff96@live.com>
+ * @author george popoff <popoff96@live.com> 
+ * @version 1.2.5 02.04.2017
  *
  * @version 1.2 28.03.2017
  * Support of materials. Loading from obj code
@@ -35,6 +36,8 @@ namespace black {
  */
 class Model : public Resource, private QOpenGLFunctions
 {
+public:
+
     friend class ResourceManager;
 public:
     Model();
@@ -75,10 +78,12 @@ public:
 
 private:
     void load(string file) override;
+public:
+    std::string defaultName() override { return std::string("default.obj"); }
+    std::string folderName()  override { return std::string("models");      }
 
 private:
     std::unique_ptr<Mesh> m_mesh;
-    std::shared_ptr<Texture> m_texture;
     std::shared_ptr<Material> m_material;
 
     QVector3D m_position;
