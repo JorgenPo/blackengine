@@ -1,6 +1,7 @@
 #include "blmtlparser.h"
 
-#include <src/utils/bllogger.h>
+#include <bllogger.h>
+#include <blfileexceptions.h>
 #include <map>
 
 namespace black {
@@ -20,10 +21,7 @@ void MtlParser::parse(std::string file)
     m_file.open(file);
 
     if ( !m_file.is_open() ) {
-        // TODO: Exceptions
-        Logger::getInstance() << "Can't open the file " << file << "!" << std::endl;
-
-        throw "Cannot open the file!";
+        throw NoSuchFileException(file);
     }
 
     std::string line;
@@ -32,10 +30,7 @@ void MtlParser::parse(std::string file)
     getline(m_file, line);
 
     if ( line.find("MTL") == std::string::npos ) {
-        // TODO: Exceptions
-        Logger::getInstance() << "Bad file format " << file << "!" << std::endl;
-
-        throw "Bad file format";
+        throw WrongFileException(file, ".mtl");
     }
 
     // Second header. Contains materials count
@@ -47,10 +42,7 @@ void MtlParser::parse(std::string file)
     m_file >> count;
 
     if ( count == 0 ) {
-        // TODO: Exceptions
-        Logger::getInstance() << "No materials found in file " << file << "!" << std::endl;
-
-        throw "Empty material file";
+        throw ParseException(file, "No materials was found in this file!");
     }
 
     QVector3D ambient;
@@ -67,6 +59,9 @@ void MtlParser::parse(std::string file)
         while ( line != "newmtl" ) { }
 
         // Defaults
+        auto &rm = ResourceManager::getInstance();
+
+        std::string textureName;
         ambient = { 0, 0, 0 };
         diffuse = { 0, 0, 0 };
         spectacular = { 0, 0, 0 };
@@ -92,12 +87,22 @@ void MtlParser::parse(std::string file)
                 diffuse = getVector();
             } else if ( type == "Ks" ) {
                 spectacular = getVector();
+            } else if ( type == "map_Kd" ) {
+                m_file >> textureName;
             }
 
             oldpos = m_file.tellg();
         }
 
-        m_materials[matName] = Material(ambient, diffuse, spectacular, shineFactor);
+        std::shared_ptr<Texture> texture;
+        if ( !textureName.empty() ) {
+            texture = rm.get<Texture>(textureName, false);
+        } else {
+            texture = nullptr;
+        }
+        m_materials[matName] = Material(texture, ambient, diffuse, spectacular, shineFactor);
+
+        texture.reset();
     }
 }
 
@@ -115,6 +120,11 @@ QVector3D MtlParser::getVector()
 std::map<std::string, Material> MtlParser::getMaterials() const
 {
     return m_materials;
+}
+
+std::shared_ptr<Texture> MtlParser::getTexture() const
+{
+    return m_materials.begin()->second.texture();
 }
 
 QVector3D MtlParser::getAmbient() const

@@ -13,6 +13,7 @@ namespace black {
  * @brief The MtlParser class
  * Parses a .mtl files. File can contain one or more
  * materials.
+ * @version 1.1 02.04.2017
  *
  * @version 1.0.1 28.03.2017
  * Fix a bug when reading multiple mtl from one file
@@ -33,6 +34,7 @@ public:
     std::map<std::string, Material> getMaterials() const;
     const Material& getMaterial(std::string name) const { return m_materials.at(name); }
 
+    std::shared_ptr<Texture> getTexture() const;
     QVector3D getAmbient() const;
     QVector3D getDiffuse() const;
     QVector3D getSpectacular() const;
