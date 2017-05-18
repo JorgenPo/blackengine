@@ -16,8 +16,6 @@ Model::Model()
 {
     auto& rm = ResourceManager::getInstance();
 
-    initializeOpenGLFunctions();
-
     m_material = rm.get<Material>("materials/default.mtl");
 }
 
@@ -30,6 +28,7 @@ Model::Model(std::string file)
 Model::~Model()
 {
     m_material.reset();
+    m_mesh.reset();
 }
 
 void Model::load(string file)
@@ -101,34 +100,7 @@ std::shared_ptr<Material> Model::material() const
     return m_material;
 }
 
-void Model::render()
-{
-    if ( !m_initialized ) {
-        Logger::getInstance("error") << "Trying to render empty model "
-                                     << "(no mesh provided)" << std::endl;
-        return;
-    }
-
-    m_mesh->bind();
-
-    if ( m_material->texture() != nullptr ) {
-        m_material->texture()->bind();
-    }
-
-    if ( m_mesh->isIndexed() ) {
-        glDrawElements(GL_TRIANGLES, m_mesh->vertexCount(), GL_UNSIGNED_INT, 0);
-    } else {
-        glDrawArrays(GL_TRIANGLES, 0, m_mesh->vertexCount());
-    }
-
-    if ( m_material->texture() != nullptr ) {
-        m_material->texture()->release();
-    }
-
-    m_mesh->release();
-}
-
-QMatrix4x4 Model::modelMatrix()
+const QMatrix4x4 &Model::modelMatrix()
 {
     if ( m_needUpdate ) {
         m_matModel.setToIdentity();
@@ -222,6 +194,34 @@ std::shared_ptr<Texture> Model::texture() const
 void Model::setTexture(const std::shared_ptr<Texture> &texture)
 {
     m_material->setTexture(texture);
+}
+
+void Model::setMesh(const Mesh &mesh)
+{
+    if ( m_mesh ) {
+        m_mesh->release();
+    }
+
+    m_mesh = std::make_unique<Mesh>(mesh);
+}
+
+void Model::bind()
+{
+    m_mesh->bind();
+
+    if ( m_material->texture() != nullptr ) {
+        m_material->texture()->bind();
+    }
+
+}
+
+void Model::release()
+{
+    if ( m_material->texture() != nullptr ) {
+        m_material->texture()->release();
+    }
+
+    m_mesh->release();
 }
 
 

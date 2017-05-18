@@ -59,7 +59,7 @@ void ShaderProgram::setModelMatrix(const QMatrix4x4 &model)
     this->setUniformValue("mModel", model);
 }
 
-void ShaderProgram::setCamera(const Camera* camera)
+void ShaderProgram::setCamera(const std::shared_ptr<Camera> camera)
 {
     if ( !supportCamera() ) {
         return;
@@ -75,7 +75,7 @@ void ShaderProgram::setCamera(const Camera* camera)
     this->setUniformValue("cameraPos", camera->position());
 }
 
-void ShaderProgram::setLight(const Light* light)
+void ShaderProgram::setLight(const std::shared_ptr<Light> light)
 {
     if ( !supportLight() ) {
         return;
@@ -87,7 +87,17 @@ void ShaderProgram::setLight(const Light* light)
     this->setUniformValue("light.spectacular", light->spectacular());
 }
 
-void ShaderProgram::setMaterial(std::shared_ptr<Material> material)
+void ShaderProgram::setTerrain(const std::shared_ptr<Terrain> &terrain)
+{
+    if ( !supportTerrain() ) {
+        return;
+    }
+
+    // Terrain textures setted here
+    // And height mapp and so on
+}
+
+void ShaderProgram::setMaterial(const std::shared_ptr<Material> material)
 {
     if ( !supportMaterials() ) {
         return;

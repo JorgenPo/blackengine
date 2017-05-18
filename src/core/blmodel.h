@@ -34,7 +34,7 @@ namespace black {
  * @version 1.0 19.03.2017
  *  Working version of Model class
  */
-class Model : public Resource, private QOpenGLFunctions
+class Model : public Resource
 {
 public:
 
@@ -49,11 +49,18 @@ public:
     std::shared_ptr<Texture> texture() const;
     std::shared_ptr<Material> material() const;
 
+    bool isInitialized() const { return m_initialized; }
+    bool isIndexed() const { return m_mesh->isIndexed(); }
+
+    size_t vertexCount() const { return m_mesh->vertexCount(); }
+
     void setTexture(const std::shared_ptr<Texture> &texture);
+    void setMesh(const Mesh &mesh);
 
-    void render();
+    void bind();
+    void release();
 
-    QMatrix4x4 modelMatrix();
+    const QMatrix4x4& modelMatrix();
 
     /* MODEL matrix properties */
     void setPosition(float dx, float dy, float dz);

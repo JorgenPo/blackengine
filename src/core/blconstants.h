@@ -40,6 +40,9 @@ public:
     static constexpr int VERTEX_ATTR_TEXCOORDS = 1;
     static constexpr int VERTEX_ATTR_NORMAL = 2;
     static constexpr int VERTEX_ATTR_COLOR = 3;
+
+    /* Default reosurces names */
+    static constexpr auto DEFAULT_PROGRAM = "shaders/default";
 };
 
 }

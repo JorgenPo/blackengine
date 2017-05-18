@@ -16,7 +16,7 @@ namespace black {
  * Vertices data. Represents actualy VBO and
  * all vbo's.
  */
-class Mesh : protected QOpenGLFunctions //TODO: REMOVE THIS WHEN GLOBAL CLASSES WILL BE HERE
+class Mesh
 {
 public:
     /**
@@ -53,6 +53,9 @@ public:
     Mesh(const std::vector<GLfloat> &position,
          const std::vector<GLclampf> &textureCoords);
 
+
+    Mesh(const Mesh &mesh);
+
     void setPositionData(const std::vector<GLfloat> &position);
 
     void setIndexData(const std::vector<GLuint> &index);
@@ -76,18 +79,16 @@ public:
     bool isIndexed() const { return m_isIndexProvided; }
 
 private:
-    bool   m_isDataProvided  = false;
-    bool   m_isIndexProvided = false;
+    bool   m_isDataProvided;
+    bool   m_isIndexProvided;
     GLuint m_vertexCount;
 
-    QOpenGLVertexArrayObject m_vao;
+    QOpenGLVertexArrayObject* m_vao;
 
     QOpenGLBuffer m_positionVBO;
     QOpenGLBuffer m_indexVBO;
     QOpenGLBuffer m_textureVBO;
     QOpenGLBuffer m_normalVBO;
-
-    QOpenGLShaderProgram *m_program;
 };
 
 

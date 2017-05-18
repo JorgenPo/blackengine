@@ -3,10 +3,10 @@
 
 #include "blcamera.h"
 
-#include <src/core/blshader.h>
-#include <src/core/blmaterial.h>
-
-#include <src/utils/bllight.h>
+#include <blshader.h>
+#include <blmaterial.h>
+#include <blterrain.h>
+#include <bllight.h>
 
 #include <QOpenGLShaderProgram>
 
@@ -62,15 +62,15 @@ public:
     virtual bool supportModelMatrix() const { return true; }
     virtual bool supportCameraPosition() const { return true; }
     virtual bool supportCamera() const { return true; }
+    virtual bool supportTerrain() const { return true; }
 
     // Can be overriden, but by default
     // do this work by self
     virtual void setModelMatrix(const QMatrix4x4& model);
-
-    virtual void setCamera(const Camera *camera);
-
-    virtual void setLight(const Light* light);
+    virtual void setCamera(const std::shared_ptr<Camera> camera);
+    virtual void setLight(const std::shared_ptr<Light> light);
     virtual void setMaterial(std::shared_ptr<Material> material);
+    virtual void setTerrain(const std::shared_ptr<Terrain> &terrain);
 
     virtual void enableTextures();
     virtual void disableTextures();

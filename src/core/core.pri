@@ -13,7 +13,9 @@ HEADERS += $$PWD/blapplication.h \
     $$PWD/blmaterial.h \
     $$PWD/blterrain.h \
     $$PWD/blexceptions.h \
-    $$PWD/blfileexceptions.h
+    $$PWD/blfileexceptions.h \
+    $$PWD/blrenderer.h \
+    $$PWD/blgameobject.h
 
 SOURCES += $$PWD/blapplication.cpp \
         $$PWD/blmesh.cpp \
@@ -26,4 +28,6 @@ SOURCES += $$PWD/blapplication.cpp \
     $$PWD/blmaterial.cpp \
     $$PWD/blterrain.cpp \
     $$PWD/blexceptions.cpp \
-    $$PWD/blfileexceptions.cpp
+    $$PWD/blfileexceptions.cpp \
+    $$PWD/blrenderer.cpp \
+    $$PWD/blgameobject.cpp

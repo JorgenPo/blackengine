@@ -11,17 +11,18 @@
 #include <QOpenGLShader>
 
 /* Core */
-#include <src/core/blmesh.h>
-#include <src/core/blcamera.h>
-#include <src/core/blshaderprogram.h>
-#include <src/core/blmodel.h>
-#include <src/core/blconstants.h>
-#include <src/core/bltexture.h>
+#include <blmesh.h>
+#include <blcamera.h>
+#include <blshaderprogram.h>
+#include <blmodel.h>
+#include <blconstants.h>
+#include <bltexture.h>
+#include <blterrain.h>
 
 /* Utils */
-#include <src/utils/bllight.h>
-#include <src/utils/blcubemesh.h>
-#include <src/utils/bltimer.h>
+#include <bllight.h>
+#include <blcubemesh.h>
+#include <bltimer.h>
 
 class BLApplication : public QOpenGLWindow, public QOpenGLFunctions {
 
@@ -41,7 +42,6 @@ protected:
     virtual void keyPressEvent(QKeyEvent *event);
     virtual void mouseMoveEvent(QMouseEvent *);
 private:
-    void initModels();
     void loadResources();
     void prepareToRender();
 
@@ -52,30 +52,26 @@ private:
     std::shared_ptr<black::Shader> m_vShader;
     std::shared_ptr<black::Shader> m_fShader;
 
-    std::unique_ptr<black::CubeMesh> m_cubeMesh;
-    std::unique_ptr<black::Mesh> m_axisMesh;
-
     bool m_initialized = false;
 
-    black::Camera* m_currentCamera;
-    std::unique_ptr<black::Camera> m_specCamera;
-    std::unique_ptr<black::Camera> m_objCamera;
+    std::shared_ptr<black::Camera> m_currentCamera;
+    std::shared_ptr<black::Camera> m_specCamera;
+    std::shared_ptr<black::Camera> m_objCamera;
     std::unique_ptr<black::Timer> m_timer;
 
     // Handled by rm
+    std::shared_ptr<black::Terrain> m_terrain;
     std::shared_ptr<black::Model> m_stallMesh;
     std::shared_ptr<black::Model> m_bodyMesh;
     std::shared_ptr<black::Model> m_monkeyMesh;
     std::shared_ptr<black::Model> m_houseModel;
     std::shared_ptr<black::Model> m_landModel;
-    std::shared_ptr<black::Model> m_cubeModel;
-    std::shared_ptr<black::Model> m_planeModel;
     std::shared_ptr<black::Model> m_skyBoxModel;
     std::shared_ptr<black::Model> m_flyingIslandModel;
 
     std::shared_ptr<black::Texture> m_brickTexture;
 
-    std::unique_ptr<black::Light> m_lightSource;
+    std::shared_ptr<black::Light> m_lightSource;
 
     // QWindow interface
 protected:
