@@ -1,3 +1,7 @@
 *.autosave
 /releases
 /resources/*
+*.sln
+*.vcxproj*
+*.pro*
+/.vs
