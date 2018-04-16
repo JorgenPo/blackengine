@@ -5,7 +5,7 @@
 #ifndef BLACKENGINE2018_PLUGIN_H
 #define BLACKENGINE2018_PLUGIN_H
 
-namespace black::core {
+namespace black {
 
     class Plugin {
 

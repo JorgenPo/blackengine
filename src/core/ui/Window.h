@@ -7,7 +7,7 @@
 #ifndef BLACKENGINE2018_WINDOW_H
 #define BLACKENGINE2018_WINDOW_H
 
-namespace black::core::ui {
+namespace black::ui {
 
 /**
  * An abstraction for window

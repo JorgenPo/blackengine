@@ -4,7 +4,7 @@
 
 #include "Core.h"
 
-namespace black::core {
+namespace black {
     Core::Core() {
         // 10 is enough almost for now
         this->factories.reserve(10);

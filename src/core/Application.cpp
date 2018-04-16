@@ -8,7 +8,7 @@
 #include "Core.h"
 #include "Exception.h"
 
-namespace black::core::engine {
+namespace black {
 
 
     Application::Application() {
@@ -32,12 +32,14 @@ namespace black::core::engine {
     }
 
 
-    void Application::run() {
+    int Application::run() {
         if (this->window == nullptr) {
             throw Exception("Window has not been set up");
         }
 
         this->window->show();
+
+        return 0;
     }
 
     void Application::initialize() {

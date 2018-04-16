@@ -8,7 +8,7 @@
 #include <string>
 #include <utility>
 
-namespace black::core {
+namespace black {
 
     class Exception : std::exception {
     protected:

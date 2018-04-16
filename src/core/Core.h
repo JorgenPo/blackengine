@@ -10,7 +10,7 @@
 
 #include <core/ui/WindowFactory.h>
 
-namespace black::core {
+namespace black {
     /**
      * Responsible for register components and provide
      *  components runtime

@@ -6,7 +6,7 @@
 #include "ui/Window.h"
 
 
-namespace black::core::engine {
+namespace black {
     /**
      * Main class of application
      */
@@ -28,7 +28,7 @@ namespace black::core::engine {
          * Runs the application. Shows the window.
          * User must set the window before run application
          */
-        virtual void run();
+        virtual int run();
     };
 
 }

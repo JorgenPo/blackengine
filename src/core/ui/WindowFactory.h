@@ -8,7 +8,7 @@
 #include <memory>
 #include "Window.h"
 
-namespace black::core::ui {
+namespace black::ui {
     /**
      * A Window factory class responsible for
      * creating abstract window classes.
