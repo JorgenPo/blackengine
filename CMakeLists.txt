@@ -7,28 +7,55 @@ set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 set(BUILD_DIR ${CMAKE_SOURCE_DIR}/build)
 set(CMAKE_PREFIX_PATH ${BUILD_DIR}/)
 
-option(WINDOW_WITH_ALL "Include support of all window implementations" OFF)
-option(WINDOW_WITH_GLFW "Include GLFW window implementation support" ON)
-option(WINDOW_WITH_WX "Include wxWidgets window implementation support" OFF)
+#option(WINDOW_WITH_ALL "Include support of all window implementations" OFF)
+#option(WINDOW_WITH_GLFW "Include GLFW window implementation support" ON)
+#option(WINDOW_WITH_WX "Include wxWidgets window implementation support" OFF)
 
-file(GLOB SOURCES
+# Run initializing scripts
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
+
+## Check platform
+include(Platform)
+
+# Config
+CONFIGURE_FILE(
+        ${CMAKE_SOURCE_DIR}/src/config/config.h.in
+        ${CMAKE_SOURCE_DIR}/src/config/config.h
+)
+
+# Common sources
+file(GLOB COMMON_SOURCES
         "src/core/*.h"
-        "src/ui/*.h"
-        "src/plugin/*.h"
+        "src/core/ui/*.h"
 
         "src/core/*.cpp"
-        "src/ui/*.cpp"
-        "src/plugin/*.cpp"
+        "src/core/ui/*.cpp"
         )
 
+# Platform specific sources
+if (BLACK_PLATFORM_WINDOWS)
+    file(GLOB PLATFORM_SOURCES "src/core/os/windows/*.h" "src/core/os/windows/*.cpp")
+elseif(BLACK_PLATFORM_LINUX)
+    file(GLOB PLATFORM_SOURCES "src/core/os/macos/*.h" "src/core/os/macos/*.cpp")
+elseif(BLACK_PLATFORM_MACOSX)
+    file(GLOB PLATFORM_SOURCES "src/core/os/linux/*.h" "src/core/os/linux/*.cpp")
+endif(BLACK_PLATFORM_WINDOWS)
+
+# Join all sources
+set(SOURCES ${COMMON_SOURCES} ${PLATFORM_SOURCES})
+
 add_library(BlackEngine SHARED ${SOURCES})
+
+# Remove lib prefix
+set_target_properties(BlackEngine PROPERTIES PREFIX "")
 
 # Include directories for BlackEngine and for all subprojects
 include_directories(src)
 
 # Install headers and library
 install(TARGETS BlackEngine DESTINATION ${BUILD_DIR}/)
-install(DIRECTORY src/core/ DESTINATION ${BUILD_DIR}/include/BlackEngine)
+install(DIRECTORY src/core/ DESTINATION ${BUILD_DIR}/include/BlackEngine
+        FILES_MATCHING PATTERN "*.h")
 
 # Need to build from ide
 install(TARGETS BlackEngine DESTINATION ${CMAKE_BINARY_DIR}/examples/SimpleApplication/)
@@ -36,3 +63,5 @@ install(TARGETS BlackEngine DESTINATION ${CMAKE_BINARY_DIR}/examples/SimpleAppli
 # Build examples
 add_subdirectory(examples/SimpleApplication)
 
+# Add core plugin
+add_subdirectory(plugins/core)

@@ -1,0 +1,8 @@
+//
+// Created by popof on 17.04.2018.
+//
+
+#cmakedefine BLACK_PLATFORM_WINDOWS
+#cmakedefine BLACK_PLATFORM_LINUX
+#cmakedefine BLACK_PLATFORM_MACOSX
+

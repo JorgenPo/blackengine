@@ -1,0 +1,9 @@
+# Detecting build system
+
+if(UNIX AND APPLE)
+    set(BLACK_PLATFORM_MACOSX 1)
+elseif(WIN32)
+    set(BLACK_PLATFORM_WINDOWS 1)
+elseif(UNIX AND NOT APPLE)
+    set(BLACK_PLATFORM_LINUX 1)
+endif(UNIX AND APPLE)

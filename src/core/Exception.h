@@ -15,6 +15,7 @@ namespace black {
         std::string message;
 
     public:
+        explicit Exception() : message() {}
         explicit Exception(std::string message) : message(std::move(message)) {}
 
         const char *what() const noexcept {
