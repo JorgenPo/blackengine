@@ -13,6 +13,7 @@ namespace black {
      * Extention plugin class
      */
     class Plugin {
+    public:
         virtual std::string getName() = 0;
 
         // Plugin lifecycle. Inpired by Ogre:3

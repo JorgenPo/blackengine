@@ -12,7 +12,7 @@ namespace black {
 
 
     Application::Application() {
-        auto core = Core::getInstance();
+        auto &core = Core::getInstance();
         auto factories = core.getWindowFactories();
 
         if (!factories.empty()) {
