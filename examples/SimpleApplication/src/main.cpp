@@ -7,6 +7,7 @@
 #include <core/Exception.h>
 #include <core/SharedLibrary.h>
 #include <core/os/windows/WindowsSharedLibrary.h>
+#include <core/Core.h>
 
 // Simple example application
 class SimpleApplication : public black::Application {
@@ -22,9 +23,11 @@ int main() {
     std::unique_ptr<black::SharedLibrary> lib =
             std::make_unique<black::os::WindowsSharedLibrary>("BlackEngine");
 
+    auto& core = black::Core::getInstance();
+
     try {
-        lib->load();
-        auto func = lib->getFunction("notfound");
+        auto& pm = core.getPluginManager();
+        pm->loadPlugin("CorePlugin");
     } catch(const black::Exception& e) {
         std::cerr << e.getMessage() << "\n";
         return 2;
