@@ -7,15 +7,16 @@
 
 #include <core/ui/WindowFactory.h>
 
-using namespace black::core::ui;
-
 namespace black::ui {
 
     /**
      * Responsible for creating glfw windows
      */
-    class glfwWindowFactory : WindowFactory {
+    class glfwWindowFactory : public WindowFactory {
+    public:
         std::shared_ptr<Window> create() override;
+
+        std::string getName() override;
     };
 
 }

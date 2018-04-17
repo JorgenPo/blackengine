@@ -5,6 +5,9 @@
 #include "CorePlugin.h"
 
 #include <iostream>
+#include <memory>
+#include <ui/glfwWindowFactory.h>
+#include <core/Core.h>
 
 using namespace std;
 
@@ -15,7 +18,10 @@ namespace black {
     }
 
     void CorePlugin::install() {
-        cout << "install CorePlugin!" << endl;
+        auto core = Core::getInstance();
+        auto glfwFactory = std::make_shared<ui::glfwWindowFactory>();
+
+        core->registerWindowFactory(glfwFactory);
     }
 
     void CorePlugin::initialize() {

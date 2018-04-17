@@ -1,14 +1,15 @@
 //
 // Created by popof on 15.04.2018.
 //
-
-#include <core/os/windows/WindowsSharedLibrary.h>
 #include "Core.h"
+#include <core/os/windows/WindowsSharedLibrary.h>
 
 namespace black {
-    UnknownPlatformException::UnknownPlatformException() {
-        this->message = "Unknown platform";
-    }
+
+    Core* Core::instance = nullptr;
+
+    CoreInitializationException::CoreInitializationException(const std::string &message) : Exception(message) {}
+    UnknownPlatformException::UnknownPlatformException() : Exception("Unknown target platform") {}
 
     Core::Core() : platform(Platform::UNKNOWN) {
         // 10 is enough almost for now
@@ -20,12 +21,12 @@ namespace black {
         determineTargetPlatform();
     }
 
-    void Core::addWindowFactory(std::shared_ptr<ui::WindowFactory> factory) {
+    void Core::registerWindowFactory(std::shared_ptr<ui::WindowFactory> factory) {
         this->factories.push_back(factory);
     }
 
-    std::vector<std::shared_ptr<ui::WindowFactory>> Core::getWindowFactories() {
-        return std::vector<std::shared_ptr<ui::WindowFactory>>();
+    const std::vector<std::shared_ptr<ui::WindowFactory>> &Core::getWindowFactories() {
+        return this->factories;
     }
 
     const std::unique_ptr<PluginManager> &Core::getPluginManager() const {
@@ -67,5 +68,17 @@ namespace black {
 
     void Core::unregisterPlugin(std::shared_ptr<Plugin> plugin) {
         plugin->uninstall();
+    }
+
+    void Core::initialize() {
+        // Load core plugin
+        try {
+            this->pluginManager->loadPlugin(CORE_PLUGIN_NAME);
+        } catch(const PluginNotFoundException &e) {
+            std::string message = "Failed to load core plugin. Check ";
+            message += CORE_PLUGIN_NAME + " shared library exist in application directory";
+
+            throw CoreInitializationException(message);
+        }
     }
 }

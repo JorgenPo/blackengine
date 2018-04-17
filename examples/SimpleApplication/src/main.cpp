@@ -17,16 +17,23 @@ class SimpleApplication : public black::Application {
 };
 
 int main() {
+    auto core = black::Core::getInstance();
+
+    try {
+        core->initialize();
+    } catch (const black::CoreInitializationException &e) {
+        std::cerr << "Failed to init blackengine core. Reason: " << e.getMessage() << std::endl;
+        return 1;
+    }
+
     SimpleApplication app;
 
     // Loading shared library
     std::unique_ptr<black::SharedLibrary> lib =
             std::make_unique<black::os::WindowsSharedLibrary>("BlackEngine");
 
-    auto& core = black::Core::getInstance();
-
     try {
-        auto& pm = core.getPluginManager();
+        auto& pm = core->getPluginManager();
         pm->loadPlugin("CorePlugin");
     } catch(const black::Exception& e) {
         std::cerr << e.getMessage() << "\n";

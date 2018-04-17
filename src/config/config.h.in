@@ -5,4 +5,5 @@
 #cmakedefine BLACK_PLATFORM_WINDOWS
 #cmakedefine BLACK_PLATFORM_LINUX
 #cmakedefine BLACK_PLATFORM_MACOSX
+#cmakedefine ENABLE_GLFW
 

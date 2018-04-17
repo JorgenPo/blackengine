@@ -18,8 +18,13 @@ namespace black::ui {
         std::string title;
         int width;
         int height;
+        Window::Mode mode;
+        bool isShown;
+        bool isMaximized;
+        bool isMinimized;
 
     public:
+        virtual std::string getName() = 0;
         virtual std::shared_ptr<Window> create() = 0;
 
         void setTitle(const std::string &title) {
@@ -32,6 +37,22 @@ namespace black::ui {
 
         void setHeight(int height) {
             WindowFactory::height = height;
+        }
+
+        void setMode(Window::Mode mode) {
+            WindowFactory::mode = mode;
+        }
+
+        void setIsShown(bool isShown) {
+            WindowFactory::isShown = isShown;
+        }
+
+        void setIsMaximized(bool isMaximized) {
+            WindowFactory::isMaximized = isMaximized;
+        }
+
+        void setIsMinimized(bool isMinimized) {
+            WindowFactory::isMinimized = isMinimized;
         }
     };
 }

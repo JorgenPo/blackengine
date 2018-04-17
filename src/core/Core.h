@@ -15,6 +15,11 @@
 
 namespace black {
 
+    class CoreInitializationException : public Exception {
+    public:
+        explicit CoreInitializationException(const std::string &message);
+    };
+
     class UnknownPlatformException : public Exception {
     public:
         UnknownPlatformException();
@@ -34,22 +39,42 @@ namespace black {
      *  @singleton
      */
     class Core {
+    private:
+        static Core *instance;
+
+        const std::string CORE_PLUGIN_NAME = "CorePlugin";
+
         std::vector<std::shared_ptr<ui::WindowFactory>> factories;
         std::map<std::string, std::shared_ptr<Plugin>> plugins;
-
         std::unique_ptr<PluginManager> pluginManager;
         Platform platform;
-    private:
-        Core();
 
+        Core();
+        ~Core() = default;
     public:
-        static Core& getInstance() {
-            static Core instance;
+        Core(Core const&) = delete;
+        Core& operator=(Core const&) = delete;
+
+        static Core* getInstance() {
+            if (instance == nullptr) {
+                instance = new Core();
+            }
+
             return instance;
         }
 
-        void addWindowFactory(std::shared_ptr<ui::WindowFactory> factory);
-        std::vector<std::shared_ptr<ui::WindowFactory>> getWindowFactories();
+        /**
+         * Initialize blackengine core
+         * Application must call this method.
+         * Loads plugins, set up runtime systems.
+         *
+         * @throws CoreInitializationException When core hasn't init successfully.
+         * The message contains a problem description
+         */
+        void initialize();
+
+        void registerWindowFactory(std::shared_ptr<ui::WindowFactory> factory);
+        const std::vector<std::shared_ptr<ui::WindowFactory>> &getWindowFactories();
 
         const std::unique_ptr<PluginManager> &getPluginManager() const;
 

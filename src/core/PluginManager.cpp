@@ -90,12 +90,12 @@ namespace black {
     }
 
     std::shared_ptr<SharedLibrary> PluginManager::searchForPluginLibrary(std::string pluginName) {
-        auto &core = Core::getInstance();
+        auto core = Core::getInstance();
 
         // Search for plugin in all dirs
         for (auto &pluginDir : this->pluginDirs) {
             try {
-                auto library = core.getPlatformLibrary(pluginDir + pluginName);
+                auto library = core->getPlatformLibrary(pluginDir + pluginName);
                 library->load();
 
                 // Library found

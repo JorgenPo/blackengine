@@ -5,4 +5,5 @@
 #define BLACK_PLATFORM_WINDOWS
 /* #undef BLACK_PLATFORM_LINUX */
 /* #undef BLACK_PLATFORM_MACOSX */
+#define ENABLE_GLFW
 

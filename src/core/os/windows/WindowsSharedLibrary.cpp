@@ -11,6 +11,7 @@ namespace black::os {
         this->hLib = LoadLibrary(TEXT(name.c_str()));
 
         if (this->hLib == nullptr) {
+            DWORD error = GetLastError();
             throw LibraryNotFoundException(name);
         }
     }

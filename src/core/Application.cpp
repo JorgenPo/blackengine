@@ -12,8 +12,9 @@ namespace black {
 
 
     Application::Application() {
-        auto &core = Core::getInstance();
-        auto factories = core.getWindowFactories();
+        auto core = Core::getInstance();
+
+        auto factories = core->getWindowFactories();
 
         if (!factories.empty()) {
             auto factory = factories.front();
@@ -21,7 +22,11 @@ namespace black {
             factory->setHeight(600);
             factory->setTitle("BlackEngine 2k18 Application");
 
-            this->window = factory->create();
+            try {
+                this->window = factory->create();
+            } catch (const ui::WindowInitializationException &e) {
+                // TODO: Logging
+            }
         }
 
         initialize();
@@ -37,9 +42,7 @@ namespace black {
             throw Exception("Window has not been set up");
         }
 
-        this->window->show();
-
-        return 0;
+        return this->window->run();
     }
 
     void Application::initialize() {

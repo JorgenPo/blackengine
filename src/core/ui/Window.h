@@ -7,13 +7,21 @@
 #ifndef BLACKENGINE2018_WINDOW_H
 #define BLACKENGINE2018_WINDOW_H
 
+#include <core/Exception.h>
+#include <utility>
+
 namespace black::ui {
 
-/**
- * An abstraction for window
- */
-    class Window {
+    class WindowInitializationException : public Exception {
+    public:
+        explicit WindowInitializationException(const std::string &message) : Exception(message) {}
+    };
 
+    /**
+     * An abstraction for window
+     */
+    class Window {
+    public:
         /**
          * Window display mode
          */
@@ -23,16 +31,103 @@ namespace black::ui {
             MINIMAL
         };
 
+    protected:
+        std::string title{};
+        int width;
+        int height;
+        Mode mode;
+        bool isShown;
+        bool isMaximized;
+        bool isMinimized;
+
     public:
+        Window(std::string title, int width, int height, Mode mode, bool isMaximized, bool isMinimized)
+                : title(std::move(title)), width(width), height(height), mode(mode),
+                  isShown(false), isMaximized(isMaximized), isMinimized(isMinimized) {
+        }
+
+        /**
+         * Initialize window
+         *
+         * @throws WindowInitializationException When failed to initialize window. Message contain a reason.
+         */
+        virtual void initialize() {};
+
+        /**
+         * Run window message loop
+         */
+        virtual int run() = 0;
+
         /**
          * Hides the window
          */
-        virtual void show() = 0;
+        virtual void hide() {
+            this->isShown = false;
+        }
 
         /**
          * Shows the window
          */
-        virtual void hide() = 0;
+        virtual void show() {
+            this->isShown = true;
+        }
+
+        /* Getters and setters */
+        const std::string &getTitle() const {
+            return title;
+        }
+
+        void setTitle(const std::string &title) {
+            Window::title = title;
+        }
+
+        int getWidth() const {
+            return width;
+        }
+
+        void setWidth(int width) {
+            Window::width = width;
+        }
+
+        int getHeight() const {
+            return height;
+        }
+
+        void setHeight(int height) {
+            Window::height = height;
+        }
+
+        Mode getMode() const {
+            return mode;
+        }
+
+        void setMode(Mode mode) {
+            Window::mode = mode;
+        }
+
+        bool isIsShown() const {
+            return isShown;
+        }
+
+        void setIsShown(bool isShown) {
+            Window::isShown = isShown;
+        }
+
+        bool isIsMaximized() const {
+            return isMaximized;
+        }
+
+        void setIsMaximized(bool isMaximized) {
+            Window::isMaximized = isMaximized;
+        }
+
+        bool isIsMinimized() const {
+            return isMinimized;
+        }
+
+        void setIsMinimized(bool isMinimized) {
+            Window::isMinimized = isMinimized;
+        }
     };
 
 }

@@ -3,11 +3,19 @@
 //
 
 #include "glfwWindowFactory.h"
+#include <memory>
+#include "glfwWindow.h"
 
 namespace black::ui {
 
     std::shared_ptr<Window> glfwWindowFactory::create() {
-        return std::shared_ptr<Window>();
+        return std::make_shared<glfwWindow>(
+                this->title, this->width, this->height, this->mode,
+                               this->isMaximized, this->isMinimized);
+    }
+
+    std::string glfwWindowFactory::getName() {
+        return "GLFW Window Factory";
     }
 
 }
