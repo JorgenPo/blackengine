@@ -8,7 +8,8 @@
 #include <core/Plugin.h>
 
 namespace black {
-    class CorePlugin : Plugin {
+    class CorePlugin : public Plugin {
+    public:
         std::string getName() override;
 
         void install() override;
