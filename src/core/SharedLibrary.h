@@ -11,8 +11,12 @@
 namespace black {
 
     class FunctionNotFoundException : public Exception {
+        std::string function;
+
     public:
         FunctionNotFoundException(std::string library, std::string function);
+
+        const std::string &getFunction() const;
     };
 
     class LibraryNotFoundException : public Exception {

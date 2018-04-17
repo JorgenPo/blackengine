@@ -17,9 +17,15 @@ namespace black {
         this->message = stream.str();
     }
 
-    FunctionNotFoundException::FunctionNotFoundException(std::string library, std::string function) {
+    FunctionNotFoundException::FunctionNotFoundException(std::string library, std::string function)
+        : function(function) {
+
         std::ostringstream stream;
         stream << "Function " << function << "() not found in " << library;
         this->message = stream.str();
+    }
+
+    const std::string &FunctionNotFoundException::getFunction() const {
+        return function;
     }
 }
