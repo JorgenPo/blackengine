@@ -1,13 +1,13 @@
 
 #include <memory>
 
-#include "GLRenderPlugin.h"
+#include "GLRendererPlugin.h"
 #include <core/Core.h>
 
-std::shared_ptr<black::GLRenderPlugin> plugin;
+std::shared_ptr<black::GLRendererPlugin> plugin;
 
 extern "C" void BlackPluginInstall() {
-    plugin = std::make_shared<black::GLRenderPlugin>();
+    plugin = std::make_shared<black::GLRendererPlugin>();
 
     auto core = black::Core::getInstance();
     core->registerPlugin(plugin);

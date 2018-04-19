@@ -8,7 +8,7 @@
 #include <core/Plugin.h>
 
 namespace black {
-    class GLRenderPlugin : public Plugin {
+    class GLRendererPlugin : public Plugin {
     public:
         std::string getName() override;
 
