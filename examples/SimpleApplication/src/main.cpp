@@ -34,7 +34,7 @@ int main() {
 
     try {
         auto& pm = core->getPluginManager();
-        pm->loadPlugin("CorePlugin");
+        pm->loadPlugin("GLRenderPlugin");
     } catch(const black::Exception& e) {
         std::cerr << e.getMessage() << "\n";
         return 2;

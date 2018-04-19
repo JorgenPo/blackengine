@@ -32,7 +32,7 @@ namespace black::ui {
         };
 
     protected:
-        std::string title{};
+        std::string title;
         int width;
         int height;
         Mode mode;
@@ -41,9 +41,8 @@ namespace black::ui {
         bool isMinimized;
 
     public:
-        Window(std::string title, int width, int height, Mode mode, bool isMaximized, bool isMinimized)
-                : title(std::move(title)), width(width), height(height), mode(mode),
-                  isShown(false), isMaximized(isMaximized), isMinimized(isMinimized) {
+        Window() : title(), width(), height(), mode(Mode::NORMAL),
+                  isShown(false), isMaximized(false), isMinimized(false) {
         }
 
         /**

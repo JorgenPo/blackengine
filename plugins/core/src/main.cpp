@@ -16,6 +16,5 @@ extern "C" void BlackPluginInstall() {
 extern "C" void BlackPluginUninstall() {
     auto core = black::Core::getInstance();
     core->unregisterPlugin(plugin);
-
     plugin.reset();
 }

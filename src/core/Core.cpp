@@ -21,14 +21,6 @@ namespace black {
         determineTargetPlatform();
     }
 
-    void Core::registerWindowFactory(std::shared_ptr<ui::WindowFactory> factory) {
-        this->factories.push_back(factory);
-    }
-
-    const std::vector<std::shared_ptr<ui::WindowFactory>> &Core::getWindowFactories() {
-        return this->factories;
-    }
-
     const std::unique_ptr<PluginManager> &Core::getPluginManager() const {
         return pluginManager;
     }

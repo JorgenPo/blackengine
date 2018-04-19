@@ -9,7 +9,6 @@
 #include <vector>
 
 #include <config/config.h>
-#include <core/ui/WindowFactory.h>
 
 #include "PluginManager.h"
 
@@ -72,9 +71,6 @@ namespace black {
          * The message contains a problem description
          */
         void initialize();
-
-        void registerWindowFactory(std::shared_ptr<ui::WindowFactory> factory);
-        const std::vector<std::shared_ptr<ui::WindowFactory>> &getWindowFactories();
 
         const std::unique_ptr<PluginManager> &getPluginManager() const;
 

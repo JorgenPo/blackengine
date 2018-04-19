@@ -6,12 +6,11 @@ set(CMAKE_CXX_STANDARD 17)
 set(BUILD_DIR ${CMAKE_SOURCE_DIR}/build)
 set(CMAKE_PREFIX_PATH ${BUILD_DIR}/)
 
-#option(WINDOW_WITH_ALL "Include support of all window implementations" OFF)
-#option(WINDOW_WITH_GLFW "Include GLFW window implementation support" ON)
-#option(WINDOW_WITH_WX "Include wxWidgets window implementation support" OFF)
-
 # Run initializing scripts
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
+
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 ## Check platform
 include(Platform)
@@ -61,16 +60,17 @@ set_target_properties(BlackEngine PROPERTIES PREFIX "")
 include_directories(${INCLUDE_DIRECTORIES})
 
 # Install headers and library
-install(TARGETS BlackEngine DESTINATION ${BUILD_DIR}/)
-install(TARGETS BlackEngine DESTINATION ${BUILD_DIR}/examples)
-install(DIRECTORY src/core/ DESTINATION ${BUILD_DIR}/include/BlackEngine
+install(TARGETS BlackEngine DESTINATION /)
+install(TARGETS BlackEngine DESTINATION examples/)
+install(DIRECTORY src/core/ DESTINATION include/BlackEngine/
         FILES_MATCHING PATTERN "*.h")
-
-# Need to build from ide
-install(TARGETS BlackEngine DESTINATION ${CMAKE_BINARY_DIR}/examples/SimpleApplication/)
 
 # Build examples
 add_subdirectory(examples/SimpleApplication)
+
+# PLUGINS
+## Gl Render Plugin
+add_subdirectory(plugins/glrender)
 
 # Add core plugin
 add_subdirectory(plugins/core)

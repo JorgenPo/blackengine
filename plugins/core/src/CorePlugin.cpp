@@ -6,7 +6,6 @@
 
 #include <iostream>
 #include <memory>
-#include <ui/glfwWindowFactory.h>
 #include <core/Core.h>
 
 using namespace std;
@@ -14,14 +13,10 @@ using namespace std;
 namespace black {
 
     std::string CorePlugin::getName() {
-        return std::string("Core");
+        return std::string("Core Plugin");
     }
 
     void CorePlugin::install() {
-        auto core = Core::getInstance();
-        auto glfwFactory = std::make_shared<ui::glfwWindowFactory>();
-
-        core->registerWindowFactory(glfwFactory);
     }
 
     void CorePlugin::initialize() {
