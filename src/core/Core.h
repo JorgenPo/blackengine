@@ -7,8 +7,13 @@
 
 #include <memory>
 #include <vector>
+#include <set>
+#include <list>
 
 #include <config/config.h>
+#include <core/render/Renderer.h>
+#include <core/scene/Scene.h>
+
 
 #include "PluginManager.h"
 
@@ -22,6 +27,36 @@ namespace black {
     class UnknownPlatformException : public Exception {
     public:
         UnknownPlatformException();
+    };
+
+    class RendererNotSetException : public Exception {
+    public:
+        RendererNotSetException();
+    };
+
+    class ScenePrototypeAlreadyExistException : public Exception {
+    public:
+        explicit ScenePrototypeAlreadyExistException(const std::string &prototypeName);
+    };
+
+    class ScenePrototypeNotFoundException : public Exception {
+    public:
+        explicit ScenePrototypeNotFoundException(const std::string &sceneType);
+    };
+
+    class SceneAlreadyExistException : public Exception {
+    public:
+        explicit SceneAlreadyExistException(const std::string &name);
+    };
+
+    class RendererAlreadyExistException : public Exception {
+    public:
+        explicit RendererAlreadyExistException(const std::string &name);
+    };
+
+    class SceneNotFoundException : public Exception {
+    public:
+        explicit SceneNotFoundException(const std::string &name);
     };
 
     enum class Platform {
@@ -38,15 +73,26 @@ namespace black {
      *  @singleton
      */
     class Core {
+        using PluginsMap = std::map<std::string, std::shared_ptr<Plugin>>;
+        using ScenePrototypeList = std::list<std::shared_ptr<scene::Scene>>;
+        using SceneMap = std::map<std::string, std::shared_ptr<scene::Scene>>;
+        using RendererSet = std::set<std::shared_ptr<render::Renderer>>;
+
     private:
         static Core *instance;
 
         const std::string CORE_PLUGIN_NAME = "CorePlugin";
 
-        std::vector<std::shared_ptr<ui::WindowFactory>> factories;
-        std::map<std::string, std::shared_ptr<Plugin>> plugins;
-        std::unique_ptr<PluginManager> pluginManager;
         Platform platform;
+
+        PluginsMap plugins;
+        RendererSet renderers;
+        ScenePrototypeList scenePrototypes;
+        SceneMap scenes;
+
+        std::unique_ptr<PluginManager> pluginManager;
+        std::shared_ptr<render::Renderer> currentRenderer;
+        std::shared_ptr<scene::Scene> currentScene;
 
         Core();
         ~Core() = default;
@@ -102,6 +148,62 @@ namespace black {
          * @param plugin Plugin to be unregistered
          */
         void unregisterPlugin(std::shared_ptr<Plugin> plugin);
+
+        /**
+         * Register a renderer in core
+         *
+         * @param renderer Renderer
+         */
+        void registerRenderer(std::shared_ptr<render::Renderer> renderer);
+
+        const RendererSet &getAvailableRenderers();
+
+        /**
+         * Register a scene type prototype.
+         *
+         * @throws ScenePrototypeAlreadyExistException if type with that name was already registered
+         * @param prototype Pointer to a scene class object. That object will be
+         * copied every time user creates scene with this type
+         */
+        void registerScenePrototype(std::shared_ptr<scene::Scene> prototype);
+
+        /**
+         * Creates scene with given prototypeName string.
+         * Looks in scenePrototypes for prototype with name prototypeName.
+         *
+         * @param prototypeName Name of scene prototype
+         *
+         * @throws ScenePrototypeNotFoundException if no such scene prototype was registered
+         * @return
+         */
+        std::shared_ptr<scene::Scene> createScene(std::string prototypeName);
+
+        /**
+         * Add scene to scene list with given name.
+         *
+         * @param scene A scene
+         * @param name Name for scene
+         */
+        void addScene(std::shared_ptr<scene::Scene> scene, std::string name);
+
+        /**
+         * Removes a scene with given name
+         *
+         * @param name A scene name
+         */
+        void removeScene(std::string name);
+
+        /**
+         * Set scene with given name current
+         *
+         * @param name Scene name
+         */
+        void setCurrentScene(std::string name);
+
+        /**
+         * Renders a new frame
+         */
+        void render();
 
     private:
         /**

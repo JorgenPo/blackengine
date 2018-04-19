@@ -2,7 +2,10 @@
 // Created by popof on 15.04.2018.
 //
 #include "Core.h"
+
+#include <set>
 #include <core/os/windows/WindowsSharedLibrary.h>
+#include <sstream>
 
 namespace black {
 
@@ -10,11 +13,34 @@ namespace black {
 
     CoreInitializationException::CoreInitializationException(const std::string &message) : Exception(message) {}
     UnknownPlatformException::UnknownPlatformException() : Exception("Unknown target platform") {}
+    RendererNotSetException::RendererNotSetException() : Exception("No renderers was loaded. Please, set up a renderer manually.") {}
+    ScenePrototypeAlreadyExistException::ScenePrototypeAlreadyExistException(const std::string &prototypeName) : Exception() {
+        std::stringstream stream;
+        stream << "Scene prototype with name '" << prototypeName << "' already exist";
+        this->message = stream.str();
+    }
+    ScenePrototypeNotFoundException::ScenePrototypeNotFoundException(const std::string &sceneType) : Exception() {
+        std::stringstream stream;
+        stream << "Scene prototype with name '" << sceneType << "' not found";
+        this->message = stream.str();
+    }
+    SceneAlreadyExistException::SceneAlreadyExistException(const std::string &name) : Exception() {
+        std::stringstream stream;
+        stream << "Scene with name '" << name << "' already exist";
+        this->message = stream.str();
+    }
+    SceneNotFoundException::SceneNotFoundException(const std::string &name) : Exception() {
+        std::stringstream stream;
+        stream << "Scene with name '" << name << "' not found";
+        this->message = stream.str();
+    }
+    RendererAlreadyExistException::RendererAlreadyExistException(const std::string &name) : Exception() {
+        std::stringstream stream;
+        stream << "Renderer with name '" << name << "' already exist";
+        this->message = stream.str();
+    }
 
     Core::Core() : platform(Platform::UNKNOWN) {
-        // 10 is enough almost for now
-        this->factories.reserve(10);
-
         // Responsible for manage plugins
         this->pluginManager = std::make_unique<PluginManager>();
 
@@ -72,5 +98,63 @@ namespace black {
 
             throw CoreInitializationException(message);
         }
+    }
+
+    void Core::render() {
+        if (this->currentRenderer == nullptr) {
+            throw RendererNotSetException();
+        }
+
+        //this->currentRenderer->renderToAllTargets();
+    }
+
+    void Core::registerScenePrototype(std::shared_ptr<scene::Scene> prototype) {
+        this->scenePrototypes.push_back(prototype);
+    }
+
+    std::shared_ptr<scene::Scene> Core::createScene(std::string prototypeName) {
+        for (const auto &prototype : this->scenePrototypes) {
+            if (prototype->getPrototypeName() == prototypeName) {
+                return std::shared_ptr<scene::Scene>(prototype->copy());
+            }
+        }
+
+        throw ScenePrototypeNotFoundException(prototypeName);
+    }
+
+    void Core::addScene(std::shared_ptr<scene::Scene> newScene, std::string name) {
+        if (this->scenes.find(name) != this->scenes.end()) {
+            throw SceneAlreadyExistException(name);
+        }
+
+        this->scenes[name] = newScene;
+
+        if (this->currentScene == nullptr) {
+            this->currentScene = newScene;
+        }
+    }
+
+    void Core::setCurrentScene(std::string name) {
+        if (this->scenes.find(name) == this->scenes.end()) {
+            throw SceneNotFoundException(name);
+        }
+
+        this->currentScene = this->scenes[name];
+    }
+
+    void Core::removeScene(std::string name) {
+        this->scenes.erase(name);
+    }
+
+    void Core::registerRenderer(std::shared_ptr<render::Renderer> newRenderer) {
+        auto exist = this->renderers.insert(newRenderer);
+
+        if (exist.second == true) {
+            throw RendererAlreadyExistException(newRenderer->getName());
+        }
+    }
+
+    const Core::RendererSet &Core::getAvailableRenderers() {
+        return this->renderers;
     }
 }

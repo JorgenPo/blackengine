@@ -14,27 +14,10 @@ namespace black {
     Application::Application() {
         auto core = Core::getInstance();
 
-        auto factories = core->getWindowFactories();
-
-        if (!factories.empty()) {
-            auto factory = factories.front();
-            factory->setWidth(800);
-            factory->setHeight(600);
-            factory->setTitle("BlackEngine 2k18 Application");
-
-            try {
-                this->window = factory->create();
-            } catch (const ui::WindowInitializationException &e) {
-                // TODO: Logging
-            }
-        }
-
         initialize();
     }
 
-    Application::~Application() {
-
-    }
+    Application::~Application() = default;
 
 
     int Application::run() {

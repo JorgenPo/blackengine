@@ -2,6 +2,7 @@
 #define BLACKENGINE2018_APPLICATION_H
 
 #include <memory>
+#include <core/scene/Scene.h>
 
 #include "ui/Window.h"
 
@@ -13,6 +14,7 @@ namespace black {
     class Application {
     protected:
         std::shared_ptr<ui::Window> window;
+        std::shared_ptr<scene::Scene> mainScene;
 
     public:
         /* Initialize application. Constructor calls initialize() method

@@ -69,8 +69,8 @@ install(DIRECTORY src/core/ DESTINATION include/BlackEngine/
 add_subdirectory(examples/SimpleApplication)
 
 # PLUGINS
-## Gl Render Plugin
-add_subdirectory(plugins/glrender)
+## Gl Renderer Plugin
+add_subdirectory(plugins/glrenderer)
 
 # Add core plugin
 add_subdirectory(plugins/core)

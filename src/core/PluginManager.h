@@ -38,10 +38,12 @@ namespace black {
      * Manages plugin loading
      */
     class PluginManager {
+        using PluginsMap = std::map<std::string, std::shared_ptr<SharedLibrary>>;
+
         const std::string PLUGIN_ENTRY_POINT = "BlackPluginInstall";
         const std::string PLUGIN_EXIT_POINT = "BlackPluginUninstall";
 
-        std::map<std::string, std::shared_ptr<SharedLibrary>> loadedPlugins;
+        PluginsMap loadedPlugins;
         std::list<std::string> pluginDirs;
 
         typedef void (*PluginEntryPoint)();
