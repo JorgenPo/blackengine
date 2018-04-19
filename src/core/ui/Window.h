@@ -9,6 +9,7 @@
 
 #include <core/Exception.h>
 #include <utility>
+#include <core/render/RenderTarget.h>
 
 namespace black::ui {
 
@@ -20,7 +21,7 @@ namespace black::ui {
     /**
      * An abstraction for window
      */
-    class Window {
+    class Window : public render::RenderTarget {
     public:
         /**
          * Window display mode
