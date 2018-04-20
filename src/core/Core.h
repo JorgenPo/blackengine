@@ -19,6 +19,11 @@
 
 namespace black {
 
+    class NotImplementedException : public Exception {
+    public:
+        NotImplementedException(const std::string &what);
+    };
+
     class CoreInitializationException : public Exception {
     public:
         explicit CoreInitializationException(const std::string &message);
@@ -32,6 +37,11 @@ namespace black {
     class RendererNotSetException : public Exception {
     public:
         RendererNotSetException();
+    };
+
+    class SceneNotSetException : public Exception {
+    public:
+        SceneNotSetException();
     };
 
     class ScenePrototypeAlreadyExistException : public Exception {
@@ -82,6 +92,7 @@ namespace black {
         static Core *instance;
 
         const std::string CORE_PLUGIN_NAME = "CorePlugin";
+        const std::string GL_RENDERER_PLUGIN_NAME = "GLRendererPlugin";
 
         Platform platform;
 
@@ -158,6 +169,9 @@ namespace black {
 
         const RendererSet &getAvailableRenderers();
 
+        void setRenderer(std::shared_ptr<render::Renderer>);
+        std::shared_ptr<render::Renderer> getCurrentRenderer();
+
         /**
          * Register a scene type prototype.
          *
@@ -176,7 +190,7 @@ namespace black {
          * @throws ScenePrototypeNotFoundException if no such scene prototype was registered
          * @return
          */
-        std::shared_ptr<scene::Scene> createScene(std::string prototypeName);
+        std::shared_ptr<scene::Scene> createSceneWithType(std::string prototypeName);
 
         /**
          * Add scene to scene list with given name.
@@ -203,7 +217,7 @@ namespace black {
         /**
          * Renders a new frame
          */
-        void render();
+        void renderFrame();
 
     private:
         /**

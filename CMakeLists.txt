@@ -4,7 +4,9 @@ project(BlackEngine)
 set(CMAKE_CXX_STANDARD 17)
 
 set(BUILD_DIR ${CMAKE_SOURCE_DIR}/build)
-set(CMAKE_PREFIX_PATH ${BUILD_DIR}/)
+set(CMAKE_INSTALL_PREFIX ${BUILD_DIR}/)
+
+message(STATUS "Install Directory: ${CMAKE_INSTALL_PREFIX}")
 
 # Run initializing scripts
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
@@ -31,9 +33,13 @@ CONFIGURE_FILE(
 file(GLOB COMMON_SOURCES
         "src/core/*.h"
         "src/core/ui/*.h"
+        "src/core/scene/*.h"
+        "src/core/render/*.h"
 
         "src/core/*.cpp"
         "src/core/ui/*.cpp"
+        "src/core/scene/*.cpp"
+        "src/core/render/*.cpp"
         )
 
 # Platform specific sources

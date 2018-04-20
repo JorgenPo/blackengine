@@ -6,14 +6,24 @@
 #include <set>
 #include <core/os/windows/WindowsSharedLibrary.h>
 #include <sstream>
+#include <utility>
 
 namespace black {
 
     Core* Core::instance = nullptr;
 
+    NotImplementedException::NotImplementedException(const std::string &what) : Exception() {
+        std::stringstream stream;
+        stream << what << " not implemented";
+        this->message = stream.str();
+    }
+
     CoreInitializationException::CoreInitializationException(const std::string &message) : Exception(message) {}
     UnknownPlatformException::UnknownPlatformException() : Exception("Unknown target platform") {}
-    RendererNotSetException::RendererNotSetException() : Exception("No renderers was loaded. Please, set up a renderer manually.") {}
+    RendererNotSetException::RendererNotSetException()
+            : Exception("No renderer was set. Please, set up a renderer before render frame") {}
+    SceneNotSetException::SceneNotSetException()
+            : Exception("No scene was set. Please, set up a scene before render frame") {}
     ScenePrototypeAlreadyExistException::ScenePrototypeAlreadyExistException(const std::string &prototypeName) : Exception() {
         std::stringstream stream;
         stream << "Scene prototype with name '" << prototypeName << "' already exist";
@@ -89,9 +99,12 @@ namespace black {
     }
 
     void Core::initialize() {
-        // Load core plugin
         try {
+            // Load core plugin
             this->pluginManager->loadPlugin(CORE_PLUGIN_NAME);
+
+            // Default opengl renderer
+            this->pluginManager->loadPlugin(GL_RENDERER_PLUGIN_NAME);
         } catch(const PluginNotFoundException &e) {
             std::string message = "Failed to load core plugin. Check ";
             message += CORE_PLUGIN_NAME + " shared library exist in application directory";
@@ -100,19 +113,24 @@ namespace black {
         }
     }
 
-    void Core::render() {
+    void Core::renderFrame() {
         if (this->currentRenderer == nullptr) {
             throw RendererNotSetException();
         }
 
-        //this->currentRenderer->renderToAllTargets();
+        if (this->currentScene == nullptr) {
+            throw SceneNotSetException();
+        }
+
+        auto objects = this->currentScene->getObjectList();
+        this->currentRenderer->renderToAllTargets(objects);
     }
 
     void Core::registerScenePrototype(std::shared_ptr<scene::Scene> prototype) {
         this->scenePrototypes.push_back(prototype);
     }
 
-    std::shared_ptr<scene::Scene> Core::createScene(std::string prototypeName) {
+    std::shared_ptr<scene::Scene> Core::createSceneWithType(std::string prototypeName) {
         for (const auto &prototype : this->scenePrototypes) {
             if (prototype->getPrototypeName() == prototypeName) {
                 return std::shared_ptr<scene::Scene>(prototype->copy());
@@ -149,12 +167,21 @@ namespace black {
     void Core::registerRenderer(std::shared_ptr<render::Renderer> newRenderer) {
         auto exist = this->renderers.insert(newRenderer);
 
-        if (exist.second == true) {
+        // If no renderer was inserted
+        if (!exist.second) {
             throw RendererAlreadyExistException(newRenderer->getName());
         }
     }
 
     const Core::RendererSet &Core::getAvailableRenderers() {
         return this->renderers;
+    }
+
+    void Core::setRenderer(std::shared_ptr<render::Renderer> renderer) {
+        this->currentRenderer = std::move(renderer);
+    }
+
+    std::shared_ptr<render::Renderer> Core::getCurrentRenderer() {
+        return this->currentRenderer;
     }
 }

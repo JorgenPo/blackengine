@@ -11,9 +11,6 @@
 
 // Simple example application
 class SimpleApplication : public black::Application {
-    void initialize() override {
-        Application::initialize();
-    }
 };
 
 int main() {
@@ -28,19 +25,8 @@ int main() {
 
     SimpleApplication app;
 
-    // Loading shared library
-    std::unique_ptr<black::SharedLibrary> lib =
-            std::make_unique<black::os::WindowsSharedLibrary>("BlackEngine");
-
     try {
-        auto& pm = core->getPluginManager();
-        pm->loadPlugin("GLRendererPlugin");
-    } catch(const black::Exception& e) {
-        std::cerr << e.getMessage() << "\n";
-        return 2;
-    }
-
-    try {
+        app.initialize();
         return app.run();
     } catch (const black::Exception &e) {
         std::cerr << e.getMessage() << "\n";
