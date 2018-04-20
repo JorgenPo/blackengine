@@ -11,6 +11,11 @@
 
 // Simple example application
 class SimpleApplication : public black::Application {
+public:
+    void initialize() override {
+        Application::initialize();
+        this->core->getCurrentRenderer()->setClearColor(black::Color(black::Color::RED));
+    }
 };
 
 int main() {

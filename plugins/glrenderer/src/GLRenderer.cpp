@@ -17,7 +17,8 @@ namespace black::render {
     }
 
     void GLRenderer::render(const ObjectList &objectList) {
-        glClearColor(0.8f, 0.2f, 0.8f, 1.0f);
+        auto color = this->clearColor;
+        glClearColor(color.r, color.g, color.b, color.a);
         glClear(GL_COLOR_BUFFER_BIT);
     }
 }
