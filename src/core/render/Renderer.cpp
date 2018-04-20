@@ -2,10 +2,11 @@
 // Created by popof on 19.04.2018.
 //
 
+#include <core/Core.h>
 #include "Renderer.h"
 
 namespace black::render {
-    black::render::Renderer::Renderer() : renderTargets() {
+    black::render::Renderer::Renderer() : renderTargets(), clearColor(Color::WHITE) {
     }
 
     void Renderer::addRenderTarget(std::shared_ptr<RenderTarget> target) {
@@ -14,7 +15,7 @@ namespace black::render {
 
     void Renderer::removeRenderTarget(std::string name) {
         for (auto &renderTarget : this->renderTargets) {
-            if (renderTarget->getName() == name) {
+            if (renderTarget->getRenderTargetName() == name) {
                 this->renderTargets.remove(renderTarget);
             }
         }
@@ -22,6 +23,36 @@ namespace black::render {
 
     RenderTargetList &Renderer::getRenderTargets() {
         return this->renderTargets;
+    }
+
+    void Renderer::renderToAllTargets(const ObjectList &objectList) {
+        for (const auto &target : this->renderTargets) {
+            target->setRenderTargetCurrent();
+            this->render(objectList);
+            target->updateRenderTarget();
+        }
+    }
+
+    void Renderer::renderToTarget(std::string targetName, const ObjectList &objectList) {
+        for (const auto &target : this->renderTargets) {
+            if (target->getRenderTargetName() == targetName) {
+                target->setRenderTargetCurrent();
+                this->render(objectList);
+                target->updateRenderTarget();
+            }
+        }
+    }
+
+    void Renderer::render(const ObjectList &objectList) {
+        throw NotImplementedException("Renderer::render");
+    }
+
+    const Color &Renderer::getClearColor() const {
+        return clearColor;
+    }
+
+    void Renderer::setClearColor(const Color &clearColor) {
+        Renderer::clearColor = clearColor;
     }
 }
 

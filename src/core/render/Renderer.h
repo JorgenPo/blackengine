@@ -7,6 +7,9 @@
 
 #include <memory>
 #include <list>
+#include <core/ui/Window.h>
+#include <core/Color.h>
+
 #include "RenderTarget.h"
 #include "Object.h"
 
@@ -17,18 +20,35 @@ namespace black::render {
      * Abstract class for all renderers.
      */
     class Renderer {
+    protected:
         RenderTargetList renderTargets;
+        Color clearColor;
+
     public:
         Renderer();
 
         virtual std::string getName() = 0;
+        virtual std::shared_ptr<ui::Window> createRendererWindow() = 0;
+
+        /**
+         * Renders all object to current render target.
+         * Target is current prior call of this method, after
+         * this method render target will be updated.
+         *
+         * @param objectList Objects to render
+         */
+        virtual void render(const ObjectList &objectList);
 
         void addRenderTarget(std::shared_ptr<RenderTarget> target);
         void removeRenderTarget(std::string name);
         RenderTargetList &getRenderTargets();
 
-        virtual void renderToAllTargets(const ObjectList &objectList) = 0;
-        virtual void renderToTarget(std::string targetName) = 0;
+        void renderToAllTargets(const ObjectList &objectList);
+        void renderToTarget(std::string targetName, const ObjectList &objectList);
+
+        const Color &getClearColor() const;
+
+        void setClearColor(const Color &clearColor);
     };
 }
 

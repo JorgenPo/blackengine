@@ -3,6 +3,7 @@
 //
 
 #include "GLRendererPlugin.h"
+#include "GLRenderer.h"
 
 #include <iostream>
 #include <memory>
@@ -17,7 +18,8 @@ namespace black {
     }
 
     void GLRendererPlugin::install() {
-
+        auto core = Core::getInstance();
+        core->registerRenderer(std::make_shared<render::GLRenderer>());
     }
 
     void GLRendererPlugin::initialize() {
