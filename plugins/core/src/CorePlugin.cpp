@@ -3,6 +3,7 @@
 //
 
 #include "CorePlugin.h"
+#include "SimpleScene.h"
 
 #include <iostream>
 #include <memory>
@@ -17,6 +18,8 @@ namespace black {
     }
 
     void CorePlugin::install() {
+        auto core = Core::getInstance();
+        core->registerScenePrototype(std::make_shared<scene::SimpleScene>());
     }
 
     void CorePlugin::initialize() {
