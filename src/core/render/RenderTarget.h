@@ -16,8 +16,18 @@ namespace black::render {
     class RenderTarget {
 
     public:
-        virtual std::string getName() = 0;
+        virtual std::string getRenderTargetName() = 0;
 
+        /**
+         * Updates a renderer target. Apply all changes in context,
+         * Swaps the buffers if double buffering enabled and so on.
+         */
+        virtual void updateRenderTarget() = 0;
+
+        /**
+         * Makes a renderer target current
+         */
+        virtual void setRenderTargetCurrent() = 0;
     };
 
 }
