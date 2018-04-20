@@ -5,21 +5,43 @@
 #include <core/scene/Scene.h>
 
 #include "ui/Window.h"
+#include "Core.h"
 
 
 namespace black {
+
+    class ApplicationNotInitializedException : public Exception {
+    public:
+        ApplicationNotInitializedException();
+    };
+
+    class ApplicationInitializationException : public Exception {
+    public:
+        explicit ApplicationInitializationException(const std::string &message);
+    };
+
     /**
      * Main class of application
      */
     class Application {
     protected:
-        std::shared_ptr<ui::Window> window;
+        const std::string MAIN_SCENE_NAME = "Main Scene";
+
+        std::shared_ptr<ui::Window> mainWindow;
         std::shared_ptr<scene::Scene> mainScene;
+        Core *core;
+
+        bool isInitialized;
+
+        std::string windowTitle;
+        int windowWidth;
+        int windowHeight;
 
     public:
         /* Initialize application. Constructor calls initialize() method
          * of subclasses
          */
+        Application(std::string windowTitle, int windowWidth, int windowHeight);
         Application();
 
         virtual ~Application();
@@ -31,6 +53,11 @@ namespace black {
          * User must set the window before run application
          */
         virtual int run();
+
+    private:
+        void setDefaultRenderer();
+        void setMainWindow();
+        void setMainScene();
     };
 
 }

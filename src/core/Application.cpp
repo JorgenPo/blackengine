@@ -8,27 +8,94 @@
 #include "Core.h"
 #include "Exception.h"
 
+#include <utility>
+
 namespace black {
 
+    ApplicationNotInitializedException::ApplicationNotInitializedException()
+            : Exception("Application must be initialized before run. Call initialize method") {}
 
-    Application::Application() {
-        auto core = Core::getInstance();
+    ApplicationInitializationException::ApplicationInitializationException(const std::string &message)
+            : Exception(message) {}
 
-        initialize();
+
+    Application::Application() : core(Core::getInstance()), isInitialized(false), windowTitle("BlackEngine application"),
+                                 windowWidth(800), windowHeight(600)
+    {
+    }
+
+    Application::Application(std::string title, int windowWidth, int windowHeight)
+            : core(Core::getInstance()), isInitialized(false), windowTitle(std::move(title)),
+              windowWidth(windowWidth), windowHeight(windowHeight) {
+
     }
 
     Application::~Application() = default;
 
 
+    /**
+     * Application loop
+     *
+     * @return Result code
+     */
     int Application::run() {
-        if (this->window == nullptr) {
+        if (!isInitialized) {
+            throw ApplicationNotInitializedException();
+        }
+
+        if (this->mainWindow == nullptr) {
             throw Exception("Window has not been set up");
         }
 
-        return this->window->run();
+        while (!this->mainWindow->isWindowShouldClose()) {
+            this->core->renderFrame();
+            this->mainWindow->pollEvents();
+        }
+
+        return 0;
     }
 
     void Application::initialize() {
-        // Subclasses must implement this
+        setDefaultRenderer();
+        setMainWindow();
+        setMainScene();
+
+        this->isInitialized = true;
+    }
+
+    void Application::setDefaultRenderer() {
+        auto renderers = this->core->getAvailableRenderers();
+
+        for (const auto &renderer : renderers) {
+            this->core->setRenderer(renderer);
+            return;
+        }
+
+        throw ApplicationInitializationException("No available renderers found");
+    }
+
+    void Application::setMainWindow() {
+        if (this->core->getCurrentRenderer() == nullptr) {
+            throw ApplicationInitializationException("Failed to set up main window: no renderer");
+        }
+
+        // Create window for renderFrame using this renderer
+        this->mainWindow = this->core->getCurrentRenderer()->createRendererWindow();
+        if (this->mainWindow == nullptr) {
+            throw ApplicationInitializationException("Failed to create renderer window");
+        }
+
+        this->mainWindow->setTitle(this->windowTitle);
+        this->mainWindow->setWidth(this->windowWidth);
+        this->mainWindow->setHeight(this->windowHeight);
+        this->mainWindow->initialize();
+
+        this->core->getCurrentRenderer()->addRenderTarget(this->mainWindow);
+    }
+
+    void Application::setMainScene() {
+        this->mainScene = this->core->createSceneWithType("Simple Scene");
+        this->core->addScene(this->mainScene, MAIN_SCENE_NAME);
+        this->core->setCurrentScene(MAIN_SCENE_NAME);
     }
 }
