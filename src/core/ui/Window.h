@@ -8,8 +8,10 @@
 #define BLACKENGINE2018_WINDOW_H
 
 #include <core/Exception.h>
-#include <utility>
 #include <core/render/RenderTarget.h>
+#include <core/render/Context.h>
+#include <memory>
+#include <utility>
 
 namespace black::ui {
 
@@ -41,22 +43,31 @@ namespace black::ui {
         bool isMaximized;
         bool isMinimized;
 
+        std::shared_ptr<render::Context> context;
     public:
-        Window() : title(), width(), height(), mode(Mode::NORMAL),
-                  isShown(false), isMaximized(false), isMinimized(false) {
-        }
+        Window(std::shared_ptr<render::Context> context) : context(std::move(context)), title(), width(), height(),
+                                                           mode(Mode::NORMAL), isShown(false), isMaximized(false),
+                                                           isMinimized(false) {}
 
         /**
-         * Initialize window
+         * Initialize the window.
          *
          * @throws WindowInitializationException When failed to initialize window. Message contain a reason.
          */
-        virtual void initialize() {};
+        virtual void initialize() = 0;
+
 
         /**
-         * Run window message loop
+         * True if window should be closed and terminate
+         *
+         * @return boolean
          */
-        virtual int run() = 0;
+        virtual bool isWindowShouldClose() = 0;
+
+        /**
+         * Check event queue for os events
+         */
+        virtual void pollEvents() = 0;
 
         /**
          * Hides the window
@@ -70,6 +81,16 @@ namespace black::ui {
          */
         virtual void show() {
             this->isShown = true;
+        }
+
+        void setRenderTargetCurrent() override {
+            if (!this->context->isContextCurrent()) {
+                this->context->setContextCurrent();
+            }
+        }
+
+        const std::shared_ptr<render::Context> &getContext() const {
+            return context;
         }
 
         /* Getters and setters */
