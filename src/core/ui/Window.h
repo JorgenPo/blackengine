@@ -10,8 +10,12 @@
 #include <core/Exception.h>
 #include <core/render/RenderTarget.h>
 #include <core/render/Context.h>
+
+#include "WindowEventEmitter.h"
+
 #include <memory>
 #include <utility>
+#include <set>
 
 namespace black::ui {
 
@@ -23,7 +27,9 @@ namespace black::ui {
     /**
      * An abstraction for window
      */
-    class Window : public render::RenderTarget {
+    class Window : public render::RenderTarget, public WindowEventEmitter {
+        static std::set<std::string> windowNames;
+
     public:
         /**
          * Window display mode
@@ -35,6 +41,7 @@ namespace black::ui {
         };
 
     protected:
+        std::string name;
         std::string title;
         int width;
         int height;
@@ -45,17 +52,27 @@ namespace black::ui {
 
         std::shared_ptr<render::Context> context;
     public:
-        Window(std::shared_ptr<render::Context> context) : context(std::move(context)), title(), width(), height(),
+        Window(std::string name, std::shared_ptr<render::Context> context) : name(std::move(name)), context(std::move(context)), title(), width(), height(),
                                                            mode(Mode::NORMAL), isShown(false), isMaximized(false),
-                                                           isMinimized(false) {}
+                                                           isMinimized(false)
+        {
+
+        }
+
+        std::string getWindowName() {
+            return this->name;
+        }
 
         /**
          * Initialize the window.
          *
          * @throws WindowInitializationException When failed to initialize window. Message contain a reason.
          */
-        virtual void initialize() = 0;
-
+        virtual void initialize() {
+            if (windowNames.find(this->name) != windowNames.end()) {
+                throw WindowInitializationException("Window with name '" + this->name + "' already exist");
+            }
+        }
 
         /**
          * True if window should be closed and terminate
@@ -74,6 +91,14 @@ namespace black::ui {
          */
         virtual void hide() {
             this->isShown = false;
+        }
+
+        /**
+         * Change window size
+         */
+        virtual void resize(int width, int height) {
+            this->width = width;
+            this->height = height;
         }
 
         /**
@@ -150,6 +175,5 @@ namespace black::ui {
             Window::isMinimized = isMinimized;
         }
     };
-
 }
 #endif //BLACKENGINE2018_WINDOW_H

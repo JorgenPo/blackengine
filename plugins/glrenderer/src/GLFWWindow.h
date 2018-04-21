@@ -26,15 +26,16 @@ namespace black::ui {
         std::shared_ptr<GLFWwindow> window;
 
     public:
-        explicit GLFWWindow(const std::string &title = "", int width = 800, int height = 600,
+        explicit GLFWWindow(std::string name, const std::string &title = "", int width = 800, int height = 600,
                    Mode mode = Mode::NORMAL, bool isMaximized = false, bool isMinimized = false);
 
         virtual ~GLFWWindow();
 
         void initialize() override;
         bool isWindowShouldClose() override;
-
         void pollEvents() override;
+
+        void resize(int width, int height) override;
 
         /* Render target interface */
         std::string getRenderTargetName() override;
