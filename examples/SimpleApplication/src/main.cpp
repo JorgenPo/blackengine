@@ -35,6 +35,7 @@ int main() {
         return app.run();
     } catch (const black::Exception &e) {
         std::cerr << e.getMessage() << "\n";
-        return 1;
     }
+
+    return 1;
 }

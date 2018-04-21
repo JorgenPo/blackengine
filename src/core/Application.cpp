@@ -80,15 +80,15 @@ namespace black {
         }
 
         // Create window for renderFrame using this renderer
-        this->mainWindow = this->core->getCurrentRenderer()->createRendererWindow();
-        if (this->mainWindow == nullptr) {
-            throw ApplicationInitializationException("Failed to create renderer window");
+        try {
+            this->mainWindow = this->core->getCurrentRenderer()->createRendererWindow(this->windowTitle);
+            this->mainWindow->setTitle(this->windowTitle);
+            this->mainWindow->setWidth(this->windowWidth);
+            this->mainWindow->setHeight(this->windowHeight);
+            this->mainWindow->initialize();
+        } catch(const Exception &e) {
+            throw ApplicationInitializationException("Failed to init main window: " + e.getMessage());
         }
-
-        this->mainWindow->setTitle(this->windowTitle);
-        this->mainWindow->setWidth(this->windowWidth);
-        this->mainWindow->setHeight(this->windowHeight);
-        this->mainWindow->initialize();
 
         this->core->getCurrentRenderer()->addRenderTarget(this->mainWindow);
     }

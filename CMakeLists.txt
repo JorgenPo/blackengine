@@ -35,11 +35,13 @@ file(GLOB COMMON_SOURCES
         "src/core/ui/*.h"
         "src/core/scene/*.h"
         "src/core/render/*.h"
+        "src/core/events/*.h"
 
         "src/core/*.cpp"
         "src/core/ui/*.cpp"
         "src/core/scene/*.cpp"
         "src/core/render/*.cpp"
+        "src/core/events/*.cpp"
         )
 
 # Platform specific sources
