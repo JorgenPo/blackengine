@@ -5,7 +5,14 @@
 #ifndef BLACKENGINE_CONTEXT_H
 #define BLACKENGINE_CONTEXT_H
 
+#include <core/Exception.h>
+
 namespace black::render {
+
+    class ContextInitializationException : public Exception {
+    public:
+        explicit ContextInitializationException(const std::string &message) : Exception(message) {}
+    };
 
     /**
      * Represent a renderer context with all renderer objects.
@@ -13,6 +20,7 @@ namespace black::render {
      */
     class Context {
     public:
+        virtual void initializeContext() = 0;
         virtual void setContextCurrent() = 0;
         virtual bool isContextCurrent() = 0;
     };

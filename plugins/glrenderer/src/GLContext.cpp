@@ -3,29 +3,64 @@
 //
 
 #include "GLContext.h"
+
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 namespace black::render {
 
-    int GLContext::getMajorVersion() {
-        int version;
-        glGetIntegerv(GLFW_VERSION_MAJOR, &version);
-
-        return version;
+    GLContext::GLContext() : version() {
     }
 
-    int GLContext::getMinorVersion() {
-        int version;
-        glGetIntegerv(GLFW_VERSION_MINOR, &version);
-
-        return version;
+    int GLContext::getGLMajorVersion() {
+        return this->version.major;
     }
 
-    std::string GLContext::getVendorString() {
-        return reinterpret_cast<const char*>(glGetString(GL_VENDOR));
+    int GLContext::getGLMinorVersion() {
+        return this->version.minor;
     }
 
-    std::string GLContext::getRendererDeviceName() {
-        return reinterpret_cast<const char*>(glGetString(GL_RENDER));
+    int GLContext::getGLRevisionVersion() {
+        return this->version.revision;
+    }
+
+    std::string GLContext::getGLVendorString() {
+        auto string = reinterpret_cast<const char*>(glGetString(GL_VENDOR));
+
+        if (string == nullptr) {
+            string = "Unknown vendor";
+        }
+
+        return string;
+    }
+
+    std::string GLContext::getGLRendererDeviceName() {
+        auto string = reinterpret_cast<const char*>(glGetString(GL_RENDERER));
+
+        if (string == nullptr) {
+            string = "Unknown device name";
+        }
+
+        return string;
+    }
+
+    GLVersion GLContext::getGLVersion() {
+        return this->version;
+    }
+
+    std::string GLContext::getGLVersionString() {
+        static auto string = glfwGetVersionString();
+
+        return string;
+    }
+
+    // Called after creating context and making it current
+    void GLContext::initializeContext() {
+        this->setContextCurrent();
+
+        glfwGetVersion(&this->version.major, &this->version.minor, &this->version.revision);
+        if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))) {
+            throw ContextInitializationException("Failed to load GL loader using glad");
+        }
     }
 }

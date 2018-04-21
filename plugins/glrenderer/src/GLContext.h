@@ -10,12 +10,26 @@
 
 namespace black::render {
 
+    struct GLVersion {
+        int major;
+        int minor;
+        int revision;
+    };
+
     class GLContext : public Context {
+        GLVersion version;
     public:
-        virtual int getMajorVersion();
-        virtual int getMinorVersion();
-        virtual std::string getVendorString();
-        virtual std::string getRendererDeviceName();
+        GLContext();
+
+        virtual int getGLMajorVersion();
+        virtual int getGLMinorVersion();
+        virtual int getGLRevisionVersion();
+        virtual GLVersion getGLVersion();
+        virtual std::string getGLVersionString();
+        virtual std::string getGLVendorString();
+        virtual std::string getGLRendererDeviceName();
+
+        void initializeContext() override;
     };
 }
 
