@@ -6,11 +6,12 @@ set(CMAKE_CXX_STANDARD 17)
 file(GLOB SOURCES
         src/*.h
         src/*.cpp
+        src/glad/src/glad.c
         )
 
 set(LIBRARIES BlackEngine)
 
-include_directories(src)
+include_directories(src src/glad/include)
 
 add_library(GLRendererPlugin SHARED ${SOURCES})
 
