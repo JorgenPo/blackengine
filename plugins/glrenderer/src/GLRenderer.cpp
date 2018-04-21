@@ -11,9 +11,9 @@ namespace black::render {
         return this->rendererName;
     }
 
-    std::shared_ptr<ui::Window> GLRenderer::createRendererWindow() {
+    std::shared_ptr<ui::Window> GLRenderer::createRendererWindow(std::string name) {
         // TODO: allow to use different subclasses of GLWindow
-        return std::make_shared<ui::GLFWWindow>();
+        return std::make_shared<ui::GLFWWindow>(std::move(name));
     }
 
     void GLRenderer::render(const ObjectList &objectList) {

@@ -18,7 +18,7 @@ namespace black::render {
     public:
         std::string getName() override;
 
-        std::shared_ptr<ui::Window> createRendererWindow() override;
+        std::shared_ptr<ui::Window> createRendererWindow(std::string name) override;
 
         void render(const ObjectList &objectList) override;
 

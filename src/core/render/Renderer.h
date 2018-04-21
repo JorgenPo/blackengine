@@ -28,7 +28,7 @@ namespace black::render {
         Renderer();
 
         virtual std::string getName() = 0;
-        virtual std::shared_ptr<ui::Window> createRendererWindow() = 0;
+        virtual std::shared_ptr<ui::Window> createRendererWindow(std::string name) = 0;
 
         /**
          * Renders all object to current render target.

@@ -17,8 +17,7 @@ namespace black::ui {
     class GLWindow : public Window {
 
     public:
-        explicit GLWindow(std::shared_ptr<render::GLContext> context);
-
+        explicit GLWindow(std::string name, std::shared_ptr<render::GLContext> context);
     };
 
 }

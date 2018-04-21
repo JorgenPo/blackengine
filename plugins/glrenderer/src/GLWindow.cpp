@@ -6,6 +6,6 @@
 #include <memory>
 
 namespace black::ui {
-    GLWindow::GLWindow(std::shared_ptr<render::GLContext> context) : Window(context) {
+    GLWindow::GLWindow(std::string name, std::shared_ptr<render::GLContext> context) : Window(name, context) {
     }
 }
