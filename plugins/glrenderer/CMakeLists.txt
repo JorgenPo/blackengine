@@ -5,7 +5,11 @@ set(CMAKE_CXX_STANDARD 17)
 
 file(GLOB SOURCES
         src/*.h
+        src/glsl/*.h
+
         src/*.cpp
+        src/glsl/*.cpp
+
         src/glad/src/glad.c
         )
 

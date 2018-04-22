@@ -20,6 +20,10 @@ namespace black::render {
 
         std::shared_ptr<ui::Window> createRendererWindow(std::string name) override;
 
+        std::shared_ptr<Shader> createShader(std::string source, Shader::Type type) override;
+
+        std::shared_ptr<Mesh> createMesh(std::vector<float> vertices) override;
+
         void render(const ObjectList &objectList) override;
 
 

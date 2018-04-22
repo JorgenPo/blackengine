@@ -7,7 +7,7 @@
 #ifndef BLACKENGINE2018_GLFWWINDOW_H
 #define BLACKENGINE2018_GLFWWINDOW_H
 
-#include <GLFW/glfw3.h>
+#include "GLIncludes.h"
 
 #include <string>
 #include <memory>
