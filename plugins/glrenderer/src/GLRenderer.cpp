@@ -3,6 +3,7 @@
 //
 
 #include <glsl/GLSLShader.h>
+#include <glsl/GLSLShaderProgram.h>
 #include "GLRenderer.h"
 #include "GLFWWindow.h"
 #include "GLMesh.h"
@@ -30,5 +31,9 @@ namespace black::render {
 
     std::shared_ptr<Mesh> GLRenderer::createMesh(std::vector<float> vertices) {
         return std::make_shared<GLMesh>(vertices);
+    }
+
+    std::shared_ptr<ShaderProgram> GLRenderer::createShaderProgram() {
+        return std::make_shared<GLSLShaderProgram>();
     }
 }

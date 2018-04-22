@@ -21,6 +21,8 @@ namespace black::render {
 
         void compile() override;
 
+        void *getImplementation() override;
+
     private:
         GLenum toGLShaderType(Type type);
         bool isCompiledSuccessfully();

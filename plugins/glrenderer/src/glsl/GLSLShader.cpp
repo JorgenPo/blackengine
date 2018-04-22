@@ -24,6 +24,8 @@ namespace black::render {
         if (!isCompiledSuccessfully()) {
             throw ShaderCompileException(this->getCompilationError());
         }
+
+        this->compiled = true;
     }
 
     GLenum GLSLShader::toGLShaderType(Shader::Type type) {
@@ -53,5 +55,9 @@ namespace black::render {
 
         auto string = std::string(errorBuffer);
         return string;
+    }
+
+    void *GLSLShader::getImplementation() {
+        return &(this->shader);
     }
 }

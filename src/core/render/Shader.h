@@ -29,6 +29,7 @@ namespace black::render {
     protected:
         std::string source;
         Type type;
+        bool compiled;
 
     public:
         Shader(const std::string &code, Type type);
@@ -40,9 +41,20 @@ namespace black::render {
          */
         virtual void compile() = 0;
 
+        bool isCompiled();
+
+        /**
+         * Returns implementation specific pointer
+         *
+         * @return
+         */
+        virtual void *getImplementation() = 0;
+
         const std::string &getSource() const;
 
         void setSource(const std::string &source);
+
+        Type getType() const;
     };
 }
 

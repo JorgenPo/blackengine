@@ -17,7 +17,15 @@ namespace black::render {
         Shader::source = source;
     }
 
+    bool Shader::isCompiled() {
+        return this->compiled;
+    }
+
+    Shader::Type Shader::getType() const {
+        return type;
+    }
+
     ShaderCompileException::ShaderCompileException(std::string message) : Exception() {
-        this->message = "Shader compiled with errors: " + std::move(message);
+        this->message = "Shader compiled with errors: \n" + std::move(message);
     }
 }

@@ -19,7 +19,7 @@ public:
         Application::initialize();
         this->core->getCurrentRenderer()->setClearColor(Color(Color::RED));
 
-        std::string shaderSource = "#version 330 core\n"
+        std::string vertexShaderSource = "#version 330 core\n"
                                    "layout (location = 0) in vec3 aPos;\n"
                                    "\n"
                                    "void main()\n"
@@ -27,9 +27,29 @@ public:
                                    "    gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
                                    "}";
 
+        std::string fragmentShaderSource = "#version 330 core\n"
+                                           "out vec4 FragColor;\n"
+                                           "\n"
+                                           "void main()\n"
+                                           "{\n"
+                                           "    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+                                           "} ";
+
+        auto vertexShader = this->core->getCurrentRenderer()->createShader(vertexShaderSource, Shader::Type::VERTEX);
+        auto fragmentShader = this->core->getCurrentRenderer()->createShader(fragmentShaderSource, Shader::Type::FRAGMENT);
+
+        auto triangleMesh = this->core->getCurrentRenderer()->createMesh({});
+
         try {
-            auto shader = this->core->getCurrentRenderer()->createShader(shaderSource, Shader::Type::VERTEX);
-            shader->compile();
+            vertexShader->compile();
+            fragmentShader->compile();
+            auto program = this->core->getCurrentRenderer()->createShaderProgram();
+            program->setVertexShader(vertexShader);
+            program->setFragmentShader(fragmentShader);
+            program->link();
+
+            program->use();
+            std::cout << "Shader program built successfully" << std::endl;
         } catch(const Exception &e) {
             std::cerr << "Failed to compile shader: " + e.getMessage() << std::endl;
         }

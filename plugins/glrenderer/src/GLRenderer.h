@@ -24,6 +24,8 @@ namespace black::render {
 
         std::shared_ptr<Mesh> createMesh(std::vector<float> vertices) override;
 
+        std::shared_ptr<ShaderProgram> createShaderProgram() override;
+
         void render(const ObjectList &objectList) override;
 
 

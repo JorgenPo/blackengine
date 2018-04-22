@@ -14,6 +14,7 @@
 #include "Object.h"
 #include "Shader.h"
 #include "Mesh.h"
+#include "ShaderProgram.h"
 
 namespace black::render {
     using RenderTargetList = std::list<std::shared_ptr<RenderTarget>>;
@@ -32,6 +33,7 @@ namespace black::render {
         virtual std::string getName() = 0;
         virtual std::shared_ptr<ui::Window> createRendererWindow(std::string name) = 0;
         virtual std::shared_ptr<Shader> createShader(std::string source, Shader::Type type) = 0;
+        virtual std::shared_ptr<ShaderProgram> createShaderProgram() = 0;
         virtual std::shared_ptr<Mesh> createMesh(std::vector<float> vertices) = 0;
 
         /**
