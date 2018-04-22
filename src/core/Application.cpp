@@ -47,7 +47,9 @@ namespace black {
             throw Exception("Window has not been set up");
         }
 
-        while (!this->mainWindow->isWindowShouldClose()) {
+        while (!this->mainWindow->isWindowShouldClose() &&
+               !(this->mainWindow->isKeyPressed(InputKey::KEY_ESCAPE))) {
+            this->processInput();
             this->core->renderFrame();
             this->mainWindow->pollEvents();
         }
@@ -97,5 +99,8 @@ namespace black {
         this->mainScene = this->core->createSceneWithType("Simple Scene");
         this->core->addScene(this->mainScene, MAIN_SCENE_NAME);
         this->core->setCurrentScene(MAIN_SCENE_NAME);
+    }
+
+    void Application::processInput() {
     }
 }

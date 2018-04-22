@@ -16,6 +16,18 @@ public:
         Application::initialize();
         this->core->getCurrentRenderer()->setClearColor(black::Color(black::Color::RED));
     }
+
+    void processInput() override {
+        if (this->mainWindow->isKeyPressed(black::InputKey::KEY_0)) {
+            this->core->getCurrentRenderer()->setClearColor(black::Color(black::Color::RED));
+        } else if (this->mainWindow->isKeyPressed(black::InputKey::KEY_1)) {
+            this->core->getCurrentRenderer()->setClearColor(black::Color(black::Color::GREEN));
+        } else if (this->mainWindow->isKeyPressed(black::InputKey::KEY_2)) {
+            this->core->getCurrentRenderer()->setClearColor(black::Color(black::Color::WHITE));
+        } else if (this->mainWindow->isKeyPressed(black::InputKey::KEY_3)) {
+            this->core->getCurrentRenderer()->setClearColor(black::Color(black::Color::BLACK));
+        }
+    }
 };
 
 int main() {

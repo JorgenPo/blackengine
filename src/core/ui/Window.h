@@ -16,6 +16,7 @@
 #include <memory>
 #include <utility>
 #include <set>
+#include <core/InputKey.h>
 
 namespace black::ui {
 
@@ -85,6 +86,12 @@ namespace black::ui {
          * Check event queue for os events
          */
         virtual void pollEvents() = 0;
+
+        /**
+         * Process user input (keyboard, mouse) and
+         * emit appropriate window event (onKeyDown and so on)
+         */
+        virtual bool isKeyPressed(InputKey key) = 0;
 
         /**
          * Hides the window

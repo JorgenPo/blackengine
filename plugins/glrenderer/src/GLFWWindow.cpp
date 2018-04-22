@@ -95,4 +95,9 @@ namespace black::ui {
 
         this->emitWindowSizeChanged(this, width, height);
     }
+
+    bool GLFWWindow::isKeyPressed(InputKey key) {
+        // GLFW KEYS AND InputKey enum are fully compatible
+        return glfwGetKey(this->window.get(), static_cast<int>(key)) == GLFW_PRESS;
+    }
 }

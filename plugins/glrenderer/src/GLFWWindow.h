@@ -35,6 +35,8 @@ namespace black::ui {
         bool isWindowShouldClose() override;
         void pollEvents() override;
 
+        bool isKeyPressed(InputKey key) override;
+
         void resize(int width, int height) override;
 
         /* Render target interface */

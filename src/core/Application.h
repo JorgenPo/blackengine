@@ -45,8 +45,8 @@ namespace black {
         Application();
 
         virtual ~Application();
-
         virtual void initialize();
+        virtual void processInput();
 
         /**
          * Runs the application. Shows the window.
