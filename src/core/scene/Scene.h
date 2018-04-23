@@ -7,7 +7,7 @@
 
 #include <core/render/Renderer.h>
 #include <core/Copyable.h>
-#include <core/render/Object.h>
+#include <core/GameEntity.h>
 
 namespace black::scene {
     /**
@@ -21,14 +21,14 @@ namespace black::scene {
     class Scene : public Copyable {
     public:
         virtual std::string getPrototypeName() = 0;
-        virtual void addObject(std::shared_ptr<render::Object> object) = 0;
-        virtual void addObjects(const render::ObjectList &objectList) = 0;
-        virtual void removeObject(std::shared_ptr<render::Object> object) = 0;
+        virtual void addEntity(std::shared_ptr<GameEntity> object) = 0;
+        virtual void addEntities(const GameEntityList &objectList) = 0;
+        virtual void removeEntity(std::shared_ptr<GameEntity> object) = 0;
         virtual void clear() = 0;
 
         Scene *copy() const override = 0;
 
-        virtual const render::ObjectList &getObjectList() = 0;
+        virtual const GameEntityList &getEntityList() = 0;
     };
 }
 

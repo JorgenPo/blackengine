@@ -9,19 +9,19 @@ namespace black::scene {
         return new SimpleScene();
     }
 
-    void SimpleScene::addObject(std::shared_ptr<render::Object> object) {
+    void SimpleScene::addEntity(std::shared_ptr<GameEntity> object) {
         this->objects.push_back(object);
     }
 
-    void SimpleScene::addObjects(const render::ObjectList &objectList) {
+    void SimpleScene::addEntities(const GameEntityList &objectList) {
         this->objects.insert(this->objects.end(), objectList.begin(), objectList.end());
     }
 
-    void SimpleScene::removeObject(std::shared_ptr<render::Object> object) {
+    void SimpleScene::removeEntity(std::shared_ptr<GameEntity> object) {
         this->objects.remove(object);
     }
 
-    const ObjectList &SimpleScene::getObjectList() {
+    const GameEntityList &SimpleScene::getEntityList() {
         return this->objects;
     }
 

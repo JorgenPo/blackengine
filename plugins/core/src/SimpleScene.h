@@ -16,20 +16,20 @@ namespace black::scene {
     class SimpleScene : public Scene {
         const std::string name = "Simple Scene";
 
-        ObjectList objects;
+        GameEntityList objects;
     public:
 
         std::string getPrototypeName() override;
 
         void clear() override;
 
-        void addObject(std::shared_ptr<render::Object> object) override;
+        void addEntity(std::shared_ptr<GameEntity> object) override;
 
-        void addObjects(const render::ObjectList &objectList) override;
+        void addEntities(const GameEntityList &objectList) override;
 
-        void removeObject(std::shared_ptr<render::Object> object) override;
+        void removeEntity(std::shared_ptr<GameEntity> object) override;
 
-        const ObjectList &getObjectList() override;
+        const GameEntityList &getEntityList() override;
 
         // Copyable interface
         SimpleScene* copy() const override;
