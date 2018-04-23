@@ -57,6 +57,9 @@ namespace black::ui {
             auto glfwWindow = reinterpret_cast<GLFWWindow*>(glfwGetWindowUserPointer(window));
             glfwWindow->resize(width, height);
         });
+
+        // Required to get rid of GL_INVALID_ENUM error
+        glGetError();
     }
 
     GLFWWindow::~GLFWWindow() {
