@@ -23,7 +23,7 @@ namespace black::render {
 
         std::shared_ptr<Shader> createShader(std::string source, Shader::Type type) override;
 
-        std::shared_ptr<Mesh> createMesh(std::vector<float> vertices) override;
+        std::shared_ptr<Mesh> createMesh(std::vector<float> vertices, std::vector<unsigned int> indices) override;
 
         std::shared_ptr<ShaderProgram> createShaderProgram() override;
 

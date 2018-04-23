@@ -34,7 +34,7 @@ namespace black::render {
         virtual std::shared_ptr<ui::Window> createRendererWindow(std::string name) = 0;
         virtual std::shared_ptr<Shader> createShader(std::string source, Shader::Type type) = 0;
         virtual std::shared_ptr<ShaderProgram> createShaderProgram() = 0;
-        virtual std::shared_ptr<Mesh> createMesh(std::vector<float> vertices) = 0;
+        virtual std::shared_ptr<Mesh> createMesh(std::vector<float> vertices, std::vector<unsigned int> indices) = 0;
 
         /**
          * Renders all object to current render target.

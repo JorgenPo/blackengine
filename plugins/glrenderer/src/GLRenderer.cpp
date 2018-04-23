@@ -75,8 +75,11 @@ namespace black::render {
                 continue;
             }
 
-            model->getMesh()->bind();
-            glDrawArrays(GL_TRIANGLES, 0, model->getMesh()->getVerticesCount());
+            auto mesh = model->getMesh();
+
+            mesh->bind();
+            glDrawElements(GL_TRIANGLES, mesh->getIndicesCount(), GL_UNSIGNED_INT, nullptr);
+            mesh->unbind();
         }
     }
 
@@ -84,8 +87,8 @@ namespace black::render {
         return std::make_shared<GLSLShader>(source, type);
     }
 
-    std::shared_ptr<Mesh> GLRenderer::createMesh(std::vector<float> vertices) {
-        return std::make_shared<GLMesh>(vertices);
+    std::shared_ptr<Mesh> GLRenderer::createMesh(std::vector<float> vertices, std::vector<unsigned int> indices) {
+        return std::make_shared<GLMesh>(vertices, indices);
     }
 
     std::shared_ptr<ShaderProgram> GLRenderer::createShaderProgram() {

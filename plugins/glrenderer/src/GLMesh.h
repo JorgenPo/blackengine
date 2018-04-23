@@ -17,9 +17,10 @@ namespace black::render {
         static const GLuint POSITION_LAYOUT;
 
         GLuint vbo;
+        GLuint ebo;
         GLuint vao;
     public:
-        explicit GLMesh(std::vector<float> vertices);
+        explicit GLMesh(std::vector<float> vertices, std::vector<unsigned int> indices);
 
         virtual ~GLMesh();
 

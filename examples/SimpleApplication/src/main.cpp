@@ -20,9 +20,19 @@ public:
         Application::initialize();
         this->core->getCurrentRenderer()->setClearColor(Color(Color::WHITE));
 
-        auto triangleMesh = this->core->getCurrentRenderer()->createMesh({-0.5f, -0.5f, 0.0f,
-                                                                           0.5f, -0.5f, 0.0f,
-                                                                           0.0f,  0.5f, 0.0f});
+        std::vector<float> vertices = {
+                0.5f,  0.5f, 0.0f,  // top right
+                0.5f, -0.5f, 0.0f,  // bottom right
+                -0.5f, -0.5f, 0.0f,  // bottom left
+                -0.5f,  0.5f, 0.0f   // top left
+        };
+
+        std::vector<unsigned int> indices = {  // note that we start from 0!
+                0, 1, 3,   // first triangle
+                1, 2, 3    // second triangle
+        };
+
+        auto triangleMesh = this->core->getCurrentRenderer()->createMesh(vertices, indices);
 
         auto entity = std::make_shared<GameEntity>();
         entity->addComponent("Model", std::make_shared<components::ModelComponent>(triangleMesh));

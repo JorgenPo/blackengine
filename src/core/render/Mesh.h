@@ -15,12 +15,15 @@ namespace black::render {
     class Mesh {
     protected:
         std::vector<float> vertices;
-
+        std::vector<unsigned int> indices;
     public:
-        explicit Mesh(std::vector<float> vertices);
+        explicit Mesh(std::vector<float> vertices, std::vector<unsigned int> indices);
 
         int getVerticesCount();
         std::vector<float> getVertices();
+
+        const std::vector<unsigned int> &getIndices() const;
+        int getIndicesCount();
 
         /**
          * Bind a mesh. Makes it current.
