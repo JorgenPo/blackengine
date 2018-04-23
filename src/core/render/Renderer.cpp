@@ -25,7 +25,7 @@ namespace black::render {
         return this->renderTargets;
     }
 
-    void Renderer::renderToAllTargets(const ObjectList &objectList) {
+    void Renderer::renderToAllTargets(const GameEntityList &objectList) {
         for (const auto &target : this->renderTargets) {
             target->setRenderTargetCurrent();
             this->render(objectList);
@@ -33,7 +33,7 @@ namespace black::render {
         }
     }
 
-    void Renderer::renderToTarget(std::string targetName, const ObjectList &objectList) {
+    void Renderer::renderToTarget(std::string targetName, const GameEntityList &objectList) {
         for (const auto &target : this->renderTargets) {
             if (target->getRenderTargetName() == targetName) {
                 target->setRenderTargetCurrent();
@@ -43,7 +43,7 @@ namespace black::render {
         }
     }
 
-    void Renderer::render(const ObjectList &objectList) {
+    void Renderer::render(const GameEntityList &objectList) {
         throw NotImplementedException("Renderer::render");
     }
 

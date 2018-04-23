@@ -13,6 +13,7 @@ namespace black::render {
      * OpenGL Renderer
      */
     class GLRenderer : public Renderer {
+        std::shared_ptr<ShaderProgram> program;
         const std::string rendererName = "OpenGL Renderer";
 
     public:
@@ -26,9 +27,10 @@ namespace black::render {
 
         std::shared_ptr<ShaderProgram> createShaderProgram() override;
 
-        void render(const ObjectList &objectList) override;
+        void render(const GameEntityList &objectList) override;
 
 
+        void initProgram();
     };
 
 }

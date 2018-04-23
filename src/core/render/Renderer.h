@@ -11,7 +11,7 @@
 #include <core/Color.h>
 
 #include "RenderTarget.h"
-#include "Object.h"
+#include "core/GameEntity.h"
 #include "Shader.h"
 #include "Mesh.h"
 #include "ShaderProgram.h"
@@ -43,14 +43,14 @@ namespace black::render {
          *
          * @param objectList Objects to render
          */
-        virtual void render(const ObjectList &objectList);
+        virtual void render(const GameEntityList &objectList);
 
         void addRenderTarget(std::shared_ptr<RenderTarget> target);
         void removeRenderTarget(std::string name);
         RenderTargetList &getRenderTargets();
 
-        void renderToAllTargets(const ObjectList &objectList);
-        void renderToTarget(std::string targetName, const ObjectList &objectList);
+        void renderToAllTargets(const GameEntityList &objectList);
+        void renderToTarget(std::string targetName, const GameEntityList &objectList);
 
         const Color &getClearColor() const;
 

@@ -122,7 +122,7 @@ namespace black {
             throw SceneNotSetException();
         }
 
-        auto objects = this->currentScene->getObjectList();
+        auto objects = this->currentScene->getEntityList();
         this->currentRenderer->renderToAllTargets(objects);
     }
 

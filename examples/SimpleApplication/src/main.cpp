@@ -8,6 +8,7 @@
 #include <core/SharedLibrary.h>
 #include <core/os/windows/WindowsSharedLibrary.h>
 #include <core/Core.h>
+#include <core/components/ModelComponent.h>
 
 using namespace black;
 using namespace black::render;
@@ -17,42 +18,15 @@ class SimpleApplication : public Application {
 public:
     void initialize() override {
         Application::initialize();
-        this->core->getCurrentRenderer()->setClearColor(Color(Color::RED));
+        this->core->getCurrentRenderer()->setClearColor(Color(Color::WHITE));
 
-        std::string vertexShaderSource = "#version 330 core\n"
-                                   "layout (location = 0) in vec3 aPos;\n"
-                                   "\n"
-                                   "void main()\n"
-                                   "{\n"
-                                   "    gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-                                   "}";
+        auto triangleMesh = this->core->getCurrentRenderer()->createMesh({-0.5f, -0.5f, 0.0f,
+                                                                           0.5f, -0.5f, 0.0f,
+                                                                           0.0f,  0.5f, 0.0f});
 
-        std::string fragmentShaderSource = "#version 330 core\n"
-                                           "out vec4 FragColor;\n"
-                                           "\n"
-                                           "void main()\n"
-                                           "{\n"
-                                           "    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-                                           "} ";
-
-        auto vertexShader = this->core->getCurrentRenderer()->createShader(vertexShaderSource, Shader::Type::VERTEX);
-        auto fragmentShader = this->core->getCurrentRenderer()->createShader(fragmentShaderSource, Shader::Type::FRAGMENT);
-
-        auto triangleMesh = this->core->getCurrentRenderer()->createMesh({});
-
-        try {
-            vertexShader->compile();
-            fragmentShader->compile();
-            auto program = this->core->getCurrentRenderer()->createShaderProgram();
-            program->setVertexShader(vertexShader);
-            program->setFragmentShader(fragmentShader);
-            program->link();
-
-            program->use();
-            std::cout << "Shader program built successfully" << std::endl;
-        } catch(const Exception &e) {
-            std::cerr << "Failed to compile shader: " + e.getMessage() << std::endl;
-        }
+        auto entity = std::make_shared<GameEntity>();
+        entity->addComponent("Model", std::make_shared<components::ModelComponent>(triangleMesh));
+        this->mainScene->addEntity(entity);
     }
 
     void processInput() override {
