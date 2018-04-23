@@ -14,7 +14,10 @@ namespace black::render {
      * OpenGL specific mesh
      */
     class GLMesh : public Mesh {
+        static const GLuint POSITION_LAYOUT;
+
         GLuint vbo;
+        GLuint vao;
     public:
         explicit GLMesh(std::vector<float> vertices);
 
