@@ -54,6 +54,9 @@ namespace black {
         // Responsible for manage plugins
         this->pluginManager = std::make_unique<PluginManager>();
 
+        // Responsible for manage resources
+        this->resourceManager = std::make_unique<resources::ResourceManager>();
+
         determineTargetPlatform();
     }
 
@@ -183,5 +186,9 @@ namespace black {
 
     std::shared_ptr<render::Renderer> Core::getCurrentRenderer() {
         return this->currentRenderer;
+    }
+
+    const std::unique_ptr<resources::ResourceManager> &Core::getResourceManager() const {
+        return resourceManager;
     }
 }

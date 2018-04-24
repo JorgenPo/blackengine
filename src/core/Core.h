@@ -13,6 +13,7 @@
 #include <config/config.h>
 #include <core/render/Renderer.h>
 #include <core/scene/Scene.h>
+#include <core/resources/ResourceManager.h>
 
 
 #include "PluginManager.h"
@@ -102,6 +103,7 @@ namespace black {
         SceneMap scenes;
 
         std::unique_ptr<PluginManager> pluginManager;
+        std::unique_ptr<resources::ResourceManager> resourceManager;
         std::shared_ptr<render::Renderer> currentRenderer;
         std::shared_ptr<scene::Scene> currentScene;
 
@@ -129,7 +131,17 @@ namespace black {
          */
         void initialize();
 
+        /**
+         * Returns a pointer to plugin manager instance
+         * @return PluginManager pointer
+         */
         const std::unique_ptr<PluginManager> &getPluginManager() const;
+
+        /**
+         * Returns a pointer to resource manager instance
+         * @return ResourceManager pointer
+         */
+        const std::unique_ptr<resources::ResourceManager> &getResourceManager() const;
 
         /**
          * Initialize concrete subclass of SharedLibrary suitable for user
