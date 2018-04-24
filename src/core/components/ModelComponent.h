@@ -20,6 +20,8 @@ namespace black::components {
         // TODO: material
 
     public:
+        static std::string getName() { return "Model"; }
+
         ModelComponent();
 
         explicit ModelComponent(const std::shared_ptr<render::Mesh> &mesh);

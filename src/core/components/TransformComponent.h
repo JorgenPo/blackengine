@@ -19,6 +19,8 @@ namespace black::components {
         std::array<float, 3> scale;
 
     public:
+        static std::string getName() { return "Transform"; }
+
         TransformComponent();
 
         const std::array<float, 3> &getPosition() const;

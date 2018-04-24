@@ -14,11 +14,11 @@
 
 namespace black::components {
 
-    class ComponentNameAlreadyExistException : public Exception {
+    class ComponentAlreadyExistException : public Exception {
     public:
-        explicit ComponentNameAlreadyExistException(const std::string &name) : Exception() {
+        explicit ComponentAlreadyExistException(const std::string &name) : Exception() {
             std::stringstream stream;
-            stream << "Component with name '" << name << "' already exist";
+            stream << "Component '" << name << "' already exist";
             this->message = stream.str();
         }
     };
@@ -42,7 +42,7 @@ namespace black::components {
          * @return Requested component
          */
         template<typename T>
-        std::shared_ptr<T> getComponent(std::string name);
+        std::shared_ptr<T> getComponent();
 
         /**
          * Add the component to container
@@ -50,22 +50,26 @@ namespace black::components {
          * @param component Component
          * @throws ComponentNameAlreadyExist If a given name is busy
          */
-        void addComponent(const std::string &name, const std::shared_ptr<Component> &component) {
-            if (this->components.find(name) != this->components.end()) {
-                throw ComponentNameAlreadyExistException(name);
-            }
-
-            this->components[name] = component;
-        }
+        template<typename T>
+        void addComponent(const std::shared_ptr<T> &component);
     };
 
     template<typename T>
-    std::shared_ptr<T> ComponentsContainer::getComponent(std::string name) {
-        if (this->components.find(name) == this->components.end()) {
+    std::shared_ptr<T> ComponentsContainer::getComponent() {
+        if (this->components.find(T::getName()) == this->components.end()) {
             return nullptr;
         }
 
-        return std::dynamic_pointer_cast<T>(this->components.at(name));
+        return std::dynamic_pointer_cast<T>(this->components.at(T::getName()));
+    }
+
+    template<typename T>
+    void ComponentsContainer::addComponent(const std::shared_ptr<T> &component) {
+        if (this->components.find(T::getName()) != this->components.end()) {
+            throw ComponentAlreadyExistException(T::getName());
+        }
+
+        this->components[T::getName()] = component;
     }
 
 }

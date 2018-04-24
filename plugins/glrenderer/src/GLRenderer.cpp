@@ -26,18 +26,21 @@ namespace black::render {
 
         std::string vertexShaderSource = "#version 330 core\n"
                                          "layout (location = 0) in vec3 aPos;\n"
+                                         "out vec3 vertexColor;\n"
                                          "\n"
                                          "void main()\n"
                                          "{\n"
+                                         "    vertexColor = vec3(1.0 * gl_VertexID * aPos.y, 0.2 * gl_VertexID / gl_InstanceID, 0.4);\n"
                                          "    gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
                                          "}";
 
         std::string fragmentShaderSource = "#version 330 core\n"
+                                           "in vec3 vertexColor;\n"
                                            "out vec4 FragColor;\n"
                                            "\n"
                                            "void main()\n"
                                            "{\n"
-                                           "    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+                                           "    FragColor = vec4(vertexColor, 1.0f);\n"
                                            "} ";
 
 
@@ -53,6 +56,7 @@ namespace black::render {
             this->program->setFragmentShader(fragmentShader);
             this->program->link();
         } catch(const Exception &e) {
+            std::cerr << e.getMessage() << std::endl;
         }
     }
 
@@ -60,7 +64,9 @@ namespace black::render {
 
         static bool initialized = false;
 
-        this->initProgram();
+        if (!initialized) {
+            this->initProgram();
+        }
 
         initialized = true;
 
@@ -70,7 +76,7 @@ namespace black::render {
 
         this->program->use();
         for (const auto &object : objectList) {
-            auto model = object->getComponent<components::ModelComponent>("Model");
+            auto model = object->getComponent<components::ModelComponent>();
             if (model == nullptr) {
                 continue;
             }

@@ -16,7 +16,7 @@ namespace black {
     }
 
     GameEntity::GameEntity() {
-        this->addComponent("Transform", std::make_shared<components::TransformComponent>());
+        this->addComponent(std::make_shared<components::TransformComponent>());
     }
 
     GameEntity::GameEntity(std::shared_ptr<GameEntity> parent) {
@@ -26,7 +26,7 @@ namespace black {
     GameEntity::GameEntity(std::array<float, 3> position) {
         auto transform = std::make_shared<components::TransformComponent>();
         transform->setPosition(position);
-        this->addComponent("Transform", transform);
+        this->addComponent(transform);
     }
 
 

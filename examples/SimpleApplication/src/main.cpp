@@ -35,7 +35,7 @@ public:
         auto triangleMesh = this->core->getCurrentRenderer()->createMesh(vertices, indices);
 
         auto entity = std::make_shared<GameEntity>();
-        entity->addComponent("Model", std::make_shared<components::ModelComponent>(triangleMesh));
+        entity->addComponent(std::make_shared<components::ModelComponent>(triangleMesh));
         this->mainScene->addEntity(entity);
     }
 
