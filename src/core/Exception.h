@@ -7,9 +7,9 @@
 
 #include <string>
 #include <utility>
+#include <sstream>
 
 namespace black {
-
     class Exception : std::exception {
     protected:
         std::string message;
@@ -27,6 +27,14 @@ namespace black {
         }
     };
 
+    class FileNotFoundException : public Exception {
+    public:
+        explicit FileNotFoundException(const std::string &filename) : Exception() {
+            std::stringstream ss;
+            ss << "File with name '" << filename << "' not found";
+            this->message = ss.str();
+        }
+    };
 }
 
 
