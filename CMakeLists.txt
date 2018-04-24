@@ -46,6 +46,8 @@ file(GLOB COMMON_SOURCES
         "src/core/events/*.cpp"
         "src/core/components/*.cpp"
         "src/core/resources/*.cpp"
+
+        "libs/logging/easylogging++.cc"
         )
 
 # Platform specific sources
@@ -59,7 +61,7 @@ endif(BLACK_PLATFORM_WINDOWS)
 
 # Join all sources
 set(SOURCES ${COMMON_SOURCES} ${PLATFORM_SOURCES})
-set(INCLUDE_DIRECTORIES src/ ${Libraries_INCLUDE_PATH})
+set(INCLUDE_DIRECTORIES src/ libs/ ${Libraries_INCLUDE_PATH})
 
 add_library(BlackEngine SHARED ${SOURCES})
 
