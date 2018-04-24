@@ -28,7 +28,7 @@ namespace black::render {
     /**
      * Shader program
      */
-    class ShaderProgram {
+    class ShaderProgram : public resources::Resource {
     protected:
         std::shared_ptr<Shader> vertexShader;
         std::shared_ptr<Shader> fragmentShader;

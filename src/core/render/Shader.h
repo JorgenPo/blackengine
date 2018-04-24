@@ -7,6 +7,9 @@
 
 #include <string>
 #include <core/Exception.h>
+#include <core/resources/Resource.h>
+#include <memory>
+#include <map>
 
 namespace black::render {
 
@@ -18,7 +21,7 @@ namespace black::render {
     /**
      * A gpu program class
      */
-    class Shader {
+    class Shader : public resources::Resource {
     public:
         enum class Type {
             VERTEX,
@@ -32,6 +35,21 @@ namespace black::render {
         bool compiled;
 
     public:
+        /**
+         * Loads a shader from file.
+         * File extension must one of this:
+         *   vs - for vertex shader
+         *   fs - for fragment shader
+         *   gs - for geometry shader
+         *
+         * If no filename was specified then it assumes that it
+         * is a vertex shader.
+         *
+         * @param filename
+         * @return
+         */
+        static std::shared_ptr<Shader> fromFile(std::string filename);
+
         Shader(const std::string &code, Type type);
 
         /**
