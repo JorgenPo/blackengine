@@ -7,6 +7,7 @@
 #include <core/Core.h>
 #include <core/components/ModelComponent.h>
 #include <iostream>
+#include <cmath>
 #include "GLRenderer.h"
 #include "GLFWWindow.h"
 #include "GLMesh.h"
@@ -28,6 +29,8 @@ namespace black::render {
 
         try {
             this->program = rm->load<ShaderProgram>("simple.shader");
+            this->program->addUniformVariable("time");
+            this->program->addUniformVariable("mousePos");
         } catch (const resources::ResourceNotFoundException &e) {
             std::cerr << e.getMessage() << std::endl;
             std::cerr << "Search paths: " << e.getSearchPaths() << std::endl;
@@ -52,6 +55,11 @@ namespace black::render {
         glClear(GL_COLOR_BUFFER_BIT);
 
         this->program->use();
+
+        // Update uniform
+        double timeValue = glfwGetTime();
+        this->program->setUniformVariable("time", static_cast<float>(timeValue));
+
         for (const auto &object : objectList) {
             auto model = object->getComponent<components::ModelComponent>();
             if (model == nullptr) {

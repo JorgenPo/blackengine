@@ -1,9 +1,21 @@
 #version 330 core
 out vec4 FragColor;
 
-in vec4 vertexColor; // the input variable from the vertex shader (same name and same type)
+uniform float time;
 
 void main()
 {
-    FragColor = vertexColor;
+    float pixelX = gl_FragCoord.x;
+    float pixelY = gl_FragCoord.y;
+
+    vec4 whiteColor = vec4(1.0, 1.0, 1.0, 1.0);
+    vec4 blackColor = vec4(0.0, 0.0, 0.0, 1.0);
+
+    if (mod(pixelX, 100) < 50 && mod(pixelY, 100) < 50) {
+        FragColor = blackColor;
+    } else if (mod(pixelX, 100) > 50 && mod(pixelY, 100) > 50) {
+        FragColor = blackColor;
+    } else {
+        FragColor = whiteColor;
+    }
 }

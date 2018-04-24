@@ -62,6 +62,21 @@ namespace black::render {
          */
         virtual void use() = 0;
 
+        /**
+         * Add uniform variable to the shader
+         *
+         * @param name Name of the uniform variable
+         */
+        virtual void addUniformVariable(const std::string &name) = 0;
+
+        virtual void setUniformVariable(const std::string &name, int value) = 0;
+        virtual void setUniformVariable(const std::string &name, float value) = 0;
+        virtual void setUniformVariable(const std::string &name, bool value) = 0;
+        virtual void setUniformVariable(const std::string &name, double value) = 0;
+        virtual void setUniformVariable(const std::string &name, std::array<float, 4> value) = 0;
+        virtual void setUniformVariable(const std::string &name, std::array<float, 3> value) = 0;
+        virtual void setUniformVariable(const std::string &name, std::array<float, 2> value) = 0;
+
         const std::shared_ptr<Shader> &getVertexShader() const;
         const std::shared_ptr<Shader> &getFragmentShader() const;
         const std::shared_ptr<Shader> &getGeometryShader() const;

@@ -74,4 +74,64 @@ namespace black::render {
         }
         glUseProgram(this->program);
     }
+
+    void GLSLShaderProgram::addUniformVariable(const std::string &name) {
+        this->uniformLocations[name] = glGetUniformLocation(this->program, name.c_str());
+    }
+
+    void GLSLShaderProgram::setUniformVariable(const std::string &name, int value) {
+        if (this->uniformLocations.find(name) == this->uniformLocations.end()) {
+            return;
+        }
+
+        glUniform1i(this->uniformLocations[name], value);
+    }
+
+    void GLSLShaderProgram::setUniformVariable(const std::string &name, float value) {
+        if (this->uniformLocations.find(name) == this->uniformLocations.end()) {
+            return;
+        }
+
+        glUniform1f(this->uniformLocations[name], value);
+    }
+
+    void GLSLShaderProgram::setUniformVariable(const std::string &name, bool value) {
+        if (this->uniformLocations.find(name) == this->uniformLocations.end()) {
+            return;
+        }
+
+        glUniform1i(this->uniformLocations[name], value);
+    }
+
+    void GLSLShaderProgram::setUniformVariable(const std::string &name, double value) {
+        if (this->uniformLocations.find(name) == this->uniformLocations.end()) {
+            return;
+        }
+
+        glUniform1d(this->uniformLocations[name], value);
+    }
+
+    void GLSLShaderProgram::setUniformVariable(const std::string &name, std::array<float, 4> value) {
+        if (this->uniformLocations.find(name) == this->uniformLocations.end()) {
+            return;
+        }
+
+        glUniform4f(this->uniformLocations[name], value[0], value[1], value[2], value[3]);
+    }
+
+    void GLSLShaderProgram::setUniformVariable(const std::string &name, std::array<float, 3> value) {
+        if (this->uniformLocations.find(name) == this->uniformLocations.end()) {
+            return;
+        }
+
+        glUniform3f(this->uniformLocations[name], value[0], value[1], value[2]);
+    }
+
+    void GLSLShaderProgram::setUniformVariable(const std::string &name, std::array<float, 2> value) {
+        if (this->uniformLocations.find(name) == this->uniformLocations.end()) {
+            return;
+        }
+
+        glUniform2f(this->uniformLocations[name], value[0], value[1]);
+    }
 }
