@@ -26,16 +26,8 @@ namespace black::render {
         auto core = Core::getInstance();
         auto &rm = core->getResourceManager();
 
-        this->program = this->createShaderProgram();
         try {
-            auto vertexShader = rm->load<Shader>("simple.vert");
-            auto fragmentShader = rm->load<Shader>("simple.frag");
-
-            vertexShader->compile();
-            fragmentShader->compile();
-            this->program->setVertexShader(vertexShader);
-            this->program->setFragmentShader(fragmentShader);
-            this->program->link();
+            this->program = rm->load<ShaderProgram>("simple.shader");
         } catch (const resources::ResourceNotFoundException &e) {
             std::cerr << e.getMessage() << std::endl;
             std::cerr << "Search paths: " << e.getSearchPaths() << std::endl;

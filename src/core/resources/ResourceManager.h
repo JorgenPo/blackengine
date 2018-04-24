@@ -15,18 +15,24 @@
 namespace black::resources {
 
     class ResourceLoadingException : public Exception {
+        std::string resource;
     public:
         explicit ResourceLoadingException(const std::string &resource, const std::string &message) : Exception() {
             std::stringstream ss;
             ss << "Error while creating a resource '" << resource << "': " << message;
             this->message = ss.str();
         }
+
+        const std::string &getResource() const {
+            return resource;
+        }
     };
 
     class ResourceNotFoundException : public ResourceLoadingException {
         std::list<std::string> searchPaths;
+
     public:
-        explicit ResourceNotFoundException(const std::string &resource, std::list<std::string> searchPaths)
+        explicit ResourceNotFoundException(const std::string &resource, const std::list<std::string> &searchPaths)
                 : ResourceLoadingException(resource, "Resource not found"), searchPaths(searchPaths) {
         }
 

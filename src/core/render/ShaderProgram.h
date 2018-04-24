@@ -36,6 +36,16 @@ namespace black::render {
 
         bool linked;
     public:
+        /**
+         * Loads a program from file and tries to compile
+         * all shaders and link the program.
+         * So, after this you can use program.
+         *
+         * @param fileName
+         * @return
+         */
+        static std::shared_ptr<ShaderProgram> fromFile(const std::string &fileName);
+
         ShaderProgram();
         ShaderProgram(const std::shared_ptr<Shader> &vertexShader, const std::shared_ptr<Shader> &fragmentShader,
                       const std::shared_ptr<Shader> &geometryShader = std::shared_ptr<Shader>());
