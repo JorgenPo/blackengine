@@ -23,38 +23,23 @@ namespace black::render {
     }
 
     void GLRenderer::initProgram() {
-
-        std::string vertexShaderSource = "#version 330 core\n"
-                                         "layout (location = 0) in vec3 aPos;\n"
-                                         "out vec3 vertexColor;\n"
-                                         "\n"
-                                         "void main()\n"
-                                         "{\n"
-                                         "    vertexColor = vec3(1.0 * gl_VertexID * aPos.y, 0.2 * gl_VertexID / gl_InstanceID, 0.4);\n"
-                                         "    gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-                                         "}";
-
-        std::string fragmentShaderSource = "#version 330 core\n"
-                                           "in vec3 vertexColor;\n"
-                                           "out vec4 FragColor;\n"
-                                           "\n"
-                                           "void main()\n"
-                                           "{\n"
-                                           "    FragColor = vec4(vertexColor, 1.0f);\n"
-                                           "} ";
-
-
         auto core = Core::getInstance();
-        this->program = this->createShaderProgram();
-        auto vertexShader = this->createShader(vertexShaderSource, Shader::Type::VERTEX);
-        auto fragmentShader = this->createShader(fragmentShaderSource, Shader::Type::FRAGMENT);
+        auto &rm = core->getResourceManager();
 
+        this->program = this->createShaderProgram();
         try {
+            auto vertexShader = rm->load<Shader>("simple.vert");
+            auto fragmentShader = rm->load<Shader>("simple.frag");
+
             vertexShader->compile();
             fragmentShader->compile();
             this->program->setVertexShader(vertexShader);
             this->program->setFragmentShader(fragmentShader);
             this->program->link();
+        } catch (const resources::ResourceNotFoundException &e) {
+            std::cerr << e.getMessage() << std::endl;
+            std::cerr << "Search paths: " << e.getSearchPaths() << std::endl;
+            throw Exception(e.getMessage());
         } catch(const Exception &e) {
             std::cerr << e.getMessage() << std::endl;
         }
@@ -89,7 +74,7 @@ namespace black::render {
         }
     }
 
-    std::shared_ptr<Shader> GLRenderer::createShader(std::string source, Shader::Type type) {
+    std::shared_ptr<Shader> GLRenderer::createShader(const std::string &source, Shader::Type type) {
         return std::make_shared<GLSLShader>(source, type);
     }
 

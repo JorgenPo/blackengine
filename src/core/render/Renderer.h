@@ -23,6 +23,17 @@ namespace black::render {
      * Abstract class for all renderers.
      */
     class Renderer {
+    private:
+        /* These functions are only used by friend Resource Manager class */
+        virtual std::shared_ptr<Shader> createShader(const std::string &source, Shader::Type type) = 0;
+        virtual std::shared_ptr<ShaderProgram> createShaderProgram() = 0;
+        virtual std::shared_ptr<Mesh> createMesh(std::vector<float> vertices, std::vector<unsigned int> indices) = 0;
+
+        /* These classes have access to create* methods */
+        friend class Shader;
+        friend class ShaderProgram;
+        friend class Mesh;
+
     protected:
         RenderTargetList renderTargets;
         Color clearColor;
@@ -31,10 +42,8 @@ namespace black::render {
         Renderer();
 
         virtual std::string getName() = 0;
+
         virtual std::shared_ptr<ui::Window> createRendererWindow(std::string name) = 0;
-        virtual std::shared_ptr<Shader> createShader(std::string source, Shader::Type type) = 0;
-        virtual std::shared_ptr<ShaderProgram> createShaderProgram() = 0;
-        virtual std::shared_ptr<Mesh> createMesh(std::vector<float> vertices, std::vector<unsigned int> indices) = 0;
 
         /**
          * Renders all object to current render target.

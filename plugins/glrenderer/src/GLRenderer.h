@@ -16,16 +16,14 @@ namespace black::render {
         std::shared_ptr<ShaderProgram> program;
         const std::string rendererName = "OpenGL Renderer";
 
+        std::shared_ptr<Shader> createShader(const std::string &source, Shader::Type type) override;
+        std::shared_ptr<Mesh> createMesh(std::vector<float> vertices, std::vector<unsigned int> indices) override;
+        std::shared_ptr<ShaderProgram> createShaderProgram() override;
+
     public:
         std::string getName() override;
 
         std::shared_ptr<ui::Window> createRendererWindow(std::string name) override;
-
-        std::shared_ptr<Shader> createShader(std::string source, Shader::Type type) override;
-
-        std::shared_ptr<Mesh> createMesh(std::vector<float> vertices, std::vector<unsigned int> indices) override;
-
-        std::shared_ptr<ShaderProgram> createShaderProgram() override;
 
         void render(const GameEntityList &objectList) override;
 
