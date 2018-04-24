@@ -20,19 +20,10 @@ public:
         Application::initialize();
         this->core->getCurrentRenderer()->setClearColor(Color(Color::WHITE));
 
-        std::vector<float> vertices = {
-                0.5f,  0.5f, 0.0f,  // top right
-                0.5f, -0.5f, 0.0f,  // bottom right
-                -0.5f, -0.5f, 0.0f,  // bottom left
-                -0.5f,  0.5f, 0.0f   // top left
-        };
+        // Add resource directory to resource manager
+        this->core->getResourceManager()->addResourceFolder("resources/");
 
-        std::vector<unsigned int> indices = {  // note that we start from 0!
-                0, 1, 3,   // first triangle
-                1, 2, 3    // second triangle
-        };
-
-        auto triangleMesh = this->core->getCurrentRenderer()->createMesh(vertices, indices);
+        auto triangleMesh = this->core->getResourceManager()->load<Mesh>("test.obj");
 
         auto entity = std::make_shared<GameEntity>();
         entity->addComponent(std::make_shared<components::ModelComponent>(triangleMesh));

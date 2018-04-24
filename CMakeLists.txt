@@ -37,6 +37,7 @@ file(GLOB COMMON_SOURCES
         "src/core/render/*.h"
         "src/core/events/*.h"
         "src/core/components/*.h"
+        "src/core/resources/*.h"
 
         "src/core/*.cpp"
         "src/core/ui/*.cpp"
@@ -44,6 +45,7 @@ file(GLOB COMMON_SOURCES
         "src/core/render/*.cpp"
         "src/core/events/*.cpp"
         "src/core/components/*.cpp"
+        "src/core/resources/*.cpp"
         )
 
 # Platform specific sources

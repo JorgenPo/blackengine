@@ -9,9 +9,13 @@ file(GLOB SOURCES
         "src/*.h"
         "src/*.cpp")
 
+# Copy resources to binary dir
+file(COPY resources/ DESTINATION ${CMAKE_BINARY_DIR}/bin/resources/)
+
 add_executable(SimpleApplicationExample ${SOURCES})
 
 # Link with blackEngine
 target_link_libraries(SimpleApplicationExample BlackEngine)
 
 install(TARGETS SimpleApplicationExample RUNTIME DESTINATION examples/)
+install(DIRECTORY resources/ DESTINATION examples/resources/)
