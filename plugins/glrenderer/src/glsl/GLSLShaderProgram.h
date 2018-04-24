@@ -18,8 +18,6 @@ namespace black::render {
         static size_t ERROR_BUFFER_LENGTH;
 
         GLuint program;
-
-        std::map<std::string, int> uniformLocations;
     public:
         GLSLShaderProgram();
 
@@ -27,8 +25,6 @@ namespace black::render {
 
         void link() override;
         void use() override;
-
-        void addUniformVariable(const std::string &name) override;
 
         void setUniformVariable(const std::string &name, int value) override;
 
