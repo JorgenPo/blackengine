@@ -10,6 +10,7 @@
 #include <map>
 #include <memory>
 #include <core/FileUtils.h>
+#include <core/Logger.h>
 #include "Resource.h"
 
 namespace black::resources {
@@ -107,8 +108,17 @@ namespace black::resources {
          */
         template<typename ResourceClass>
         std::shared_ptr<ResourceClass> load(std::string file) {
+            auto log = Logger::getChannelLogger("ResourceManager");
+
+            log->info("Loading '%v' resource...\n", file);
+            log->debug("Search directories: \n");
+            for (const auto &directory : this->resourceFolders) {
+                log->debug("\"%v\"", directory);
+            }
+
             // If resource was loaded then return it
             if (this->loadedResources.find(file) != this->loadedResources.end()) {
+                log->info("Resource '%v' returned from cache\n", file);
                 return std::dynamic_pointer_cast<ResourceClass>(this->loadedResources[file]);
             }
 
@@ -117,9 +127,12 @@ namespace black::resources {
             std::shared_ptr<ResourceClass> resource;
             for (const auto &folder : this->resourceFolders) {
                 try {
+                    log->debug("Trying to find '%v' resource in '%v' folder...\n", file, folder);
                     resource = ResourceClass::fromFile(folder + file);
+                    log->debug("Resource '%v' found in '%v' directory\n", file, folder);
                     break;
                 } catch (const FileNotFoundException &e) {
+                    log->debug("Resource '%v' not found in '%v' folder\n", file, folder);
                     // Okay, try to load in different location
                 } catch (const Exception &e) {
                     throw ResourceLoadingException(file, e.getMessage());
@@ -128,9 +141,11 @@ namespace black::resources {
 
             // File was not found
             if (resource == nullptr) {
+                log->info("Resource '%v' not found!\n", file);
                 throw ResourceNotFoundException(file, this->resourceFolders);
             }
 
+            log->info("Resource '%v' was loaded!\n", file);
             this->loadedResources[file] = resource;
 
             return resource;

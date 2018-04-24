@@ -230,7 +230,6 @@ namespace black {
          * Renders a new frame
          */
         void renderFrame();
-
     private:
         /**
          * Set up platform information

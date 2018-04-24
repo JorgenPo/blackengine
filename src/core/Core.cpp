@@ -57,6 +57,9 @@ namespace black {
         // Responsible for manage resources
         this->resourceManager = std::make_unique<resources::ResourceManager>();
 
+        // Initialize logger
+        Logger::initialize();
+
         determineTargetPlatform();
     }
 
