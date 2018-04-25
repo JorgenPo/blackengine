@@ -15,12 +15,13 @@ namespace black::render {
      */
     class GLMesh : public Mesh {
         static const GLuint POSITION_LAYOUT;
+        static const GLuint TEXCOORD_LAYOUT;
 
         GLuint vbo;
         GLuint ebo;
         GLuint vao;
     public:
-        explicit GLMesh(std::vector<float> vertices, std::vector<unsigned int> indices);
+        explicit GLMesh(std::vector<float> vertices, std::vector<unsigned int> indices, std::vector<float> textureCoords);
 
         virtual ~GLMesh();
 

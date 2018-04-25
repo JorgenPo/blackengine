@@ -17,12 +17,13 @@ namespace black::render {
     class Mesh : public resources::Resource {
     protected:
         std::vector<float> vertices;
+        std::vector<float> textureCoords;
         std::vector<unsigned int> indices;
 
     public:
         static std::shared_ptr<Mesh> fromFile(std::string filename);
 
-        explicit Mesh(std::vector<float> vertices, std::vector<unsigned int> indices);
+        explicit Mesh(std::vector<float> vertices, std::vector<unsigned int> indices, std::vector<float> textureCoords);
 
         int getVerticesCount();
         std::vector<float> getVertices();

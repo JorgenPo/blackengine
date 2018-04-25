@@ -3,6 +3,7 @@
 //
 
 #include <core/Core.h>
+#include <utility>
 #include "Mesh.h"
 
 namespace black::render {
@@ -14,8 +15,8 @@ namespace black::render {
         return this->vertices;
     }
 
-    Mesh::Mesh(std::vector<float> vertices, std::vector<unsigned int> indices)
-            : vertices(std::move(vertices)), indices(std::move(indices)) {
+    Mesh::Mesh(std::vector<float> vertices, std::vector<unsigned int> indices, std::vector<float> textureCoords)
+            : vertices(std::move(vertices)), indices(std::move(indices)), textureCoords(std::move(textureCoords)) {
 
     }
 
@@ -37,6 +38,13 @@ namespace black::render {
                 -0.5f,  0.5f, 0.0f   // top left
         };
 
+        std::vector<float> textureCoords = {
+                1.0f, 1.0f,
+                1.0f, 0.0f,
+                0.0f, 0.0f,
+                0.0f, 1.0f
+        };
+
         std::vector<unsigned int> indices = {  // note that we start from 0!
                 0, 1, 3,   // first triangle
                 1, 2, 3    // second triangle
@@ -44,7 +52,7 @@ namespace black::render {
 
         auto renderer = Core::getInstance()->getCurrentRenderer();
 
-        return renderer->createMesh(vertices, indices);
+        return renderer->createMesh(vertices, indices, textureCoords);
     }
 
 }

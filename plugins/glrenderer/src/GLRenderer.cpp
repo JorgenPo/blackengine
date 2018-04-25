@@ -11,6 +11,7 @@
 #include "GLRenderer.h"
 #include "GLFWWindow.h"
 #include "GLMesh.h"
+#include "GLTexture.h"
 
 namespace black::render {
 
@@ -23,12 +24,13 @@ namespace black::render {
         return std::make_shared<ui::GLFWWindow>(std::move(name));
     }
 
-    void GLRenderer::initProgram() {
+    void GLRenderer::initResourcesTemp() {
         auto core = Core::getInstance();
         auto &rm = core->getResourceManager();
 
         try {
             this->program = rm->load<ShaderProgram>("simple.shader");
+            this->mainTexture = rm->load<Texture>("wood1.jpg");
         } catch (const resources::ResourceNotFoundException &e) {
             std::cerr << e.getMessage() << std::endl;
             std::cerr << "Search paths: " << e.getSearchPaths() << std::endl;
@@ -39,11 +41,12 @@ namespace black::render {
     }
 
     void GLRenderer::render(const GameEntityList &objectList) {
+        //Logger::info("Rendering. GL_ERROR = %v", glGetError());
 
         static bool initialized = false;
 
         if (!initialized) {
-            this->initProgram();
+            this->initResourcesTemp();
         }
 
         initialized = true;
@@ -58,6 +61,9 @@ namespace black::render {
         double timeValue = glfwGetTime();
         this->program->setUniformVariable("time", static_cast<float>(timeValue));
 
+        glActiveTexture(GL_TEXTURE0);
+        this->program->setUniformVariable("mainTexture", 0);
+
         for (const auto &object : objectList) {
             auto model = object->getComponent<components::ModelComponent>();
             if (model == nullptr) {
@@ -65,6 +71,9 @@ namespace black::render {
             }
 
             auto mesh = model->getMesh();
+
+            // Main texture
+            this->mainTexture->bind();
 
             mesh->bind();
             glDrawElements(GL_TRIANGLES, mesh->getIndicesCount(), GL_UNSIGNED_INT, nullptr);
@@ -76,11 +85,15 @@ namespace black::render {
         return std::make_shared<GLSLShader>(source, type);
     }
 
-    std::shared_ptr<Mesh> GLRenderer::createMesh(std::vector<float> vertices, std::vector<unsigned int> indices) {
-        return std::make_shared<GLMesh>(vertices, indices);
+    std::shared_ptr<Mesh> GLRenderer::createMesh(std::vector<float> vertices, std::vector<unsigned int> indices, std::vector<float> textureCoords) {
+        return std::make_shared<GLMesh>(vertices, indices, textureCoords);
     }
 
     std::shared_ptr<ShaderProgram> GLRenderer::createShaderProgram() {
         return std::make_shared<GLSLShaderProgram>();
+    }
+
+    std::shared_ptr<Texture> GLRenderer::createTexture(std::shared_ptr<Image> image) {
+        return std::make_shared<GLTexture>(image);
     }
 }

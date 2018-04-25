@@ -15,6 +15,7 @@
 #include "Shader.h"
 #include "Mesh.h"
 #include "ShaderProgram.h"
+#include "Texture.h"
 
 namespace black::render {
     using RenderTargetList = std::list<std::shared_ptr<RenderTarget>>;
@@ -27,13 +28,15 @@ namespace black::render {
         /* These functions are only used by friend Resource Manager class */
         virtual std::shared_ptr<Shader> createShader(const std::string &source, Shader::Type type) = 0;
         virtual std::shared_ptr<ShaderProgram> createShaderProgram() = 0;
-        virtual std::shared_ptr<Mesh> createMesh(std::vector<float> vertices, std::vector<unsigned int> indices) = 0;
+        virtual std::shared_ptr<Mesh> createMesh(std::vector<float> vertices, std::vector<unsigned int> indices, std::vector<float> textureCoords) = 0;
+        virtual std::shared_ptr<Texture> createTexture(std::shared_ptr<Image> image) = 0;
 
         /* These classes have access to create* methods */
         friend class Shader;
         friend class ShaderProgram;
         friend class Mesh;
-
+        friend class Texture;
+        //friend class Material;
     protected:
         RenderTargetList renderTargets;
         Color clearColor;

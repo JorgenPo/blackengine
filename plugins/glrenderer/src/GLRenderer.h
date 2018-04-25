@@ -14,11 +14,15 @@ namespace black::render {
      */
     class GLRenderer : public Renderer {
         std::shared_ptr<ShaderProgram> program;
+        std::shared_ptr<Texture> mainTexture;
+
         const std::string rendererName = "OpenGL Renderer";
 
         std::shared_ptr<Shader> createShader(const std::string &source, Shader::Type type) override;
-        std::shared_ptr<Mesh> createMesh(std::vector<float> vertices, std::vector<unsigned int> indices) override;
+        std::shared_ptr<Mesh> createMesh(std::vector<float> vertices, std::vector<unsigned int> indices, std::vector<float> textureCoords) override;
         std::shared_ptr<ShaderProgram> createShaderProgram() override;
+
+        std::shared_ptr<Texture> createTexture(std::shared_ptr<Image> image) override;
 
     public:
         std::string getName() override;
@@ -28,7 +32,7 @@ namespace black::render {
         void render(const GameEntityList &objectList) override;
 
 
-        void initProgram();
+        void initResourcesTemp();
     };
 
 }
