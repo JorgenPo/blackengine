@@ -11,7 +11,7 @@ namespace black {
     class Logger {
     public:
         static void initialize() {
-            Logger::info("Initialize logger");
+            Logger::info("Initialize logger\n");
             el::Configurations defaultConf;
             defaultConf.setToDefault();
             defaultConf.set(el::Level::Info, el::ConfigurationType::Format, "%datetime %logger: %level %msg");
@@ -27,7 +27,7 @@ namespace black {
         }
 
         static el::base::Writer &info(const char *message) {
-            el::Loggers::getLogger("default")->info(message, 0);
+            el::Loggers::getLogger("default")->info("%v", message);
         }
 
         template<typename T, typename ...Args>
@@ -37,7 +37,7 @@ namespace black {
 
         template<typename T, typename ...Args>
         static el::base::Writer &error(const char *message) {
-            el::Loggers::getLogger("default")->error(message, 0);
+            el::Loggers::getLogger("default")->error("%v", message);
         }
 
         template<typename T, typename ...Args>
@@ -47,7 +47,7 @@ namespace black {
 
         template<typename T, typename ...Args>
         static el::base::Writer &debug(const char *message) {
-            el::Loggers::getLogger("default")->debug(message, 0);
+            el::Loggers::getLogger("default")->debug("%v", message);
         }
 
         /**
