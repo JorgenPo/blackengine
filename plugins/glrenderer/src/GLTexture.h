@@ -9,8 +9,9 @@
 #include <core/render/Texture.h>
 
 namespace black::render {
-    class GLTexture : Texture {
+    class GLTexture : public Texture {
         GLuint texture;
+        unsigned char* data;
 
     public:
         explicit GLTexture(const std::shared_ptr<Image> &image, bool generateMipMaps = true,

@@ -4,6 +4,7 @@
 
 #include "Image.h"
 #include "Exception.h"
+#include "Logger.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>

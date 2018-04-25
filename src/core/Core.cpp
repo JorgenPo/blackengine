@@ -51,14 +51,14 @@ namespace black {
     }
 
     Core::Core() : platform(Platform::UNKNOWN) {
+        // Initialize logger
+        Logger::initialize();
+
         // Responsible for manage plugins
         this->pluginManager = std::make_unique<PluginManager>();
 
         // Responsible for manage resources
         this->resourceManager = std::make_unique<resources::ResourceManager>();
-
-        // Initialize logger
-        Logger::initialize();
 
         determineTargetPlatform();
     }

@@ -29,7 +29,6 @@ namespace black::render {
      */
     class Texture : public resources::Resource {
     protected:
-        std::shared_ptr<Image> image;
         TextureFiltering filtering;
         TextureWrapping wrapping;
 
@@ -37,14 +36,15 @@ namespace black::render {
         static std::shared_ptr<Texture> fromFile(std::string fileName);
 
         explicit Texture(std::shared_ptr<Image> image, bool generateMipMaps,
-                         TextureFiltering filtering = TextureFiltering::NEAREST,
-                         TextureWrapping wrapping = TextureWrapping::CLAMP_TO_BORDER);
+                         TextureFiltering filtering,
+                         TextureWrapping wrapping);
+
+        virtual ~Texture();
+
 
         virtual void bind() = 0;
         virtual void unbind() = 0;
         virtual void setBorderColor(Color color) = 0;
-
-        const std::shared_ptr<Image> &getImage() const;
 
         TextureFiltering getFiltering() const;
 

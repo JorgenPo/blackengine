@@ -2,6 +2,7 @@
 // Created by popof on 25.04.2018.
 //
 
+#include <core/Logger.h>
 #include "GLTexture.h"
 
 namespace black::render {
@@ -31,11 +32,12 @@ namespace black::render {
     }
 
     GLTexture::GLTexture(const std::shared_ptr<Image> &image, bool generateMipMaps,
-                         TextureFiltering filtering = TextureFiltering::NEAREST,
-                         TextureWrapping wrapping = TextureWrapping::CLAMP_TO_BORDER)
-            : Texture(image, generateMipMaps, filtering, wrapping) {
-
+                         TextureFiltering filtering,
+                         TextureWrapping wrapping)
+            : Texture(image, generateMipMaps, filtering, wrapping), data(image->getData()) {
         glGenTextures(1, &this->texture);
+
+        this->bind();
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, getGLWrappingType(wrapping));
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, getGLWrappingType(wrapping));
@@ -48,6 +50,8 @@ namespace black::render {
         if (generateMipMaps) {
             glGenerateMipmap(GL_TEXTURE_2D);
         }
+
+        this->unbind();
     }
 
     void GLTexture::bind() {
