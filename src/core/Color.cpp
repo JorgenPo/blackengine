@@ -11,4 +11,8 @@ namespace black {
     const std::array<float, 4>   Color::YELLOW =    {0.0f, 1.0f, 1.0f, 1.0f};
     const std::array<float, 4>   Color::WHITE =     {1.0f, 1.0f, 1.0f, 1.0f};
     const std::array<float, 4>   Color::BLACK =     {0.0f, 0.0f, 0.0f, 1.0f};
+
+    std::array<float, 4> Color::getArray() const {
+        return {r, g, b, a};
+    }
 }

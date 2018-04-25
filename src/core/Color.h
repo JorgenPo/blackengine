@@ -25,6 +25,8 @@ namespace black {
         static const std::array<float, 4>   YELLOW;
         static const std::array<float, 4>   WHITE;
         static const std::array<float, 4>   BLACK;
+
+        std::array<float, 4> getArray() const;
     };
 }
 #endif //BLACKENGINE_COLOR_H
