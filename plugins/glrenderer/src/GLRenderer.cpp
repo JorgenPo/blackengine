@@ -29,8 +29,6 @@ namespace black::render {
 
         try {
             this->program = rm->load<ShaderProgram>("simple.shader");
-            this->program->addUniformVariable("time");
-            this->program->addUniformVariable("mousePos");
         } catch (const resources::ResourceNotFoundException &e) {
             std::cerr << e.getMessage() << std::endl;
             std::cerr << "Search paths: " << e.getSearchPaths() << std::endl;

@@ -67,8 +67,6 @@ namespace black::render {
          *
          * @param name Name of the uniform variable
          */
-        virtual void addUniformVariable(const std::string &name) = 0;
-
         virtual void setUniformVariable(const std::string &name, int value) = 0;
         virtual void setUniformVariable(const std::string &name, float value) = 0;
         virtual void setUniformVariable(const std::string &name, bool value) = 0;
