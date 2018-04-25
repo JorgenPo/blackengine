@@ -61,6 +61,7 @@ namespace black::resources {
      */
     class ResourceManager {
     private:
+        const std::string LOGGER_CHANNEL = "ResourceManager";
         std::list<std::string> resourceFolders;
         std::map<std::string, std::shared_ptr<Resource>> loadedResources;
 
@@ -108,12 +109,12 @@ namespace black::resources {
          */
         template<typename ResourceClass>
         std::shared_ptr<ResourceClass> load(std::string file) {
-            auto log = Logger::getChannelLogger("ResourceManager");
+            auto log = Logger::getChannelLogger(LOGGER_CHANNEL);
 
             log->info("Loading '%v' resource...\n", file);
             log->debug("Search directories: \n");
             for (const auto &directory : this->resourceFolders) {
-                log->debug("\"%v\"", directory);
+                log->debug(" \"%v\"", directory);
             }
 
             // If resource was loaded then return it
@@ -149,6 +150,22 @@ namespace black::resources {
             this->loadedResources[file] = resource;
 
             return resource;
+        }
+
+        void unload(std::string file) {
+            auto log = Logger::getChannelLogger(LOGGER_CHANNEL);
+
+            log->info("Unloading '%v' resource...", file);
+
+            if (this->loadedResources.find(file) == this->loadedResources.end()) {
+                log->info("Resource not loaded. Nothing to do\n");
+                return;
+            }
+
+            this->loadedResources[file].reset();
+            this->loadedResources.erase(file);
+
+            log->info("Resource unloaded\n");
         }
     };
 }
