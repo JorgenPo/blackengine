@@ -9,12 +9,15 @@
 #include <core/os/windows/WindowsSharedLibrary.h>
 #include <core/Core.h>
 #include <core/components/ModelComponent.h>
+#include <core/components/TransformComponent.h>
 
 using namespace black;
 using namespace black::render;
 
 // Simple example application
 class SimpleApplication : public Application {
+    std::shared_ptr<GameEntity> cube;
+
 public:
     void initialize() override {
         Application::initialize();
@@ -25,12 +28,15 @@ public:
 
         auto triangleMesh = this->core->getResourceManager()->load<Mesh>("test.obj");
 
-        auto entity = std::make_shared<GameEntity>();
-        entity->addComponent(std::make_shared<components::ModelComponent>(triangleMesh));
-        this->mainScene->addEntity(entity);
+        this->cube = std::make_shared<GameEntity>();
+        this->cube->addComponent(std::make_shared<components::ModelComponent>(triangleMesh));
+        this->mainScene->addEntity(this->cube);
     }
 
     void processInput() override {
+        static float angle = 0.1f;
+        auto transform = this->cube->getComponent<components::TransformComponent>();
+
         if (this->mainWindow->isKeyPressed(InputKey::KEY_0)) {
             this->core->getCurrentRenderer()->setClearColor(Color(Color::RED));
         } else if (this->mainWindow->isKeyPressed(InputKey::KEY_1)) {
@@ -39,6 +45,14 @@ public:
             this->core->getCurrentRenderer()->setClearColor(Color(Color::WHITE));
         } else if (this->mainWindow->isKeyPressed(InputKey::KEY_3)) {
             this->core->getCurrentRenderer()->setClearColor(Color(Color::BLACK));
+        } else if (this->mainWindow->isKeyPressed(InputKey::KEY_LEFT)) {
+            transform->rotateY(angle);
+        } else if (this->mainWindow->isKeyPressed(InputKey::KEY_RIGHT)) {
+            transform->rotateY(-angle);
+        } else if (this->mainWindow->isKeyPressed(InputKey::KEY_UP)) {
+            transform->rotateX(angle);
+        } else if (this->mainWindow->isKeyPressed(InputKey::KEY_DOWN)) {
+            transform->rotateX(-angle);
         }
     }
 };

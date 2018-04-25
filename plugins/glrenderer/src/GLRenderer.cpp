@@ -8,6 +8,7 @@
 #include <core/components/ModelComponent.h>
 #include <iostream>
 #include <cmath>
+#include <core/components/TransformComponent.h>
 #include "GLRenderer.h"
 #include "GLFWWindow.h"
 #include "GLMesh.h"
@@ -30,7 +31,7 @@ namespace black::render {
 
         try {
             this->program = rm->load<ShaderProgram>("simple.shader");
-            this->mainTexture = rm->load<Texture>("wood1.jpg");
+            this->mainTexture = rm->load<Texture>("container.jpg");
         } catch (const resources::ResourceNotFoundException &e) {
             std::cerr << e.getMessage() << std::endl;
             std::cerr << "Search paths: " << e.getSearchPaths() << std::endl;
@@ -66,6 +67,8 @@ namespace black::render {
 
         for (const auto &object : objectList) {
             auto model = object->getComponent<components::ModelComponent>();
+            auto transform = object->getComponent<components::TransformComponent>();
+
             if (model == nullptr) {
                 continue;
             }
@@ -74,6 +77,9 @@ namespace black::render {
 
             // Main texture
             this->mainTexture->bind();
+
+            // Set transform matrix
+            this->program->setUniformVariable("transform", transform->getTransformation());
 
             mesh->bind();
             glDrawElements(GL_TRIANGLES, mesh->getIndicesCount(), GL_UNSIGNED_INT, nullptr);

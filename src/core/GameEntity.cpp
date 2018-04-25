@@ -25,7 +25,7 @@ namespace black {
 
     GameEntity::GameEntity(std::array<float, 3> position) {
         auto transform = std::make_shared<components::TransformComponent>();
-        transform->setPosition(position);
+        transform->translate({position[0], position[1], position[2]});
         this->addComponent(transform);
     }
 
