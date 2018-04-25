@@ -12,18 +12,16 @@ namespace black {
     /**
      * Image file
      */
-    class Image : public resources::Resource {
+    class Image {
         int width;
         int height;
         int numColorChannels;
         unsigned char* data;
 
     public:
-        explicit Image(std::string fileName);
+        explicit Image(std::string fileName, bool flipVertically = true);
 
         virtual ~Image();
-
-        static std::shared_ptr<Image> fromFile(std::string fileName);
 
         /**
          * Loads an image from the file.
@@ -31,7 +29,7 @@ namespace black {
          * @throws FileNotFoundException If file isn't exist
          * @param fileName
          */
-        void load(std::string fileName);
+        void load(std::string fileName, bool flipVertically = true);
         bool isLoaded();
 
         int getWidth() const;

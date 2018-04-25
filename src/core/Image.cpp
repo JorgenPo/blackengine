@@ -11,13 +11,9 @@
 
 namespace black {
 
-    std::shared_ptr<Image> Image::fromFile(std::string fileName) {
-        return std::shared_ptr<Image>();
-    }
-
-    Image::Image(std::string fileName) {
+    Image::Image(std::string fileName, bool flipVertically) {
         try {
-            this->load(std::move(fileName));
+            this->load(std::move(fileName), flipVertically);
         } catch(const FileNotFoundException &e) {
             // Do nothing
         }
@@ -43,7 +39,9 @@ namespace black {
         return data;
     }
 
-    void Image::load(std::string fileName) {
+    void Image::load(std::string fileName, bool flipVertically) {
+        stbi_set_flip_vertically_on_load(flipVertically);
+
         this->data = stbi_load(fileName.c_str(), &this->width, &this->height, &this->numColorChannels, 0);
 
         if (this->data == nullptr) {
