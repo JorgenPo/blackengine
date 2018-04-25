@@ -2,6 +2,7 @@
 // Created by popof on 22.04.2018.
 //
 
+#include <glm/gtc/type_ptr.hpp>
 #include "GLSLShaderProgram.h"
 
 namespace black::render {
@@ -101,5 +102,10 @@ namespace black::render {
 
     void GLSLShaderProgram::setUniformVariable(const std::string &name, std::array<float, 2> value) {
         glUniform2f(glGetUniformLocation(this->program, name.c_str()), value[0], value[1]);
+    }
+
+    void GLSLShaderProgram::setUniformVariable(const std::string &name, glm::mat4 matrix) {
+        glUniformMatrix4fv(glGetUniformLocation(this->program, name.c_str()),
+                           1, GL_FALSE, glm::value_ptr(matrix));
     }
 }
