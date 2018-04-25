@@ -23,7 +23,7 @@ namespace black {
 
         template<typename T, typename ...Args>
         static el::base::Writer &info(const char *message, const T& type, const Args&... args) {
-            el::Loggers::getLogger("default")->info(message, args...);
+            el::Loggers::getLogger("default")->info(message, type, args...);
         }
 
         static el::base::Writer &info(const char *message) {
@@ -32,7 +32,7 @@ namespace black {
 
         template<typename T, typename ...Args>
         static el::base::Writer &error(const char *message, const T& type, const Args&... args) {
-            el::Loggers::getLogger("default")->error(message, args...);
+            el::Loggers::getLogger("default")->error(message, type, args...);
         }
 
         template<typename T, typename ...Args>
