@@ -15,7 +15,7 @@ namespace black::render {
     /**
      * Mesh is a vertices array
      */
-    class Mesh : public resources::Resource {
+    class Mesh {
     protected:
         std::vector<float> vertices;
         std::vector<float> textureCoords;
@@ -23,8 +23,6 @@ namespace black::render {
 
         int polygonLength;
     public:
-        static std::shared_ptr<Mesh> fromFile(std::string filename);
-
         Mesh();
         explicit Mesh(std::vector<float> vertices, std::vector<unsigned int> indices,
                       std::vector<float> textureCoords, int polygonLength);

@@ -35,40 +35,6 @@ namespace black::render {
         return this->indices.size();
     }
 
-    std::shared_ptr<Mesh> Mesh::fromFile(std::string filename) {
-        auto core = Core::getInstance();
-
-        std::string extension = FileUtils::getFileExtension(filename);
-
-        auto parser = core->getModelParserForExtension(extension);
-
-        if (parser == nullptr) {
-            throw FileFormatUnknownException(extension);
-        }
-
-        std::ifstream file(filename);
-        if (!file.is_open()) {
-            throw FileNotFoundException(filename);
-        }
-
-        std::vector<float> vertices;
-        std::vector<unsigned int> indices;
-        std::vector<float> uvs;
-
-        // Can throw exception
-        parser->parse(filename, vertices, indices, uvs);
-
-        auto mesh = core->getCurrentRenderer()->createMesh();
-        mesh->setIndices(indices);
-        mesh->setVertices(vertices);
-        mesh->setTextureCoords(uvs);
-        mesh->setPolygonLength(parser->getPolygonLength());
-
-        mesh->update();
-
-        return mesh;
-    }
-
     int Mesh::getPolygonLength() const {
         return polygonLength;
     }
