@@ -74,4 +74,8 @@ namespace black::components {
     const glm::mat4 TransformComponent::getTransformation() const {
         return this->translation * this->rotation * this->scaleMat;
     }
+
+    void TransformComponent::scale(float value) {
+        return this->scale(glm::vec3(value));
+    }
 }
