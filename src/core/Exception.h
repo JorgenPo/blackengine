@@ -35,6 +35,15 @@ namespace black {
             this->message = ss.str();
         }
     };
+
+    class FileFormatUnknownException : public Exception {
+    public:
+        explicit FileFormatUnknownException(const std::string &format) : Exception() {
+            std::stringstream ss;
+            ss << "Unknown file format '" << format << "'";
+            this->message = ss.str();
+        }
+    };
 }
 
 
