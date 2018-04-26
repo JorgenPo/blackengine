@@ -8,8 +8,14 @@ namespace black::render {
     const GLuint GLMesh::POSITION_LAYOUT = 0;
     const GLuint GLMesh::TEXCOORD_LAYOUT = 1;
 
-    GLMesh::GLMesh(std::vector<float> vertices, std::vector<unsigned int> indices, std::vector<float> textureCoords)
-            : Mesh(std::move(vertices), std::move(indices), std::move(textureCoords)) {
+    GLMesh::GLMesh() {
+        glGenBuffers(1, &this->vbo);
+        glGenBuffers(1, &this->ebo);
+        glGenVertexArrays(1, &this->vao);
+    }
+
+    GLMesh::GLMesh(std::vector<float> vertices, std::vector<unsigned int> indices, std::vector<float> textureCoords, int polygonLength)
+            : Mesh(std::move(vertices), std::move(indices), std::move(textureCoords), polygonLength) {
         glGenBuffers(1, &this->vbo);
         glGenBuffers(1, &this->ebo);
         glGenVertexArrays(1, &this->vao);
@@ -39,7 +45,7 @@ namespace black::render {
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->indices.size() * sizeof(unsigned int), this->indices.data(), GL_STATIC_DRAW);
 
         // Describe buffer data
-        glVertexAttribPointer(POSITION_LAYOUT, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+        glVertexAttribPointer(POSITION_LAYOUT, this->getPolygonLength(), GL_FLOAT, GL_FALSE, this->getPolygonLength() * sizeof(float), nullptr);
         glVertexAttribPointer(TEXCOORD_LAYOUT, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), reinterpret_cast<void*>(this->vertices.size() * sizeof(float)));
 
         glEnableVertexAttribArray(POSITION_LAYOUT);

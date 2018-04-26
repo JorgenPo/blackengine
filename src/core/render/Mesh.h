@@ -11,6 +11,7 @@
 #include <memory>
 
 namespace black::render {
+
     /**
      * Mesh is a vertices array
      */
@@ -20,16 +21,29 @@ namespace black::render {
         std::vector<float> textureCoords;
         std::vector<unsigned int> indices;
 
+        int polygonLength;
     public:
         static std::shared_ptr<Mesh> fromFile(std::string filename);
 
-        explicit Mesh(std::vector<float> vertices, std::vector<unsigned int> indices, std::vector<float> textureCoords);
+        Mesh();
+        explicit Mesh(std::vector<float> vertices, std::vector<unsigned int> indices,
+                      std::vector<float> textureCoords, int polygonLength);
 
         int getVerticesCount();
         std::vector<float> getVertices();
 
+        int getPolygonLength() const;
+
+        void setPolygonLength(int polygonLength);
+
         const std::vector<unsigned int> &getIndices() const;
         int getIndicesCount();
+
+        void setVertices(const std::vector<float> &vertices);
+
+        void setTextureCoords(const std::vector<float> &textureCoords);
+
+        void setIndices(const std::vector<unsigned int> &indices);
 
         /**
          * Bind a mesh. Makes it current.

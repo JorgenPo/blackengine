@@ -15,10 +15,17 @@ namespace black::render {
         return this->vertices;
     }
 
-    Mesh::Mesh(std::vector<float> vertices, std::vector<unsigned int> indices, std::vector<float> textureCoords)
-            : vertices(std::move(vertices)), indices(std::move(indices)), textureCoords(std::move(textureCoords)) {
+    Mesh::Mesh(std::vector<float> vertices, std::vector<unsigned int> indices, std::vector<float> textureCoords, int polygonLength)
+            : vertices(std::move(vertices)), indices(std::move(indices)),
+              textureCoords(std::move(textureCoords)), polygonLength(polygonLength) {
 
     }
+
+
+    Mesh::Mesh() : polygonLength(3) {
+
+    }
+
 
     const std::vector<unsigned int> &Mesh::getIndices() const {
         return indices;
@@ -29,30 +36,58 @@ namespace black::render {
     }
 
     std::shared_ptr<Mesh> Mesh::fromFile(std::string filename) {
-        // TODO: implement
+        auto core = Core::getInstance();
 
-        std::vector<float> vertices = {
-                0.5f,  0.5f, 0.0f,  // top right
-                0.5f, -0.5f, 0.0f,  // bottom right
-                -0.5f, -0.5f, 0.0f,  // bottom left
-                -0.5f,  0.5f, 0.0f   // top left
-        };
+        std::string extension = FileUtils::getFileExtension(filename);
 
-        std::vector<float> textureCoords = {
-                1.0f, 1.0f,
-                1.0f, 0.0f,
-                0.0f, 0.0f,
-                0.0f, 1.0f
-        };
+        auto parser = core->getModelParserForExtension(extension);
 
-        std::vector<unsigned int> indices = {  // note that we start from 0!
-                0, 1, 3,   // first triangle
-                1, 2, 3    // second triangle
-        };
+        if (parser == nullptr) {
+            throw FileFormatUnknownException(extension);
+        }
 
-        auto renderer = Core::getInstance()->getCurrentRenderer();
+        std::ifstream file(filename);
+        if (!file.is_open()) {
+            throw FileNotFoundException(filename);
+        }
 
-        return renderer->createMesh(vertices, indices, textureCoords);
+        std::vector<float> vertices;
+        std::vector<unsigned int> indices;
+        std::vector<float> uvs;
+
+        // Can throw exception
+        parser->parse(filename, vertices, indices, uvs);
+
+        auto mesh = core->getCurrentRenderer()->createMesh();
+        mesh->setIndices(indices);
+        mesh->setVertices(vertices);
+        mesh->setTextureCoords(uvs);
+        mesh->setPolygonLength(parser->getPolygonLength());
+
+        mesh->update();
+
+        return mesh;
     }
+
+    int Mesh::getPolygonLength() const {
+        return polygonLength;
+    }
+
+    void Mesh::setPolygonLength(int polygonLength) {
+        Mesh::polygonLength = polygonLength;
+    }
+
+    void Mesh::setVertices(const std::vector<float> &vertices) {
+        Mesh::vertices = vertices;
+    }
+
+    void Mesh::setTextureCoords(const std::vector<float> &textureCoords) {
+        Mesh::textureCoords = textureCoords;
+    }
+
+    void Mesh::setIndices(const std::vector<unsigned int> &indices) {
+        Mesh::indices = indices;
+    }
+
 
 }

@@ -21,7 +21,8 @@ namespace black::render {
         GLuint ebo;
         GLuint vao;
     public:
-        explicit GLMesh(std::vector<float> vertices, std::vector<unsigned int> indices, std::vector<float> textureCoords);
+        GLMesh();
+        explicit GLMesh(std::vector<float> vertices, std::vector<unsigned int> indices, std::vector<float> textureCoords, int polygonLength);
 
         virtual ~GLMesh();
 
