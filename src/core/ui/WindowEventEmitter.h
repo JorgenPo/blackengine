@@ -27,6 +27,24 @@ namespace black::ui {
                 listener->onWindowSizeChanged(window, newWidth, newHeight);
             }
         }
+
+        virtual void emitMouseScrolled(Window *window, double xOffset, double yOffset) {
+            for (const auto &listener : this->listeners) {
+                listener->onMouseScrolled(window, xOffset, yOffset);
+            }
+        }
+
+        virtual void emitMouseScrolledDown(Window *window) {
+            for (const auto &listener : this->listeners) {
+                listener->onMouseScrolledDown(window);
+            }
+        }
+
+        virtual void emitMouseScrolledUp(Window *window) {
+            for (const auto &listener : this->listeners) {
+                listener->onMouseScrolledUp(window);
+            }
+        }
     };
 
 }

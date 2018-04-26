@@ -9,6 +9,7 @@
 #include <cmath>
 #include <iostream>
 #include <core/ui/WindowEventEmitter.h>
+#include <core/Logger.h>
 #include "GLFWWindow.h"
 
 namespace black::ui {
@@ -52,11 +53,10 @@ namespace black::ui {
         // Set viewport to hold all window
         glViewport(0, 0, this->width, this->height);
 
-        // Register resize callback
-        glfwSetFramebufferSizeCallback(this->window.get(), [](GLFWwindow *window, int width, int height) {
-            auto glfwWindow = reinterpret_cast<GLFWWindow*>(glfwGetWindowUserPointer(window));
-            glfwWindow->resize(width, height);
-        });
+        // Enable depth buffer
+        glEnable(GL_DEPTH_TEST);
+
+        this->setCallbacks();
 
         // Required to get rid of GL_INVALID_ENUM error
         glGetError();
@@ -102,5 +102,19 @@ namespace black::ui {
     bool GLFWWindow::isKeyPressed(InputKey key) {
         // GLFW KEYS AND InputKey enum are fully compatible
         return glfwGetKey(this->window.get(), static_cast<int>(key)) == GLFW_PRESS;
+    }
+
+    void GLFWWindow::setCallbacks() {
+        // Register resize callback
+        glfwSetFramebufferSizeCallback(this->window.get(), [](GLFWwindow *window, int width, int height) {
+            auto glfwWindow = reinterpret_cast<GLFWWindow*>(glfwGetWindowUserPointer(window));
+            glfwWindow->resize(width, height);
+        });
+
+        glfwSetScrollCallback(this->window.get(), [](GLFWwindow *window, double xoffset, double yoffset) {
+            auto glfwWindow = reinterpret_cast<GLFWWindow*>(glfwGetWindowUserPointer(window));
+            Logger::info("Offset = %v", yoffset);
+            glfwWindow->emitMouseScrolled(glfwWindow, xoffset, yoffset);
+        });
     }
 }

@@ -46,6 +46,8 @@ namespace black::ui {
         /* Context interface */
         void setContextCurrent() override;
         bool isContextCurrent() override;
+
+        void setCallbacks();
     };
 
 }

@@ -15,7 +15,7 @@ using namespace black;
 using namespace black::render;
 
 // Simple example application
-class SimpleApplication : public Application {
+class SimpleApplication : public Application, public ui::WindowEventListener {
     std::shared_ptr<GameEntity> cube;
 
 public:
@@ -26,11 +26,23 @@ public:
         // Add resource directory to resource manager
         this->core->getResourceManager()->addResourceFolder("resources/");
 
-        auto triangleMesh = this->core->getResourceManager()->load<Mesh>("test.obj");
+        auto triangleMesh = this->core->getResourceManager()->load<Mesh>("model.bmf");
 
         this->cube = std::make_shared<GameEntity>();
         this->cube->addComponent(std::make_shared<components::ModelComponent>(triangleMesh));
         this->mainScene->addEntity(this->cube);
+
+        this->mainWindow->listen(this);
+    }
+
+    void onMouseScrolledUp(ui::Window *window) override {
+        static float speed = 0.1;
+        this->cube->transform->scale(1.0f + speed);
+    }
+
+    void onMouseScrolledDown(ui::Window *window) override {
+        static float speed = 0.1;
+        this->cube->transform->scale(1.0f - speed);
     }
 
     void processInput() override {
