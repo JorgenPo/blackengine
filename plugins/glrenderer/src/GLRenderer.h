@@ -19,7 +19,7 @@ namespace black::render {
         const std::string rendererName = "OpenGL Renderer";
 
         std::shared_ptr<Shader> createShader(const std::string &source, Shader::Type type) override;
-        std::shared_ptr<Mesh> createMesh(std::vector<float> vertices, std::vector<unsigned int> indices, std::vector<float> textureCoords) override;
+        std::shared_ptr<Mesh> createMesh() override;
         std::shared_ptr<ShaderProgram> createShaderProgram() override;
 
         std::shared_ptr<Texture> createTexture(std::shared_ptr<Image> image) override;

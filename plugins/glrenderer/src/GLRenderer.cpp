@@ -54,7 +54,7 @@ namespace black::render {
 
         auto color = this->clearColor;
         glClearColor(color.r, color.g, color.b, color.a);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         this->program->use();
 
@@ -91,8 +91,8 @@ namespace black::render {
         return std::make_shared<GLSLShader>(source, type);
     }
 
-    std::shared_ptr<Mesh> GLRenderer::createMesh(std::vector<float> vertices, std::vector<unsigned int> indices, std::vector<float> textureCoords) {
-        return std::make_shared<GLMesh>(vertices, indices, textureCoords);
+    std::shared_ptr<Mesh> GLRenderer::createMesh() {
+        return std::make_shared<GLMesh>();
     }
 
     std::shared_ptr<ShaderProgram> GLRenderer::createShaderProgram() {

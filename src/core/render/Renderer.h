@@ -28,7 +28,7 @@ namespace black::render {
         /* These functions are only used by friend Resource Manager class */
         virtual std::shared_ptr<Shader> createShader(const std::string &source, Shader::Type type) = 0;
         virtual std::shared_ptr<ShaderProgram> createShaderProgram() = 0;
-        virtual std::shared_ptr<Mesh> createMesh(std::vector<float> vertices, std::vector<unsigned int> indices, std::vector<float> textureCoords) = 0;
+        virtual std::shared_ptr<Mesh> createMesh() = 0;
         virtual std::shared_ptr<Texture> createTexture(std::shared_ptr<Image> image) = 0;
 
         /* These classes have access to create* methods */
