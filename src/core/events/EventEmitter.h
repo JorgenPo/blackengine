@@ -20,12 +20,12 @@ namespace black::events {
         std::list<std::shared_ptr<EventListenerClass>> listeners;
 
     public:
-        void listen(const std::shared_ptr<EventListenerClass> &listener) {
-            listeners.push_back(listener);
+        void listen(EventListenerClass *listener) {
+            listeners.push_back(std::shared_ptr<EventListenerClass>(listener));
         }
 
-        void stopListen(const std::shared_ptr<EventListenerClass> &listener) {
-            listeners.remove(listener);
+        void stopListen(EventListenerClass *listener) {
+            listeners.remove(std::shared_ptr<EventListenerClass>(listener));
         }
     };
 }
