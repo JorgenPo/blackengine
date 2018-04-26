@@ -15,16 +15,18 @@ namespace black::components {
      * material data of object and can be rendered
      * by renderer
      */
-    class ModelComponent : public Component {
+    class Model : public Component, public resources::Resource {
         std::shared_ptr<render::Mesh> mesh;
         // TODO: material
 
     public:
+        static std::shared_ptr<Model> fromFile(std::string fileName);
+
         static std::string getName() { return "Model"; }
 
-        ModelComponent();
+        Model();
 
-        explicit ModelComponent(const std::shared_ptr<render::Mesh> &mesh);
+        explicit Model(const std::shared_ptr<render::Mesh> &mesh);
 
         const std::shared_ptr<render::Mesh> &getMesh() const;
 

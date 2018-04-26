@@ -8,7 +8,7 @@
 #include <core/SharedLibrary.h>
 #include <core/os/windows/WindowsSharedLibrary.h>
 #include <core/Core.h>
-#include <core/components/ModelComponent.h>
+#include <core/components/Model.h>
 #include <core/components/TransformComponent.h>
 
 using namespace black;
@@ -29,7 +29,7 @@ public:
         auto triangleMesh = this->core->getResourceManager()->load<Mesh>("model.bmf");
 
         this->cube = std::make_shared<GameEntity>();
-        this->cube->addComponent(std::make_shared<components::ModelComponent>(triangleMesh));
+        this->cube->addComponent(std::make_shared<components::Model>(triangleMesh));
         this->mainScene->addEntity(this->cube);
 
         this->mainWindow->listen(this);

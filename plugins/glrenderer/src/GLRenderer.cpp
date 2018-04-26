@@ -5,7 +5,7 @@
 #include <glsl/GLSLShader.h>
 #include <glsl/GLSLShaderProgram.h>
 #include <core/Core.h>
-#include <core/components/ModelComponent.h>
+#include <core/components/Model.h>
 #include <iostream>
 #include <cmath>
 #include <core/components/TransformComponent.h>
@@ -66,7 +66,7 @@ namespace black::render {
         this->program->setUniformVariable("mainTexture", 0);
 
         for (const auto &object : objectList) {
-            auto model = object->getComponent<components::ModelComponent>();
+            auto model = object->getComponent<components::Model>();
             auto transform = object->getComponent<components::TransformComponent>();
 
             if (model == nullptr) {
