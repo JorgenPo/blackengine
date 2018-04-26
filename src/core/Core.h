@@ -14,6 +14,7 @@
 #include <core/render/Renderer.h>
 #include <core/scene/Scene.h>
 #include <core/resources/ResourceManager.h>
+#include <core/parsers/ModelParser.h>
 
 
 #include "PluginManager.h"
@@ -88,6 +89,7 @@ namespace black {
         using ScenePrototypeList = std::list<std::shared_ptr<scene::Scene>>;
         using SceneMap = std::map<std::string, std::shared_ptr<scene::Scene>>;
         using RendererSet = std::set<std::shared_ptr<render::Renderer>>;
+        using ModelParsersMap = std::map<std::string, std::shared_ptr<parsers::ModelParser>>;
 
     private:
         static Core *instance;
@@ -101,6 +103,7 @@ namespace black {
         RendererSet renderers;
         ScenePrototypeList scenePrototypes;
         SceneMap scenes;
+        ModelParsersMap modelParsers;
 
         std::unique_ptr<PluginManager> pluginManager;
         std::unique_ptr<resources::ResourceManager> resourceManager;
@@ -218,6 +221,16 @@ namespace black {
          * @param name A scene name
          */
         void removeScene(std::string name);
+
+        /**
+         * Registers a model parser prototype for a given extension
+         *
+         * @param extension Extension name for this prototype
+         * @param prototype Prototype
+         */
+        void registerModelParserPrototype(std::string extension, std::shared_ptr<parsers::ModelParser> prototype);
+
+        std::shared_ptr<parsers::ModelParser> getModelParserForExtension(std::string extension);
 
         /**
          * Set scene with given name current

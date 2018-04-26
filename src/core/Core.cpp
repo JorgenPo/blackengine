@@ -194,4 +194,16 @@ namespace black {
     const std::unique_ptr<resources::ResourceManager> &Core::getResourceManager() const {
         return resourceManager;
     }
+
+    void Core::registerModelParserPrototype(std::string extension, std::shared_ptr<parsers::ModelParser> prototype) {
+        this->modelParsers[extension] = std::move(prototype);
+    }
+
+    std::shared_ptr<parsers::ModelParser> Core::getModelParserForExtension(std::string extension) {
+        if (this->modelParsers.find(extension) != this->modelParsers.end()) {
+            return std::shared_ptr<parsers::ModelParser>(this->modelParsers[extension]->copy());
+        }
+
+        return nullptr;
+    }
 }
