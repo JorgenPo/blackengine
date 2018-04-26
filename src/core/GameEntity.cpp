@@ -17,6 +17,7 @@ namespace black {
 
     GameEntity::GameEntity() {
         this->addComponent(std::make_shared<components::TransformComponent>());
+        this->transform = this->getComponent<components::TransformComponent>();
     }
 
     GameEntity::GameEntity(std::shared_ptr<GameEntity> parent) {

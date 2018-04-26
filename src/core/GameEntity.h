@@ -8,6 +8,7 @@
 #include <list>
 #include <memory>
 #include <core/components/ComponentsContainer.h>
+#include <core/components/TransformComponent.h>
 
 namespace black {
 
@@ -22,6 +23,8 @@ namespace black {
          GameEntityList children;
 
     public:
+        std::shared_ptr<components::TransformComponent> transform;
+
         /**
          * Creates an empty entity with only transform component
          */
