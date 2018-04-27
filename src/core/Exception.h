@@ -27,6 +27,11 @@ namespace black {
         }
     };
 
+    class NotInitializedException : public Exception {
+    public:
+        NotInitializedException(const std::string &message) : Exception(message) {}
+    };
+
     class FileNotFoundException : public Exception {
     public:
         explicit FileNotFoundException(const std::string &filename) : Exception() {
