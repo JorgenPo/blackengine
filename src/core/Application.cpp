@@ -50,6 +50,7 @@ namespace black {
         while (!this->mainWindow->isWindowShouldClose() &&
                !(this->mainWindow->isKeyPressed(InputKey::KEY_ESCAPE))) {
             this->processInput();
+            this->update();
             this->core->renderFrame();
             this->mainWindow->pollEvents();
         }
@@ -102,5 +103,9 @@ namespace black {
     }
 
     void Application::processInput() {
+    }
+
+    void Application::update() {
+
     }
 }

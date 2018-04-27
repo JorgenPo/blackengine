@@ -54,6 +54,10 @@ namespace black {
          */
         virtual int run();
 
+        /**
+         * Updates a logic. Called every frame.
+         */
+        virtual void update();
     private:
         void setDefaultRenderer();
         void setMainWindow();
