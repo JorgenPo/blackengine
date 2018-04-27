@@ -8,7 +8,7 @@
 #include <core/SharedLibrary.h>
 #include <core/os/windows/WindowsSharedLibrary.h>
 #include <core/Core.h>
-#include <core/components/Model.h>
+#include <core/render/Model.h>
 #include <core/components/TransformComponent.h>
 
 using namespace black;
@@ -16,7 +16,7 @@ using namespace black::render;
 
 // Simple example application
 class SimpleApplication : public Application, public ui::WindowEventListener {
-    std::shared_ptr<GameEntity> cube;
+    std::shared_ptr<GameEntity> bookObject;
 
 public:
     void initialize() override {
@@ -26,28 +26,36 @@ public:
         // Add resource directory to resource manager
         this->core->getResourceManager()->addResourceFolder("resources/");
 
-        auto triangleMesh = this->core->getResourceManager()->load<Mesh>("model.bmf");
+        auto bookModel = this->core->getResourceManager()->load<Model>("book.bmf");
 
-        this->cube = std::make_shared<GameEntity>();
-        this->cube->addComponent(std::make_shared<components::Model>(triangleMesh));
-        this->mainScene->addEntity(this->cube);
+        this->bookObject = std::make_shared<GameEntity>();
+        this->bookObject->addComponent(bookModel);
+        this->bookObject->transform->scale(0.1f);
+        this->bookObject->transform->rotateX(90);
+
+        this->mainScene->addEntity(this->bookObject);
 
         this->mainWindow->listen(this);
     }
 
+    void update() override {
+        this->bookObject->transform->rotateY(0.01f);
+        this->bookObject->transform->rotateZ(0.02f);
+    }
+
     void onMouseScrolledUp(ui::Window *window) override {
         static float speed = 0.1;
-        this->cube->transform->scale(1.0f + speed);
+        this->bookObject->transform->scale(1.0f + speed);
     }
 
     void onMouseScrolledDown(ui::Window *window) override {
         static float speed = 0.1;
-        this->cube->transform->scale(1.0f - speed);
+        this->bookObject->transform->scale(1.0f - speed);
     }
 
     void processInput() override {
         static float angle = 0.1f;
-        auto transform = this->cube->getComponent<components::TransformComponent>();
+        auto transform = this->bookObject->getComponent<components::TransformComponent>();
 
         if (this->mainWindow->isKeyPressed(InputKey::KEY_0)) {
             this->core->getCurrentRenderer()->setClearColor(Color(Color::RED));
