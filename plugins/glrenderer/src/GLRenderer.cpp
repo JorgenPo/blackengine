@@ -5,7 +5,7 @@
 #include <glsl/GLSLShader.h>
 #include <glsl/GLSLShaderProgram.h>
 #include <core/Core.h>
-#include <core/components/Model.h>
+#include <core/render/Model.h>
 #include <iostream>
 #include <cmath>
 #include <core/components/TransformComponent.h>
@@ -25,48 +25,16 @@ namespace black::render {
         return std::make_shared<ui::GLFWWindow>(std::move(name));
     }
 
-    void GLRenderer::initResourcesTemp() {
-        auto core = Core::getInstance();
-        auto &rm = core->getResourceManager();
-
-        try {
-            this->program = rm->load<ShaderProgram>("simple.shader");
-            this->mainTexture = rm->load<Texture>("container.jpg");
-        } catch (const resources::ResourceNotFoundException &e) {
-            std::cerr << e.getMessage() << std::endl;
-            std::cerr << "Search paths: " << e.getSearchPaths() << std::endl;
-            throw Exception(e.getMessage());
-        } catch(const Exception &e) {
-            std::cerr << e.getMessage() << std::endl;
-        }
-    }
-
     void GLRenderer::render(const GameEntityList &objectList) {
         //Logger::info("Rendering. GL_ERROR = %v", glGetError());
-
-        static bool initialized = false;
-
-        if (!initialized) {
-            this->initResourcesTemp();
-        }
-
-        initialized = true;
 
         auto color = this->clearColor;
         glClearColor(color.r, color.g, color.b, color.a);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        this->program->use();
-
-        // Update uniform
         double timeValue = glfwGetTime();
-        this->program->setUniformVariable("time", static_cast<float>(timeValue));
-
-        glActiveTexture(GL_TEXTURE0);
-        this->program->setUniformVariable("mainTexture", 0);
-
         for (const auto &object : objectList) {
-            auto model = object->getComponent<components::Model>();
+            auto model = object->getComponent<render::Model>();
             auto transform = object->getComponent<components::TransformComponent>();
 
             if (model == nullptr) {
@@ -74,16 +42,28 @@ namespace black::render {
             }
 
             auto mesh = model->getMesh();
+            auto program = model->getMaterial()->getShaderProgram();
+            auto texture = model->getMaterial()->getMainTexture();
+
+            program->use();
+
+            // Update uniform
+            program->setUniformVariable("time", static_cast<float>(timeValue));
+
+            glActiveTexture(GL_TEXTURE0);
+            program->setUniformVariable("mainTexture", 0);
 
             // Main texture
-            this->mainTexture->bind();
+            texture->bind();
 
             // Set transform matrix
-            this->program->setUniformVariable("transform", transform->getTransformation());
+            program->setUniformVariable("transform", transform->getTransformation());
 
             mesh->bind();
             glDrawElements(GL_TRIANGLES, mesh->getIndicesCount(), GL_UNSIGNED_INT, nullptr);
+
             mesh->unbind();
+            texture->unbind();
         }
     }
 

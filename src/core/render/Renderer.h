@@ -34,9 +34,8 @@ namespace black::render {
         /* These classes have access to create* methods */
         friend class Shader;
         friend class ShaderProgram;
-        friend class Mesh;
         friend class Texture;
-        //friend class Material;
+        friend class Model;
     protected:
         RenderTargetList renderTargets;
         Color clearColor;
