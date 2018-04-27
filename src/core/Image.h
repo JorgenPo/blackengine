@@ -19,7 +19,7 @@ namespace black {
         unsigned char* data;
 
     public:
-        explicit Image(std::string fileName, bool flipVertically = true);
+        explicit Image(std::string fileName, bool flipVertically = false);
 
         virtual ~Image();
 
