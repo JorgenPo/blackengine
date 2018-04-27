@@ -17,7 +17,8 @@ namespace black::render {
         static const GLuint POSITION_LAYOUT;
         static const GLuint TEXCOORD_LAYOUT;
 
-        GLuint vbo;
+        GLuint positionVbo;
+        GLuint texturesVbo;
         GLuint ebo;
         GLuint vao;
     public:
