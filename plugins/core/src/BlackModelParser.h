@@ -23,6 +23,7 @@ namespace black::parsers {
         std::ifstream file;
 
         std::string textureName;
+        std::string programName;
         int polygonLength;
     public:
         BlackModelParser *copy() const override;
@@ -34,11 +35,12 @@ namespace black::parsers {
 
         std::string getTextureName() override;
 
-    private:
-        template<typename T>
-        void readBlock(std::vector<T> &values, size_t predictedSize);
+        std::string getProgramName() override;
 
+    private:
+        void readVerticesBlock(std::vector<float> &values, size_t predictedSize);
         void readIndicesBlock(std::vector<unsigned int> &values, size_t predictedSize);
+        void readTextureCoordsBlock(std::vector<float> &values, std::vector<unsigned int> &indices, std::vector<float> &vertices);
     };
 }
 

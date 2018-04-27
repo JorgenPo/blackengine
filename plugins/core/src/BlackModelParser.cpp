@@ -10,32 +10,20 @@ namespace black::parsers {
         return new BlackModelParser();
     }
 
-    template<typename T>
-    void BlackModelParser::readBlock(std::vector<T> &values, size_t predictedSize) {
-        char separator;
-        T value;
-        values.reserve(predictedSize);
-
-        if (!(file >> separator)) {
-            throw WrongModelFormatException();
-        } else if (separator != '{') {
-            throw WrongModelFormatException();
-        }
-
-        while ( this->file >> value >> separator && separator != '}' ) {
-            values.push_back(value);
-        }
-
-        // The last element
-        values.push_back(value);
-    }
-
     void BlackModelParser::parse(std::string filename, std::vector<float> &vertices, std::vector<unsigned int> &indices,
                                  std::vector<float> &textureCoords) {
         this->file = std::ifstream(filename);
 
         if (!file.is_open()) {
             throw ParseException("File stream not opened");
+        }
+
+        if (!(file >> this->programName)) {
+            throw WrongModelFormatException();
+        }
+
+        if (FileUtils::getFileExtension(this->programName).empty()) {
+            throw Exception("Program must be set");
         }
 
         if (!(file >> this->textureName)) {
@@ -59,15 +47,44 @@ namespace black::parsers {
             throw WrongModelFormatException();
         }
 
-        this->readBlock<float>(vertices, numVertices);
+        this->readVerticesBlock(vertices, numVertices);
         this->readIndicesBlock(indices, numIndices);
-        this->readBlock<float>(textureCoords, numUVs);
+
+        textureCoords.resize(vertices.size() / 3 * 2);
+        this->readTextureCoordsBlock(textureCoords, indices, vertices);
 
         auto rm = Core::getInstance()->getCurrentRenderer();
     }
 
     int BlackModelParser::getPolygonLength() {
         return this->polygonLength;
+    }
+
+    std::string BlackModelParser::getTextureName() {
+        return this->textureName;
+    }
+
+    std::string BlackModelParser::getProgramName() {
+        return this->programName;
+    }
+
+    void BlackModelParser::readVerticesBlock(std::vector<float> &values, size_t predictedSize) {
+        char separator;
+        float value;
+        values.reserve(predictedSize);
+
+        if (!(file >> separator)) {
+            throw WrongModelFormatException();
+        } else if (separator != '{') {
+            throw WrongModelFormatException();
+        }
+
+        while ( this->file >> value >> separator && separator != '}' ) {
+            values.push_back(value);
+        }
+
+        // The last element
+        values.push_back(value);
     }
 
     void BlackModelParser::readIndicesBlock(std::vector<unsigned int> &values, size_t predictedSize) {
@@ -102,7 +119,61 @@ namespace black::parsers {
         values.push_back(static_cast<unsigned int>(abs(value)) - 1);
     }
 
-    std::string BlackModelParser::getTextureName() {
-        return this->textureName;
+    void BlackModelParser::readTextureCoordsBlock(std::vector<float> &values, std::vector<unsigned int> &indices,
+                                                  std::vector<float> &vertices) {
+        char separator;
+        int index = 0;
+        float u = 0.0f;
+        float v = 0.0f;
+
+        if (!(file >> separator)) {
+            throw WrongModelFormatException();
+        } else if (separator != '{') {
+            throw WrongModelFormatException();
+        }
+
+        std::vector<int> usedVertices(values.size() / 2);
+
+        while ( this->file >> u >> separator >> v >> separator && separator != '}' ) {
+            // Check if we wasn't already met that vertex (with index = indices[index))
+            if (usedVertices[indices[index]] == 0)
+            {
+                values[indices[index] * 2] = abs(u);
+                values[indices[index] * 2 + 1] = abs(v);
+                usedVertices[indices[index]] = 1;
+            } else if (values[indices[index] * 2] != u || values[indices[index] * 2 + 1] != v) { // We met that vertex, but different uvs used
+                // There was already using of indices[index]th vertex,
+                // so we have to duplicate this vertex
+                vertices.push_back(vertices[indices[index] * 3]);
+                vertices.push_back(vertices[indices[index] * 3 + 1]);
+                vertices.push_back(vertices[indices[index] * 3 + 2]);
+
+                // Change index to point to new vertex (last pos)
+                indices[index] = vertices.size() / 3 - 1;
+
+                // Add new texture coordinate
+                values.push_back(abs(u));
+                values.push_back(abs(v));
+
+                usedVertices.push_back(1);
+            }
+            index++;
+        }
+
+        if (usedVertices[indices[index]] == 0) {
+            values[indices[index] * 2] = abs(u);
+            values[indices[index] * 2 + 1] = abs(v);
+        } else if (values[indices[index] * 2] != u || values[indices[index] * 2 + 1] != v) {
+            // TODO: Refactor all this code.
+
+            vertices.push_back(vertices[indices[index] * 3]);
+            vertices.push_back(vertices[indices[index] * 3 + 1]);
+            vertices.push_back(vertices[indices[index] * 3 + 2]);
+
+            indices[index] = vertices.size() / 3 - 1;
+
+            values.push_back(abs(u));
+            values.push_back(abs(v));
+        }
     }
 }

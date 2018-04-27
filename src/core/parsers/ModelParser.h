@@ -39,6 +39,8 @@ namespace black::parsers {
         virtual int getPolygonLength() = 0;
 
         virtual std::string getTextureName() = 0;
+        virtual std::string getProgramName() = 0;
+
 
         ModelParser *copy() const override = 0;
     };
