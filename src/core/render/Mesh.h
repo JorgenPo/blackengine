@@ -11,7 +11,6 @@
 #include <memory>
 
 namespace black::render {
-
     /**
      * Mesh is a vertices array
      */
@@ -22,6 +21,8 @@ namespace black::render {
         std::vector<unsigned int> indices;
 
         int polygonLength;
+
+        bool initialized;
     public:
         Mesh();
         explicit Mesh(std::vector<float> vertices, std::vector<unsigned int> indices,
@@ -42,6 +43,8 @@ namespace black::render {
         void setTextureCoords(const std::vector<float> &textureCoords);
 
         void setIndices(const std::vector<unsigned int> &indices);
+
+        bool isInitialized() const;
 
         /**
          * Bind a mesh. Makes it current.

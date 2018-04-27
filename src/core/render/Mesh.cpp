@@ -55,5 +55,9 @@ namespace black::render {
         Mesh::indices = indices;
     }
 
+    bool Mesh::isInitialized() const {
+        return initialized;
+    }
+
 
 }
