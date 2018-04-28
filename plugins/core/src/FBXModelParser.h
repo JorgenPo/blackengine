@@ -10,14 +10,20 @@
 
 namespace black::parsers {
     /**
-     * Parse black model file format (bmf)
+     * Parse fbx format
      *
-     * BMF format v0.1
+     * FBX format parser v0.1
      */
-    class BlackModelParser : public ModelParser {
+    class FBXModelParser : public ModelParser {
+        struct FBXHeader {
+            std::string headerVersion;
+            std::string versionString;
+        };
+
         size_t numVertices;
         size_t numIndices;
         size_t numUVs;
+        size_t numUVIndices;
         size_t numNormals;
 
         std::ifstream file;
@@ -25,8 +31,16 @@ namespace black::parsers {
         std::string textureName;
         std::string programName;
         int polygonLength;
+
+        FBXHeader header;
+
+        std::vector<float> *vertices;
+        std::vector<unsigned int> *indices;
+        std::vector<float> *uvs;
+
+        std::vector<unsigned int> uvIndices;
     public:
-        BlackModelParser *copy() const override;
+        FBXModelParser *copy() const override;
 
         void parse(std::string file, std::vector<float> &vertices, std::vector<unsigned int> &indices,
                    std::vector<float> &textureCoords) override;
@@ -37,10 +51,18 @@ namespace black::parsers {
 
         std::string getProgramName() override;
 
+
     private:
-        void readVerticesBlock(std::vector<float> &values, size_t predictedSize);
-        void readIndicesBlock(std::vector<unsigned int> &values, size_t predictedSize);
-        void readTextureCoordsBlock(std::vector<float> &values, std::vector<unsigned int> &indices, std::vector<float> &vertices);
+        void readFBXHeader();
+        void readVerticesBlock();
+        void readIndicesBlock();
+        void readTextureCoordsBlock();
+
+        void readObjectsBlock();
+
+        void readTextureCoordsIndicesBlock();
+
+        void makeUVCoordinates();
     };
 }
 
