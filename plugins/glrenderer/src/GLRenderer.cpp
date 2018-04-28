@@ -50,11 +50,11 @@ namespace black::render {
             // Update uniform
             program->setUniformVariable("time", static_cast<float>(timeValue));
 
-            glActiveTexture(GL_TEXTURE0);
-            program->setUniformVariable("mainTexture", 0);
-
-            // Main texture
-            texture->bind();
+            if (texture != nullptr) {
+                glActiveTexture(GL_TEXTURE0);
+                program->setUniformVariable("mainTexture", 0);
+                texture->bind();
+            }
 
             // Set transform matrix
             program->setUniformVariable("transform", transform->getTransformation());
@@ -63,7 +63,10 @@ namespace black::render {
             glDrawElements(GL_TRIANGLES, mesh->getIndicesCount(), GL_UNSIGNED_INT, nullptr);
 
             mesh->unbind();
-            texture->unbind();
+
+            if (texture != nullptr) {
+                texture->unbind();
+            }
         }
     }
 
