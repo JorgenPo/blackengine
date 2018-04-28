@@ -60,10 +60,8 @@ namespace black::render {
         mesh->setTextureCoords(uvs);
         mesh->update();
 
-        auto program = rm->load<ShaderProgram>(parser->getProgramName());
-        auto texture = rm->load<Texture>(parser->getTextureName());
+        auto program = rm->load<ShaderProgram>("simple.shader");
         auto material = std::make_shared<Material>(program);
-        material->setMainTexture(texture);
 
         return std::make_shared<Model>(mesh, material);
     }
