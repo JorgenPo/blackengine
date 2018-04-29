@@ -28,6 +28,14 @@ namespace black::render {
     void GLRenderer::render(const GameEntityList &objectList) {
         //Logger::info("Rendering. GL_ERROR = %v", glGetError());
 
+        static bool initialized = false;
+
+        if (!initialized) {
+            float aspectRatio = this->currentRenderTarget->getRenderTargetAspectRatio();
+            this->projectionMatrix = glm::perspective(glm::radians(65.0f), aspectRatio, 0.1f, 100.0f);
+            this->viewMatrix = glm::lookAt(glm::vec3{0.0f, 40.2f, 25.5f}, glm::vec3{0.0f, 0.0f, 0.0f}, glm::vec3{0.0f, 1.0f, 0.0f});
+        }
+
         auto color = this->clearColor;
         glClearColor(color.r, color.g, color.b, color.a);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -56,8 +64,10 @@ namespace black::render {
                 texture->bind();
             }
 
-            // Set transform matrix
-            program->setUniformVariable("transform", transform->getTransformation());
+            // Set matrices
+            program->setUniformVariable("model", transform->getModelMatrix());
+            program->setUniformVariable("projection", this->projectionMatrix);
+            program->setUniformVariable("view", this->viewMatrix);
 
             mesh->bind();
             glDrawElements(GL_TRIANGLES, mesh->getIndicesCount(), GL_UNSIGNED_INT, nullptr);
