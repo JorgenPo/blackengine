@@ -28,6 +28,10 @@ namespace black::render {
          * Makes a renderer target current
          */
         virtual void setRenderTargetCurrent() = 0;
+
+        virtual float getRenderTargetWidth() = 0;
+        virtual float getRenderTargetHeight() = 0;
+        virtual float getRenderTargetAspectRatio() = 0;
     };
 
 }
