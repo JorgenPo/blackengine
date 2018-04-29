@@ -68,4 +68,10 @@ namespace black::render {
         glBindVertexArray(0);
     }
 
+    void GLMesh::draw() {
+        this->bind();
+        glDrawElements(GL_TRIANGLES, this->getIndicesCount(), GL_UNSIGNED_INT, nullptr);
+        this->unbind();
+    }
+
 }

@@ -34,6 +34,16 @@ namespace black::render {
         const std::shared_ptr<Material> &getMaterial() const;
 
         void setMaterial(const std::shared_ptr<Material> &material);
+
+        /**
+         * Set current shader and binds a texture
+         */
+        void prepare();
+
+        /**
+         * Draws model
+         */
+        void render();
     };
 
 }

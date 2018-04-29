@@ -14,19 +14,21 @@ namespace black::render {
      * of object
      */
     class Material {
-        std::shared_ptr<Texture> mainTexture;
+        std::shared_ptr<Texture> diffuseTexture;
         std::shared_ptr<ShaderProgram> shaderProgram;
 
     public:
         explicit Material(const std::shared_ptr<ShaderProgram> &shaderProgram);
 
-        const std::shared_ptr<Texture> &getMainTexture() const;
+        const std::shared_ptr<Texture> &getDiffuseTexture() const;
 
-        void setMainTexture(const std::shared_ptr<Texture> &mainTexture);
+        void setDiffuseTexture(const std::shared_ptr<Texture> &diffuseTexture);
 
         const std::shared_ptr<ShaderProgram> &getShaderProgram() const;
 
         void setShaderProgram(const std::shared_ptr<ShaderProgram> &shaderProgram);
+
+        void use();
     };
 }
 

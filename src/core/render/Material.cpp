@@ -6,14 +6,14 @@
 
 namespace black::render {
     Material::Material(const std::shared_ptr<ShaderProgram> &shaderProgram)
-            : mainTexture(), shaderProgram(shaderProgram) {}
+            : diffuseTexture(), shaderProgram(shaderProgram) {}
 
-    const std::shared_ptr<Texture> &Material::getMainTexture() const {
-        return mainTexture;
+    const std::shared_ptr<Texture> &Material::getDiffuseTexture() const {
+        return diffuseTexture;
     }
 
-    void Material::setMainTexture(const std::shared_ptr<Texture> &mainTexture) {
-        Material::mainTexture = mainTexture;
+    void Material::setDiffuseTexture(const std::shared_ptr<Texture> &mainTexture) {
+        Material::diffuseTexture = mainTexture;
     }
 
     const std::shared_ptr<ShaderProgram> &Material::getShaderProgram() const {
@@ -22,5 +22,13 @@ namespace black::render {
 
     void Material::setShaderProgram(const std::shared_ptr<ShaderProgram> &shaderProgram) {
         Material::shaderProgram = shaderProgram;
+    }
+
+    void Material::use() {
+        this->shaderProgram->use();
+
+        if (this->diffuseTexture != nullptr) {
+            this->diffuseTexture->bind();
+        }
     }
 }

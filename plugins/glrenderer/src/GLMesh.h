@@ -32,6 +32,8 @@ namespace black::render {
         void unbind() override;
 
         void update() override;
+
+        void draw() override;
     };
 }
 

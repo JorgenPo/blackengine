@@ -58,6 +58,8 @@ namespace black::render {
          */
         virtual void unbind() = 0;
 
+        virtual void draw() = 0;
+
         /**
          * Updates a buffer using current vertices
          * data.

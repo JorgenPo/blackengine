@@ -49,34 +49,21 @@ namespace black::render {
                 continue;
             }
 
-            auto mesh = model->getMesh();
+            // Use program and bind texture
+            model->prepare();
+
             auto program = model->getMaterial()->getShaderProgram();
-            auto texture = model->getMaterial()->getMainTexture();
 
-            program->use();
-
-            // Update uniform
+            // Update uniforms
             program->setUniformVariable("time", static_cast<float>(timeValue));
-
-            if (texture != nullptr) {
-                glActiveTexture(GL_TEXTURE0);
-                program->setUniformVariable("mainTexture", 0);
-                texture->bind();
-            }
 
             // Set matrices
             program->setUniformVariable("model", transform->getModelMatrix());
             program->setUniformVariable("projection", this->projectionMatrix);
             program->setUniformVariable("view", this->viewMatrix);
 
-            mesh->bind();
-            glDrawElements(GL_TRIANGLES, mesh->getIndicesCount(), GL_UNSIGNED_INT, nullptr);
 
-            mesh->unbind();
-
-            if (texture != nullptr) {
-                texture->unbind();
-            }
+            model->render();
         }
     }
 

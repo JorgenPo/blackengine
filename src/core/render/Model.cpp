@@ -66,4 +66,11 @@ namespace black::render {
         return std::make_shared<Model>(mesh, material);
     }
 
+    void Model::render() {
+        this->mesh->draw();
+    }
+
+    void Model::prepare() {
+        this->material->use();
+    }
 }
