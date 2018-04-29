@@ -92,6 +92,7 @@ namespace black::ui {
          * emit appropriate window event (onKeyDown and so on)
          */
         virtual bool isKeyPressed(InputKey key) = 0;
+        virtual bool isKeyPressed(int key) = 0;
 
         /**
          * Hides the window
@@ -180,6 +181,18 @@ namespace black::ui {
 
         void setIsMinimized(bool isMinimized) {
             Window::isMinimized = isMinimized;
+        }
+
+        float getRenderTargetWidth() override {
+            return static_cast<float>(width);
+        }
+
+        float getRenderTargetHeight() override {
+            return static_cast<float>(height);
+        }
+
+        float getRenderTargetAspectRatio() override {
+            return this->getRenderTargetWidth() / this->getRenderTargetHeight();
         }
     };
 }

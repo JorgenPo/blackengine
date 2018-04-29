@@ -36,6 +36,7 @@ namespace black::ui {
         void pollEvents() override;
 
         bool isKeyPressed(InputKey key) override;
+        bool isKeyPressed(int key) override;
 
         void resize(int width, int height) override;
 

@@ -101,7 +101,7 @@ namespace black::ui {
 
     bool GLFWWindow::isKeyPressed(InputKey key) {
         // GLFW KEYS AND InputKey enum are fully compatible
-        return glfwGetKey(this->window.get(), static_cast<int>(key)) == GLFW_PRESS;
+        return this->isKeyPressed(static_cast<int>(key));
     }
 
     void GLFWWindow::setCallbacks() {
@@ -116,5 +116,9 @@ namespace black::ui {
             Logger::info("Offset = %v", yoffset);
             glfwWindow->emitMouseScrolled(glfwWindow, xoffset, yoffset);
         });
+    }
+
+    bool GLFWWindow::isKeyPressed(int key) {
+        return glfwGetKey(this->window.get(), key) == GLFW_PRESS;
     }
 }
