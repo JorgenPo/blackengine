@@ -26,7 +26,7 @@ namespace black::components {
 
         TransformComponent();
 
-        const glm::mat4 getTransformation() const;
+        const glm::mat4 getModelMatrix() const;
         const glm::mat4 &getTranslation() const;
         const glm::mat4 &getRotation() const;
         const glm::mat4 &getScale() const;
