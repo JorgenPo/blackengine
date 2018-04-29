@@ -59,7 +59,9 @@ namespace black::parsers {
 
         for (int i = 0; i < this->numVertices; ++i) {
             this->file >> value >> separator;
-            this->vertices->push_back(value);
+
+            // When loading all models are flipped over
+            this->vertices->push_back(-value);
         }
     }
 
