@@ -23,7 +23,7 @@ namespace black {
     /**
      * Main class of application
      */
-    class Application {
+    class Application : public ui::WindowEventListener {
     protected:
         const std::string MAIN_SCENE_NAME = "Main Scene";
 

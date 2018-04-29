@@ -94,6 +94,9 @@ namespace black {
         }
 
         this->core->getCurrentRenderer()->addRenderTarget(this->mainWindow);
+
+        // Listen for windows event
+        this->mainWindow->listen(this);
     }
 
     void Application::setMainScene() {
