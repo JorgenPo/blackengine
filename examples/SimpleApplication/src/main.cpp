@@ -15,64 +15,80 @@ using namespace black;
 using namespace black::render;
 
 // Simple example application
-class SimpleApplication : public Application, public ui::WindowEventListener {
-    std::shared_ptr<GameEntity> bookObject;
+class SimpleApplication : public Application {
+    std::shared_ptr<GameEntity> object;
+    std::shared_ptr<GameEntity> object1;
+    std::shared_ptr<GameEntity> object2;
 
+    std::shared_ptr<GameEntity> currentObject;
 public:
     void initialize() override {
         Application::initialize();
         this->core->getCurrentRenderer()->setClearColor(Color(Color::WHITE));
 
+        auto &rm = this->core->getResourceManager();
+
         // Add resource directory to resource manager
-        this->core->getResourceManager()->addResourceFolder("resources/");
+        rm->addResourceFolder("resources/");
 
-        auto bookModel = this->core->getResourceManager()->load<Model>("book.bmf");
+        auto columnModel = rm->load<Model>("column.fbx");
+        columnModel->getMaterial()->setMainTexture(rm->load<Texture>("column.bmp"));
 
-        this->bookObject = std::make_shared<GameEntity>();
-        this->bookObject->addComponent(bookModel);
-        this->bookObject->transform->scale(0.1f);
-        this->bookObject->transform->rotateX(90);
+        auto statueModel = rm->load<Model>("statue.fbx");
+        statueModel->getMaterial()->setMainTexture(rm->load<Texture>("statue.bmp"));
 
-        this->mainScene->addEntity(this->bookObject);
+        this->object = std::make_shared<GameEntity>();
+        this->object1 = std::make_shared<GameEntity>();
+        this->object2 = std::make_shared<GameEntity>();
 
-        this->mainWindow->listen(this);
+        this->object->addComponent(columnModel);
+        this->object1->addComponent(statueModel);
+        this->object2->addComponent(columnModel);
+
+        this->mainScene->addEntity(object);
+        this->mainScene->addEntity(object1);
+        this->mainScene->addEntity(object2);
+
+        this->currentObject = this->object;
     }
 
     void update() override {
-        this->bookObject->transform->rotateY(0.01f);
-        this->bookObject->transform->rotateZ(0.02f);
     }
 
     void onMouseScrolledUp(ui::Window *window) override {
-        static float speed = 0.1;
-        this->bookObject->transform->scale(1.0f + speed);
     }
 
     void onMouseScrolledDown(ui::Window *window) override {
-        static float speed = 0.1;
-        this->bookObject->transform->scale(1.0f - speed);
     }
 
     void processInput() override {
-        static float angle = 0.1f;
-        auto transform = this->bookObject->getComponent<components::TransformComponent>();
+        static float speed = 0.1f;
+        auto transform = this->currentObject->getComponent<components::TransformComponent>();
 
         if (this->mainWindow->isKeyPressed(InputKey::KEY_0)) {
             this->core->getCurrentRenderer()->setClearColor(Color(Color::RED));
         } else if (this->mainWindow->isKeyPressed(InputKey::KEY_1)) {
-            this->core->getCurrentRenderer()->setClearColor(Color(Color::GREEN));
+            this->currentObject = this->object;
         } else if (this->mainWindow->isKeyPressed(InputKey::KEY_2)) {
-            this->core->getCurrentRenderer()->setClearColor(Color(Color::WHITE));
+            this->currentObject = this->object1;
         } else if (this->mainWindow->isKeyPressed(InputKey::KEY_3)) {
-            this->core->getCurrentRenderer()->setClearColor(Color(Color::BLACK));
+            this->currentObject = this->object2;
         } else if (this->mainWindow->isKeyPressed(InputKey::KEY_LEFT)) {
-            transform->rotateY(angle);
+            transform->translateX(-speed);
         } else if (this->mainWindow->isKeyPressed(InputKey::KEY_RIGHT)) {
-            transform->rotateY(-angle);
+            transform->translateX(speed);
         } else if (this->mainWindow->isKeyPressed(InputKey::KEY_UP)) {
-            transform->rotateX(angle);
+            transform->translateY(0.01f);
         } else if (this->mainWindow->isKeyPressed(InputKey::KEY_DOWN)) {
-            transform->rotateX(-angle);
+            transform->translateY(-0.01f);
+        } else if (this->mainWindow->isKeyPressed('+')) {
+            transform->scale(1 + speed);
+        } else if (this->mainWindow->isKeyPressed('-')) {
+            transform->scale(1 - speed);
+        } else if (this->mainWindow->isKeyPressed('[')) {
+            transform->rotateY(-speed);
+        } else if (this->mainWindow->isKeyPressed(']')) {
+            transform->rotateY(speed);
         }
     }
 };
