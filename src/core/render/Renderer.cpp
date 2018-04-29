@@ -27,6 +27,7 @@ namespace black::render {
 
     void Renderer::renderToAllTargets(const GameEntityList &objectList) {
         for (const auto &target : this->renderTargets) {
+            this->currentRenderTarget = target;
             target->setRenderTargetCurrent();
             this->render(objectList);
             target->updateRenderTarget();

@@ -24,6 +24,9 @@ namespace black::render {
      * Abstract class for all renderers.
      */
     class Renderer {
+    protected:
+        std::shared_ptr<RenderTarget> currentRenderTarget;
+
     private:
         /* These functions are only used by friend Resource Manager class */
         virtual std::shared_ptr<Shader> createShader(const std::string &source, Shader::Type type) = 0;
