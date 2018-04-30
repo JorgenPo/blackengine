@@ -17,9 +17,11 @@ namespace black::components {
      */
     class TransformComponent : public Component {
     private:
-        glm::mat4 translation;
-        glm::mat4 rotation;
-        glm::mat4 scaleMat;
+        glm::vec3 position;
+        glm::vec3 rotation;
+        glm::vec3 scaling;
+
+        glm::mat4 modelMatrix;
 
     public:
         static std::string getName() { return "Transform"; }
@@ -27,25 +29,33 @@ namespace black::components {
         TransformComponent();
 
         const glm::mat4 getModelMatrix() const;
-        const glm::mat4 &getTranslation() const;
-        const glm::mat4 &getRotation() const;
-        const glm::mat4 &getScale() const;
 
-        void rotate(float angle, glm::vec3 axis);
+        const glm::vec3 &getPosition() const;
+
+        void setPosition(const glm::vec3 &position);
+
+        const glm::vec3 &getRotation() const;
+
+        void setRotation(const glm::vec3 &rotation);
+
+        const glm::vec3 &getScale() const;
+
+        void setScale(const glm::vec3 &scaling);
+
+        void rotate(glm::vec3 vector);
         void rotateX(float angle);
         void rotateY(float angle);
         void rotateZ(float angle);
-
-        void translate(glm::vec3 vector);
+        void translate(glm::vec3 translation);
         void translateX(float value);
         void translateY(float value);
         void translateZ(float value);
-
-        void scale(glm::vec3 vector);
-        void scale(float value);
+        void scale(glm::vec3 scale);
         void scaleX(float value);
         void scaleY(float value);
         void scaleZ(float value);
+    private:
+        void updateModelMatrix();
     };
 }
 
