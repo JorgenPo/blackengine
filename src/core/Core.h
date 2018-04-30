@@ -124,6 +124,14 @@ namespace black {
             return instance;
         }
 
+        static const std::unique_ptr<PluginManager> &GetPluginManager() {
+            return instance->getPluginManager();
+        }
+
+        static const std::unique_ptr<resources::ResourceManager> &GetResourceManager() {
+            return instance->getResourceManager();
+        }
+
         /**
          * Initialize blackengine core
          * Application must call this method.
