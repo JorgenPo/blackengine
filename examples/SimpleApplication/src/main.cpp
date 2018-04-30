@@ -59,15 +59,18 @@ public:
     }
 
     void onMouseScrolledUp(ui::Window *window) override {
-        this->currentObject->transform->scale(1 + 0.005f);
+        float speed = 5.0f * this->core->getFrameDeltaTime();
+        this->currentObject->transform->scale(1 + speed);
     }
 
     void onMouseScrolledDown(ui::Window *window) override {
-        this->currentObject->transform->scale(1 - 0.005f);
+        float speed = 5.0f * this->core->getFrameDeltaTime();
+        this->currentObject->transform->scale(1 - speed);
     }
 
     void processInput() override {
-        static float speed = 0.1f;
+        float speed = 5.0f * this->core->getFrameDeltaTime();
+
         auto transform = this->currentObject->getComponent<components::TransformComponent>();
 
         if (this->mainWindow->isKeyPressed(InputKey::KEY_0)) {
@@ -83,9 +86,9 @@ public:
         } else if (this->mainWindow->isKeyPressed(InputKey::KEY_RIGHT)) {
             transform->translateX(speed);
         } else if (this->mainWindow->isKeyPressed(InputKey::KEY_UP)) {
-            transform->translateY(0.01f);
+            transform->translateY(speed);
         } else if (this->mainWindow->isKeyPressed(InputKey::KEY_DOWN)) {
-            transform->translateY(-0.01f);
+            transform->translateY(-speed);
         } else if (this->mainWindow->isKeyPressed('+')) {
             transform->scale(1 + speed / 40.0f);
         } else if (this->mainWindow->isKeyPressed('-')) {

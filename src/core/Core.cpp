@@ -206,4 +206,8 @@ namespace black {
 
         return nullptr;
     }
+
+    float Core::getFrameDeltaTime() {
+        return this->getCurrentRenderer()->getDeltaTime();
+    }
 }

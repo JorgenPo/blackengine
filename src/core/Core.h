@@ -251,6 +251,12 @@ namespace black {
          * Renders a new frame
          */
         void renderFrame();
+
+        /**
+         * Returns a time took a last frame rendering
+         * @return
+         */
+        float getFrameDeltaTime();
     private:
         /**
          * Set up platform information

@@ -26,22 +26,33 @@ namespace black::render {
     }
 
     void GLRenderer::render(const GameEntityList &objectList) {
-        static long long int frame = 0;
-        frame++;
+        static float currentFrame = static_cast<float>(glfwGetTime());
+        static float lastFrame = static_cast<float>(glfwGetTime());
+
+        currentFrame = static_cast<float>(glfwGetTime());
+        this->deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
 
         static bool initialized = false;
+
+        double timeValue = glfwGetTime();
 
         if (!initialized) {
             float aspectRatio = this->currentRenderTarget->getRenderTargetAspectRatio();
             this->projectionMatrix = glm::perspective(glm::radians(65.0f), aspectRatio, 0.1f, 100.0f);
-            this->viewMatrix = glm::lookAt(glm::vec3{0.0f, 10.2f, 25.5f}, glm::vec3{0.0f, 0.0f, 0.0f}, glm::vec3{0.0f, 1.0f, 0.0f});
+            //this->viewMatrix = glm::lookAt(glm::vec3{0.0f, 10.2f, 25.5f}, glm::vec3{0.0f, 0.0f, 0.0f}, glm::vec3{0.0f, 1.0f, 0.0f});
         }
+
+        float radius = 10.0f;
+        float camX = static_cast<float>(sin(glfwGetTime())) * radius;
+        float camZ = static_cast<float>(cos(glfwGetTime())) * radius;
+
+        this->viewMatrix = glm::lookAt(glm::vec3(camX, 0.0, camZ), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
 
         auto color = this->clearColor;
         glClearColor(color.r, color.g, color.b, color.a);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        double timeValue = glfwGetTime();
         for (const auto &object : objectList) {
             auto model = object->getComponent<render::Model>();
             auto transform = object->getComponent<components::TransformComponent>();

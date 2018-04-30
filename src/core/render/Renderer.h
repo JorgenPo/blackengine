@@ -26,6 +26,7 @@ namespace black::render {
     class Renderer {
     protected:
         std::shared_ptr<RenderTarget> currentRenderTarget;
+        float deltaTime;
 
     private:
         /* These functions are only used by friend Resource Manager class */
@@ -69,6 +70,12 @@ namespace black::render {
         const Color &getClearColor() const;
 
         void setClearColor(const Color &clearColor);
+
+        /**
+         * Returns a time last frame render took
+         * @return
+         */
+        float getDeltaTime() const;
     };
 }
 

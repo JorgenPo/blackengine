@@ -55,6 +55,10 @@ namespace black::render {
     void Renderer::setClearColor(const Color &clearColor) {
         Renderer::clearColor = clearColor;
     }
+
+    float Renderer::getDeltaTime() const {
+        return this->deltaTime;
+    }
 }
 
 
