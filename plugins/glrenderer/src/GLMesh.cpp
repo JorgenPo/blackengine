@@ -74,4 +74,9 @@ namespace black::render {
         this->unbind();
     }
 
+    void GLMesh::draw(int offset, int count) {
+        this->bind();
+        glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, reinterpret_cast<void *>(sizeof(unsigned int) * offset));
+        this->unbind();
+    }
 }

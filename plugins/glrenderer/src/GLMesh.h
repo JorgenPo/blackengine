@@ -34,6 +34,8 @@ namespace black::render {
         void update() override;
 
         void draw() override;
+
+        void draw(int offset, int count) override;
     };
 }
 

@@ -2,6 +2,7 @@
 // Created by popof on 24.04.2018.
 //
 
+#include <core/Core.h>
 #include "Material.h"
 
 namespace black::render {
@@ -29,6 +30,15 @@ namespace black::render {
 
         if (this->diffuseTexture != nullptr) {
             this->diffuseTexture->bind();
+        }
+    }
+
+    void Material::setDiffuseTexture(std::string textureName) {
+        try {
+            auto texture = Core::GetResourceManager()->load<Texture>(textureName);
+            this->setDiffuseTexture(texture);
+        } catch(const Exception &e) {
+            throw FileNotFoundException(textureName);
         }
     }
 }

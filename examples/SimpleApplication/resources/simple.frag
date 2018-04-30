@@ -6,7 +6,14 @@ in vec2 TexCoord;
 uniform sampler2D mainTexture;
 uniform float time;
 
+uniform vec4 transparentColor;
+
 void main()
 {
     FragColor = texture(mainTexture, TexCoord);
+
+    if (FragColor == transparentColor) {
+        // Transparent
+         discard;
+    }
 }

@@ -25,6 +25,7 @@ namespace black::parsers {
         size_t numUVs;
         size_t numUVIndices;
         size_t numNormals;
+        size_t numMaterialOffsets;
 
         std::ifstream file;
 
@@ -37,8 +38,12 @@ namespace black::parsers {
         std::vector<float> *vertices;
         std::vector<unsigned int> *indices;
         std::vector<float> *uvs;
-
         std::vector<unsigned int> uvIndices;
+
+        render::MaterialList materialList;
+        std::vector<std::pair<int, int>> materialOffsets;
+
+        int needFlip;
     public:
         FBXModelParser *copy() const override;
 
@@ -51,6 +56,9 @@ namespace black::parsers {
 
         std::string getProgramName() override;
 
+        render::MaterialList getMaterials() override;
+
+        std::vector<std::pair<int, int>> getMaterialOffsets() override;
 
     private:
         void readFBXHeader();
@@ -63,6 +71,12 @@ namespace black::parsers {
         void readTextureCoordsIndicesBlock();
 
         void makeUVCoordinates();
+
+        void readMaterials();
+
+        void readMaterialOffsets();
+
+        void readPropertiesBlock();
     };
 }
 

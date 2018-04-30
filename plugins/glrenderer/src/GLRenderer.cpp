@@ -26,14 +26,15 @@ namespace black::render {
     }
 
     void GLRenderer::render(const GameEntityList &objectList) {
-        //Logger::info("Rendering. GL_ERROR = %v", glGetError());
+        static long long int frame = 0;
+        frame++;
 
         static bool initialized = false;
 
         if (!initialized) {
             float aspectRatio = this->currentRenderTarget->getRenderTargetAspectRatio();
             this->projectionMatrix = glm::perspective(glm::radians(65.0f), aspectRatio, 0.1f, 100.0f);
-            this->viewMatrix = glm::lookAt(glm::vec3{0.0f, 40.2f, 25.5f}, glm::vec3{0.0f, 0.0f, 0.0f}, glm::vec3{0.0f, 1.0f, 0.0f});
+            this->viewMatrix = glm::lookAt(glm::vec3{0.0f, 10.2f, 25.5f}, glm::vec3{0.0f, 0.0f, 0.0f}, glm::vec3{0.0f, 1.0f, 0.0f});
         }
 
         auto color = this->clearColor;
@@ -49,20 +50,22 @@ namespace black::render {
                 continue;
             }
 
-            // Use program and bind texture
-            model->prepare();
+            // TODO: this is the bad optimization
+            // Just assume that all materials using one shader program
+            auto program = model->getMaterials().front()->getShaderProgram();
 
-            auto program = model->getMaterial()->getShaderProgram();
+            program->use();
 
             // Update uniforms
             program->setUniformVariable("time", static_cast<float>(timeValue));
+            program->setUniformVariable("transparentColor", {1.0f, 0.0f, 1.0f, 1.0f});
 
             // Set matrices
             program->setUniformVariable("model", transform->getModelMatrix());
             program->setUniformVariable("projection", this->projectionMatrix);
             program->setUniformVariable("view", this->viewMatrix);
 
-
+            // Render all model parts
             model->render();
         }
     }

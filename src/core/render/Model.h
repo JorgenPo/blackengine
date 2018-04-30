@@ -7,10 +7,13 @@
 
 #include <core/render/Mesh.h>
 #include <memory>
+#include <list>
 #include <core/render/Material.h>
 #include "core/components/Component.h"
 
 namespace black::render {
+    using MaterialList = std::vector<std::shared_ptr<Material>>;
+
     /**
      * ModelComponent is holding mesh and
      * material data of object and can be rendered
@@ -18,27 +21,23 @@ namespace black::render {
      */
     class Model : public components::Component, public resources::Resource {
         std::shared_ptr<Mesh> mesh;
-        std::shared_ptr<Material> material;
+        MaterialList materials;
+        std::vector<std::pair<int, int>> materialOffsets;
 
     public:
         static std::shared_ptr<Model> fromFile(std::string fileName);
 
         static std::string getName() { return "Model"; }
 
-        Model(const std::shared_ptr<Mesh> &mesh, const std::shared_ptr<Material> &material);
+        Model(std::shared_ptr<Mesh> mesh, const MaterialList &materials, const std::vector<std::pair<int, int>> &materialOffsets);
 
         const std::shared_ptr<Mesh> &getMesh() const;
 
         void setMesh(const std::shared_ptr<Mesh> &mesh);
 
-        const std::shared_ptr<Material> &getMaterial() const;
+        const MaterialList &getMaterials() const;
 
-        void setMaterial(const std::shared_ptr<Material> &material);
-
-        /**
-         * Set current shader and binds a texture
-         */
-        void prepare();
+        void setMaterials(const MaterialList &materials);
 
         /**
          * Draws model

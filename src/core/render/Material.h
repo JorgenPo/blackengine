@@ -23,6 +23,7 @@ namespace black::render {
         const std::shared_ptr<Texture> &getDiffuseTexture() const;
 
         void setDiffuseTexture(const std::shared_ptr<Texture> &diffuseTexture);
+        void setDiffuseTexture(std::string textureName);
 
         const std::shared_ptr<ShaderProgram> &getShaderProgram() const;
 

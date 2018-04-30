@@ -3,12 +3,13 @@
 //
 
 #include <core/Core.h>
+#include <utility>
 #include "Model.h"
 
 namespace black::render {
 
-    Model::Model(const std::shared_ptr<Mesh> &mesh, const std::shared_ptr<Material> &material)
-            : mesh(mesh), material(material) {
+    Model::Model(std::shared_ptr<Mesh> mesh, const MaterialList &materials, const std::vector<std::pair<int, int>> &materialOffsets)
+            : mesh(std::move(mesh)), materials(materials), materialOffsets(materialOffsets) {
 
     }
 
@@ -20,12 +21,12 @@ namespace black::render {
         Model::mesh = mesh;
     }
 
-    const std::shared_ptr<Material> &Model::getMaterial() const {
-        return material;
+    const MaterialList &Model::getMaterials() const {
+        return this->materials;
     }
 
-    void Model::setMaterial(const std::shared_ptr<Material> &material) {
-        Model::material = material;
+    void Model::setMaterials(const MaterialList &material) {
+        this->materials = material;
     }
 
     std::shared_ptr<Model> Model::fromFile(std::string filename) {
@@ -60,17 +61,23 @@ namespace black::render {
         mesh->setTextureCoords(uvs);
         mesh->update();
 
-        auto program = rm->load<ShaderProgram>("simple.shader");
-        auto material = std::make_shared<Material>(program);
-
-        return std::make_shared<Model>(mesh, material);
+        return std::make_shared<Model>(mesh, parser->getMaterials(), parser->getMaterialOffsets());
     }
 
     void Model::render() {
-        this->mesh->draw();
-    }
+        for (int i = 0; i < this->materialOffsets.size(); i++) {
+            this->materials[this->materialOffsets[i].first]->use();
 
-    void Model::prepare() {
-        this->material->use();
+            // Draw only part of mesh
+            // materialOffsets[i].first - material index to use
+            // materialOffsets[i].second - offset in index buffer of mesh part
+            if (i != this->materialOffsets.size() - 1) {
+                this->mesh->draw(this->materialOffsets[i].second,
+                                 this->materialOffsets[i+1].second - this->materialOffsets[i].second);
+            } else {
+                this->mesh->draw(this->materialOffsets[i].second,
+                                 this->mesh->getIndicesCount() - this->materialOffsets[i].second);
+            }
+        }
     }
 }

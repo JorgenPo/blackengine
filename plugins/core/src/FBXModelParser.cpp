@@ -3,6 +3,7 @@
 //
 
 #include <core/Core.h>
+#include <cmath>
 #include "FBXModelParser.h"
 
 namespace black::parsers {
@@ -27,9 +28,13 @@ namespace black::parsers {
             throw WrongModelFormatException();
         }
 
+        this->readPropertiesBlock();
+
         this->readObjectsBlock();
 
         this->makeUVCoordinates();
+
+        this->readMaterials();
 
         auto rm = Core::getInstance()->getCurrentRenderer();
     }
@@ -60,8 +65,12 @@ namespace black::parsers {
         for (int i = 0; i < this->numVertices; ++i) {
             this->file >> value >> separator;
 
+            if (this->needFlip) {
+                value = -value;
+            }
+
             // When loading all models are flipped over
-            this->vertices->push_back(-value);
+            this->vertices->push_back(value);
         }
     }
 
@@ -172,12 +181,13 @@ namespace black::parsers {
         char c;
 
         // ORDER MATTERS
-        static const std::vector<std::string> blocks {"Vertices:", "PolygonVertexIndex:",  "UV:", "UVIndex:"};
+        static const std::vector<std::string> blocks {"Vertices:", "PolygonVertexIndex:",  "UV:", "UVIndex:", "Materials:"};
         std::map<std::string, size_t*> blockCounts {
                 {"Vertices:", &(this->numVertices)},
                 {"PolygonVertexIndex:", &(this->numIndices)},
                 {"UV:", &(this->numUVs)},
                 {"UVIndex:", &(this->numUVIndices)},
+                {"Materials:", &(this->numMaterialOffsets)}
         };
 
         size_t count;
@@ -203,7 +213,85 @@ namespace black::parsers {
                 this->readTextureCoordsBlock();
             } else if (blocks[i] == "UVIndex:") {
                 this->readTextureCoordsIndicesBlock();
+            } else if (blocks[i] == "Materials:") {
+                this->readMaterialOffsets();
             }
         }
+    }
+
+    render::MaterialList FBXModelParser::getMaterials() {
+        return this->materialList;
+    }
+
+    std::vector<std::pair<int, int>> FBXModelParser::getMaterialOffsets() {
+        return this->materialOffsets;
+    }
+
+    void FBXModelParser::readMaterials() {
+        auto shader = Core::getInstance()->getResourceManager()
+                ->load<render::ShaderProgram>("simple.shader");
+
+        std::string line;
+        for (int i = 0; i < this->materialList.size(); i++) {
+            while ((file >> line) && line.find("Material::") == std::string::npos) {}
+            // TODO: working with path
+            size_t pos = line.find_last_of('\\') + 1;
+
+            // Texture name with extension
+            // minus double quotes and coma
+            line = line.substr(pos, line.length() - pos - 2);
+
+            auto material = std::make_shared<render::Material>(shader);
+            try {
+                material->setDiffuseTexture(line);
+            } catch(const Exception &e) {
+                // Just empty texture
+            }
+
+            this->materialList[i] = material;
+        }
+    }
+
+    void FBXModelParser::readMaterialOffsets() {
+        int maxMaterialIndex = 0;
+        int index = -1;
+        int oldIndex = 0;
+        char separator;
+
+        for (int i = 0; i < this->numMaterialOffsets; i++) {
+            oldIndex = index;
+            this->file >> index >> separator;
+
+            // If material index has changed then
+            // push offset to materialOffsets
+            if (oldIndex != index) {
+                this->materialOffsets.emplace_back(index, i * 3);
+            }
+
+            maxMaterialIndex = std::max(maxMaterialIndex, index);
+        }
+
+        this->materialList.resize(static_cast<unsigned int>(maxMaterialIndex) + 1);
+    }
+
+    void FBXModelParser::readPropertiesBlock() {
+        std::string line;
+        char c;
+        int sign = 1;
+
+        // Get up axis sign to avoid flipping of some models
+        while ((file >> line) && line.find("UpAxisSign") == std::string::npos) {}
+
+        //"int",
+        file >> line;
+        //"Integer", "",
+        file >> line;
+
+        //"",
+        file >> c >> c >> c;
+
+        file >> sign;
+
+        this->needFlip = sign > 0;
     }
 }

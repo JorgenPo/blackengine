@@ -10,6 +10,7 @@
 #include <fstream>
 #include <core/Copyable.h>
 #include <core/Exception.h>
+#include <core/render/Model.h>
 
 namespace black::parsers {
     class ParseException : public Exception {
@@ -41,6 +42,9 @@ namespace black::parsers {
         virtual std::string getTextureName() = 0;
         virtual std::string getProgramName() = 0;
 
+
+        virtual render::MaterialList getMaterials() = 0;
+        virtual std::vector<std::pair<int, int>> getMaterialOffsets() = 0;
 
         ModelParser *copy() const override = 0;
     };
