@@ -113,7 +113,6 @@ namespace black::ui {
 
         glfwSetScrollCallback(this->window.get(), [](GLFWwindow *window, double xoffset, double yoffset) {
             auto glfwWindow = reinterpret_cast<GLFWWindow*>(glfwGetWindowUserPointer(window));
-            Logger::info("Offset = %v", yoffset);
             glfwWindow->emitMouseScrolled(glfwWindow, xoffset, yoffset);
         });
     }
