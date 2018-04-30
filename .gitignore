@@ -2,3 +2,8 @@
 CMakeFiles/
 cmake-build-*/
 build/
+*.fbx
+*.bmp
+*.jpg
+*.png
+*.obj
