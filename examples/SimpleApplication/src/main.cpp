@@ -30,24 +30,27 @@ public:
 
         // Add resource directory to resource manager
         rm->addResourceFolder("resources/");
+        rm->addResourceFolder("resources/morocc");
+        rm->addResourceFolder("resources/eclage");
+        rm->addResourceFolder("resources/winter_house/");
 
-        auto columnModel = rm->load<Model>("column.fbx");
-        columnModel->getMaterial()->setMainTexture(rm->load<Texture>("column.bmp"));
-
+        auto islandModel = rm->load<Model>("island.fbx");
+        auto winterHouseModel = rm->load<Model>("winter_house.fbx");
         auto statueModel = rm->load<Model>("statue.fbx");
-        statueModel->getMaterial()->setMainTexture(rm->load<Texture>("statue.bmp"));
 
         this->object = std::make_shared<GameEntity>();
         this->object1 = std::make_shared<GameEntity>();
         this->object2 = std::make_shared<GameEntity>();
 
-        this->object->addComponent(columnModel);
-        this->object1->addComponent(statueModel);
-        this->object2->addComponent(columnModel);
+        this->object->addComponent(islandModel);
+        this->object1->addComponent(winterHouseModel);
+        this->object2->addComponent(statueModel);
+
+        this->object->transform->scale(0.5f);
 
         this->mainScene->addEntity(object);
-        this->mainScene->addEntity(object1);
-        this->mainScene->addEntity(object2);
+        //this->mainScene->addEntity(object1);
+        //this->mainScene->addEntity(object2);
 
         this->currentObject = this->object;
     }
@@ -56,9 +59,11 @@ public:
     }
 
     void onMouseScrolledUp(ui::Window *window) override {
+        this->currentObject->transform->scale(1 + 0.005f);
     }
 
     void onMouseScrolledDown(ui::Window *window) override {
+        this->currentObject->transform->scale(1 - 0.005f);
     }
 
     void processInput() override {
@@ -82,13 +87,13 @@ public:
         } else if (this->mainWindow->isKeyPressed(InputKey::KEY_DOWN)) {
             transform->translateY(-0.01f);
         } else if (this->mainWindow->isKeyPressed('+')) {
-            transform->scale(1 + speed);
+            transform->scale(1 + speed / 40.0f);
         } else if (this->mainWindow->isKeyPressed('-')) {
-            transform->scale(1 - speed);
+            transform->scale(1 - speed / 40.0f);
         } else if (this->mainWindow->isKeyPressed('[')) {
-            transform->rotateY(-speed);
-        } else if (this->mainWindow->isKeyPressed(']')) {
             transform->rotateY(speed);
+        } else if (this->mainWindow->isKeyPressed(']')) {
+            transform->rotateY(-speed);
         }
     }
 };
