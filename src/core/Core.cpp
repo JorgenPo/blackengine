@@ -34,6 +34,11 @@ namespace black {
         stream << "Scene prototype with name '" << sceneType << "' not found";
         this->message = stream.str();
     }
+    CameraPrototypeNotFound::CameraPrototypeNotFound(const std::string &name) {
+        std::stringstream stream;
+        stream << "Camera prototype with name '" << name << "' not found";
+        this->message = stream.str();
+    }
     SceneAlreadyExistException::SceneAlreadyExistException(const std::string &name) : Exception() {
         std::stringstream stream;
         stream << "Scene with name '" << name << "' already exist";
@@ -128,6 +133,13 @@ namespace black {
             throw SceneNotSetException();
         }
 
+        /* Updates camera position and rotation */
+        auto camera = this->currentScene->getCurrentCamera();
+        if (camera != nullptr) {
+            camera->updateCamera();
+            this->currentRenderer->setRendererView(camera);
+        }
+
         auto objects = this->currentScene->getEntityList();
         this->currentRenderer->renderToAllTargets(objects);
     }
@@ -209,5 +221,25 @@ namespace black {
 
     float Core::getFrameDeltaTime() {
         return this->getCurrentRenderer()->getDeltaTime();
+    }
+
+    void Core::registerCameraPrototype(std::string name, std::shared_ptr<Camera> prototype) {
+        this->cameraPrototypes[name] = std::move(prototype);
+    }
+
+    std::shared_ptr<Camera> Core::createCamera(std::string prototypeName) {
+        if (this->cameraPrototypes.find(prototypeName) == this->cameraPrototypes.end()) {
+            throw CameraPrototypeNotFound(prototypeName);
+        }
+
+        return std::shared_ptr<Camera>(this->cameraPrototypes[prototypeName]->copy());
+    }
+
+    void Core::setEventWindow(std::shared_ptr<ui::Window> window) {
+        this->eventWindow = window;
+    }
+
+    std::shared_ptr<ui::Window> Core::getEventWindow() {
+        return this->eventWindow;
     }
 }

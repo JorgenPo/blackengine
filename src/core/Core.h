@@ -71,6 +71,11 @@ namespace black {
         explicit SceneNotFoundException(const std::string &name);
     };
 
+    class CameraPrototypeNotFound : public Exception {
+    public:
+        explicit CameraPrototypeNotFound(const std::string &name);
+    };
+
     enum class Platform {
         UNKNOWN,
         WINDOWS,
@@ -90,6 +95,7 @@ namespace black {
         using SceneMap = std::map<std::string, std::shared_ptr<scene::Scene>>;
         using RendererSet = std::set<std::shared_ptr<render::Renderer>>;
         using ModelParsersMap = std::map<std::string, std::shared_ptr<parsers::ModelParser>>;
+        using CameraPrototypeMap = std::map<std::string, std::shared_ptr<Camera>>;
 
     private:
         static Core *instance;
@@ -102,6 +108,7 @@ namespace black {
         PluginsMap plugins;
         RendererSet renderers;
         ScenePrototypeList scenePrototypes;
+        CameraPrototypeMap cameraPrototypes;
         SceneMap scenes;
         ModelParsersMap modelParsers;
 
@@ -109,6 +116,7 @@ namespace black {
         std::unique_ptr<resources::ResourceManager> resourceManager;
         std::shared_ptr<render::Renderer> currentRenderer;
         std::shared_ptr<scene::Scene> currentScene;
+        std::shared_ptr<ui::Window> eventWindow;
 
         Core();
         ~Core() = default;
@@ -196,6 +204,14 @@ namespace black {
         std::shared_ptr<render::Renderer> getCurrentRenderer();
 
         /**
+         * Set main event window that handles user input events
+         * @param window
+         */
+        void setEventWindow(std::shared_ptr<ui::Window> window);
+
+        std::shared_ptr<ui::Window> getEventWindow();
+
+        /**
          * Register a scene type prototype.
          *
          * @throws ScenePrototypeAlreadyExistException if type with that name was already registered
@@ -257,6 +273,23 @@ namespace black {
          * @return
          */
         float getFrameDeltaTime();
+
+        /**
+         * Registers a camera prototype
+         *
+         * @param name Camera type name
+         * @param prototype Camera copyable prototype
+         */
+        void registerCameraPrototype(std::string name, std::shared_ptr<Camera> prototype);
+
+        /**
+         * Creates a camera with given prototypeName
+         *
+         * @param name Name of registered camera prototype
+         * @return Camera object with desired prototype
+         */
+        std::shared_ptr<Camera> createCamera(std::string prototypeName);
+
     private:
         /**
          * Set up platform information
