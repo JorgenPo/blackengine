@@ -87,6 +87,13 @@ namespace black {
 
         void setViewport(const glm::vec4 &viewport);
 
+        void moveForward();
+        void moveBackward();
+        void moveLeft();
+        void moveRight();
+        void moveUp();
+        void moveDown();
+
         /**
          * Updates a camera. Concrete subclasses should set this
          */

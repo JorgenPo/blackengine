@@ -9,7 +9,7 @@
 namespace black {
 
     Camera::Camera(glm::vec4 viewport, glm::vec3 position, glm::vec3 up, float pitch, float yaw, float roll)
-        : up(up), movementSpeed(5.0f), softness(2.0f), zoom(1.0f), viewport(viewport)
+        : up(up), movementSpeed(1.0f), softness(0.5f), zoom(1.0f), viewport(viewport)
     {
         this->worldUp = up;
         this->fov = 45.0f;
@@ -17,7 +17,7 @@ namespace black {
         this->fovMax = fov;
 
         this->nearPlane = 0.1f;
-        this->farPlane = 100.0f;
+        this->farPlane = 1000.0f;
         this->projectionType = ProjectionType::PERSPECTIVE;
 
         this->aspectRatio = 16.0f / 9.0f;
@@ -48,7 +48,6 @@ namespace black {
 
     void Camera::setZoom(float zoom) {
         Camera::zoom = zoom;
-        updateProjectionMatrix();
     }
 
     glm::mat4 Camera::getProjectionMatrix() {
@@ -135,5 +134,29 @@ namespace black {
     void Camera::updateCamera() {
         this->updateViewMatrix();
         this->updateProjectionMatrix();
+    }
+
+    void Camera::moveForward() {
+        this->transform->setPosition(this->transform->getPosition() + this->front * this->movementSpeed);
+    }
+
+    void Camera::moveBackward() {
+        this->transform->setPosition(this->transform->getPosition() - this->front * this->movementSpeed);
+    }
+
+    void Camera::moveLeft() {
+        this->transform->setPosition(this->transform->getPosition() - this->right * this->movementSpeed);
+    }
+
+    void Camera::moveRight() {
+        this->transform->setPosition(this->transform->getPosition() + this->right * this->movementSpeed);
+    }
+
+    void Camera::moveUp() {
+        this->transform->setPosition(this->transform->getPosition() + this->up * this->movementSpeed);
+    }
+
+    void Camera::moveDown() {
+        this->transform->setPosition(this->transform->getPosition() - this->up * this->movementSpeed);
     }
 }
