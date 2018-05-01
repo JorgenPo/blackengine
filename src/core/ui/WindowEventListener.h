@@ -29,7 +29,7 @@ namespace black::ui {
         virtual void onMouseScrolledDown(Window *window) {}
         virtual void onMouseScrolledUp(Window *window) {}
 
-        virtual void onMouseMoved(Window *window, float xOffset, float yOffset) {}
+        virtual void onMouseMoved(Window *window, double xOffset, double yOffset) {}
     };
 }
 

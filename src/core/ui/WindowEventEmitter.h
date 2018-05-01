@@ -28,7 +28,7 @@ namespace black::ui {
             }
         }
 
-        virtual void emitMouseMoved(Window *window, float xOffset, float yOffset) {
+        virtual void emitMouseMoved(Window *window, double xOffset, double yOffset) {
             for (const auto &listener : this->listeners) {
                 listener->onMouseMoved(window, xOffset, yOffset);
             }
