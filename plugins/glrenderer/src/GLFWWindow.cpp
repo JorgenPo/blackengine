@@ -56,6 +56,9 @@ namespace black::ui {
         // Enable depth buffer
         glEnable(GL_DEPTH_TEST);
 
+        // Capture cursor
+        glfwSetInputMode(this->window.get(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
         this->setCallbacks();
 
         // Required to get rid of GL_INVALID_ENUM error
@@ -114,6 +117,11 @@ namespace black::ui {
         glfwSetScrollCallback(this->window.get(), [](GLFWwindow *window, double xoffset, double yoffset) {
             auto glfwWindow = reinterpret_cast<GLFWWindow*>(glfwGetWindowUserPointer(window));
             glfwWindow->emitMouseScrolled(glfwWindow, xoffset, yoffset);
+        });
+
+        glfwSetCursorPosCallback(this->window.get(), [](GLFWwindow *window, double x, double y) {
+            auto glfwWindow = reinterpret_cast<GLFWWindow*>(glfwGetWindowUserPointer(window));
+            glfwWindow->emitMouseMoved(glfwWindow, x, y);
         });
     }
 
