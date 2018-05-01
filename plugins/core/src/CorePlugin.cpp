@@ -5,6 +5,7 @@
 #include "CorePlugin.h"
 #include "SimpleScene.h"
 #include "FBXModelParser.h"
+#include "SpectatorCamera.h"
 
 #include <iostream>
 #include <memory>
@@ -22,6 +23,7 @@ namespace black {
         auto core = Core::getInstance();
         core->registerScenePrototype(std::make_shared<scene::SimpleScene>());
         core->registerModelParserPrototype("fbx", std::make_shared<parsers::FBXModelParser>());
+        core->registerCameraPrototype("spectator", std::make_shared<SpectatorCamera>());
     }
 
     void CorePlugin::initialize() {
