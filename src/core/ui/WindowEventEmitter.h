@@ -28,6 +28,12 @@ namespace black::ui {
             }
         }
 
+        virtual void emitMouseMoved(Window *window, float xOffset, float yOffset) {
+            for (const auto &listener : this->listeners) {
+                listener->onMouseMoved(window, xOffset, yOffset);
+            }
+        }
+
         virtual void emitMouseScrolled(Window *window, double xOffset, double yOffset) {
             for (const auto &listener : this->listeners) {
                 listener->onMouseScrolled(window, xOffset, yOffset);
