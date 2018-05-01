@@ -22,6 +22,7 @@ namespace black {
     Application::Application() : core(Core::getInstance()), isInitialized(false), windowTitle("BlackEngine application"),
                                  windowWidth(800), windowHeight(600)
     {
+
     }
 
     Application::Application(std::string title, int windowWidth, int windowHeight)
@@ -62,6 +63,7 @@ namespace black {
         setDefaultRenderer();
         setMainWindow();
         setMainScene();
+        setMainCamera();
 
         this->isInitialized = true;
     }
@@ -97,6 +99,9 @@ namespace black {
 
         // Listen for windows event
         this->mainWindow->listen(this);
+
+        // Set main window as event capturing window
+        this->core->setEventWindow(this->mainWindow);
     }
 
     void Application::setMainScene() {
@@ -110,5 +115,11 @@ namespace black {
 
     void Application::update() {
 
+    }
+
+    void Application::setMainCamera() {
+        this->mainCamera = this->core->createCamera("spectator");
+        this->mainCamera->transform->setPosition({0.0f, 1.0f, 100.0f});
+        this->mainScene->addEntity(this->mainCamera);
     }
 }

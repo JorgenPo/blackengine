@@ -29,6 +29,8 @@ namespace black {
 
         std::shared_ptr<ui::Window> mainWindow;
         std::shared_ptr<scene::Scene> mainScene;
+        std::shared_ptr<Camera> mainCamera;
+
         Core *core;
 
         bool isInitialized;
@@ -62,6 +64,8 @@ namespace black {
         void setDefaultRenderer();
         void setMainWindow();
         void setMainScene();
+
+        void setMainCamera();
     };
 
 }
