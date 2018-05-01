@@ -46,58 +46,16 @@ public:
         this->object1->addComponent(winterHouseModel);
         this->object2->addComponent(statueModel);
 
-        this->object->transform->scale(0.5f);
+        this->object->transform->scale(0.01f);
 
         this->mainScene->addEntity(object);
-        //this->mainScene->addEntity(object1);
-        //this->mainScene->addEntity(object2);
+        this->mainScene->addEntity(object1);
+        this->mainScene->addEntity(object2);
 
         this->currentObject = this->object;
     }
 
     void update() override {
-    }
-
-    void onMouseScrolledUp(ui::Window *window) override {
-        float speed = 5.0f * this->core->getFrameDeltaTime();
-        this->currentObject->transform->scale(1 + speed);
-    }
-
-    void onMouseScrolledDown(ui::Window *window) override {
-        float speed = 5.0f * this->core->getFrameDeltaTime();
-        this->currentObject->transform->scale(1 - speed);
-    }
-
-    void processInput() override {
-        float speed = 5.0f * this->core->getFrameDeltaTime();
-
-        auto transform = this->currentObject->getComponent<components::TransformComponent>();
-
-        if (this->mainWindow->isKeyPressed(InputKey::KEY_0)) {
-            this->core->getCurrentRenderer()->setClearColor(Color(Color::RED));
-        } else if (this->mainWindow->isKeyPressed(InputKey::KEY_1)) {
-            this->currentObject = this->object;
-        } else if (this->mainWindow->isKeyPressed(InputKey::KEY_2)) {
-            this->currentObject = this->object1;
-        } else if (this->mainWindow->isKeyPressed(InputKey::KEY_3)) {
-            this->currentObject = this->object2;
-        } else if (this->mainWindow->isKeyPressed(InputKey::KEY_LEFT)) {
-            transform->translateX(-speed);
-        } else if (this->mainWindow->isKeyPressed(InputKey::KEY_RIGHT)) {
-            transform->translateX(speed);
-        } else if (this->mainWindow->isKeyPressed(InputKey::KEY_UP)) {
-            transform->translateY(speed);
-        } else if (this->mainWindow->isKeyPressed(InputKey::KEY_DOWN)) {
-            transform->translateY(-speed);
-        } else if (this->mainWindow->isKeyPressed('+')) {
-            transform->scale(1 + speed / 40.0f);
-        } else if (this->mainWindow->isKeyPressed('-')) {
-            transform->scale(1 - speed / 40.0f);
-        } else if (this->mainWindow->isKeyPressed('[')) {
-            transform->rotateY(speed);
-        } else if (this->mainWindow->isKeyPressed(']')) {
-            transform->rotateY(-speed);
-        }
     }
 };
 
