@@ -28,15 +28,30 @@ namespace black::render {
     void Renderer::renderToAllTargets(const GameEntityList &objectList) {
         for (const auto &target : this->renderTargets) {
             this->currentRenderTarget = target;
+
+            updateRendererView();
+
             target->setRenderTargetCurrent();
             this->render(objectList);
             target->updateRenderTarget();
         }
     }
 
+    void Renderer::updateRendererView() const {
+        if (rendererView != nullptr) {
+            rendererView->setAspectRatio(currentRenderTarget->getRenderTargetAspectRatio());
+            rendererView->setViewport(
+                    {0.0f, currentRenderTarget->getRenderTargetWidth(),
+                     0.0f, currentRenderTarget->getRenderTargetHeight()});
+        }
+    }
+
     void Renderer::renderToTarget(std::string targetName, const GameEntityList &objectList) {
         for (const auto &target : this->renderTargets) {
             if (target->getRenderTargetName() == targetName) {
+                this->currentRenderTarget = target;
+                updateRendererView();
+
                 target->setRenderTargetCurrent();
                 this->render(objectList);
                 target->updateRenderTarget();
@@ -58,6 +73,14 @@ namespace black::render {
 
     float Renderer::getDeltaTime() const {
         return this->deltaTime;
+    }
+
+    const std::shared_ptr<Camera> &Renderer::getRendererView() const {
+        return rendererView;
+    }
+
+    void Renderer::setRendererView(const std::shared_ptr<Camera> &rendererView) {
+        Renderer::rendererView = rendererView;
     }
 }
 

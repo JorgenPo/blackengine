@@ -9,6 +9,7 @@
 #include <list>
 #include <core/ui/Window.h>
 #include <core/Color.h>
+#include <core/Camera.h>
 
 #include "RenderTarget.h"
 #include "core/GameEntity.h"
@@ -28,6 +29,7 @@ namespace black::render {
         std::shared_ptr<RenderTarget> currentRenderTarget;
         float deltaTime;
 
+        std::shared_ptr<Camera> rendererView;
     private:
         /* These functions are only used by friend Resource Manager class */
         virtual std::shared_ptr<Shader> createShader(const std::string &source, Shader::Type type) = 0;
@@ -76,6 +78,12 @@ namespace black::render {
          * @return
          */
         float getDeltaTime() const;
+
+        const std::shared_ptr<Camera> &getRendererView() const;
+
+        void setRendererView(const std::shared_ptr<Camera> &rendererView);
+
+        void updateRendererView() const;
     };
 }
 
