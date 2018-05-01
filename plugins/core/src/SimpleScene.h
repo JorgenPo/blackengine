@@ -17,6 +17,8 @@ namespace black::scene {
         const std::string name = "Simple Scene";
 
         GameEntityList objects;
+
+        std::shared_ptr<Camera> currentCamera;
     public:
 
         std::string getPrototypeName() override;
@@ -30,6 +32,12 @@ namespace black::scene {
         void removeEntity(std::shared_ptr<GameEntity> object) override;
 
         const GameEntityList &getEntityList() override;
+
+        std::shared_ptr<Camera> getCurrentCamera() override;
+
+        void setCurrentCamera(std::shared_ptr<Camera> camera) override;
+
+        void addEntity(std::shared_ptr<Camera> camera) override;
 
         // Copyable interface
         SimpleScene* copy() const override;

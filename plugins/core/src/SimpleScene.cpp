@@ -28,4 +28,21 @@ namespace black::scene {
     std::string SimpleScene::getPrototypeName() {
         return this->name;
     }
+
+    std::shared_ptr<Camera> SimpleScene::getCurrentCamera() {
+        return this->currentCamera;
+    }
+
+    void SimpleScene::setCurrentCamera(std::shared_ptr<Camera> camera) {
+        // TODO: check if camera object on scene
+        this->currentCamera = camera;
+    }
+
+    void SimpleScene::addEntity(std::shared_ptr<Camera> camera) {
+        this->objects.push_back(camera);
+
+        if (currentCamera == nullptr) {
+            currentCamera = camera;
+        }
+    }
 }
