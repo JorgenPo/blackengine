@@ -45,10 +45,10 @@ namespace black::components {
     void TransformComponent::updateModelMatrix() {
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, this->position);
-        model = glm::scale(model, this->scaling);
         model = glm::rotate(model, this->rotation.x, {1.0f, 0.0f, 0.0f});
         model = glm::rotate(model, this->rotation.y, {0.0f, 1.0f, 0.0f});
         model = glm::rotate(model, this->rotation.z, {0.0f, 0.0f, 1.0f});
+        model = glm::scale(model, this->scaling);
 
         this->modelMatrix = model;
     }
@@ -88,7 +88,10 @@ namespace black::components {
     }
 
     void TransformComponent::scale(glm::vec3 scale) {
-        this->scaling += scale;
+        this->scaling.x *= scale.x;
+        this->scaling.y *= scale.y;
+        this->scaling.z *= scale.z;
+
         this->updateModelMatrix();
     }
 
@@ -102,5 +105,10 @@ namespace black::components {
 
     void TransformComponent::scaleZ(float value) {
         this->scale({0.0f, 0.0f, value});
+    }
+
+    void TransformComponent::scale(float value) {
+        this->scaling *= value;
+        updateModelMatrix();
     }
 }

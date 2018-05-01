@@ -50,7 +50,9 @@ namespace black::components {
         void translateX(float value);
         void translateY(float value);
         void translateZ(float value);
+
         void scale(glm::vec3 scale);
+        void scale(float value);
         void scaleX(float value);
         void scaleY(float value);
         void scaleZ(float value);
