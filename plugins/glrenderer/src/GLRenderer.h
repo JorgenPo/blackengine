@@ -15,9 +15,6 @@ namespace black::render {
     class GLRenderer : public Renderer {
         const std::string rendererName = "OpenGL Renderer";
 
-        glm::mat4 projectionMatrix;
-        glm::mat4 viewMatrix;
-
         std::shared_ptr<Shader> createShader(const std::string &source, Shader::Type type) override;
         std::shared_ptr<Mesh> createMesh() override;
         std::shared_ptr<ShaderProgram> createShaderProgram() override;
