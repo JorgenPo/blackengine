@@ -21,6 +21,12 @@
 namespace black::render {
     using RenderTargetList = std::list<std::shared_ptr<RenderTarget>>;
 
+    enum class Culling {
+        FRONT,
+        BACK,
+        BOTH
+    };
+
     /**
      * Abstract class for all renderers.
      */
@@ -30,18 +36,6 @@ namespace black::render {
         float deltaTime;
 
         std::shared_ptr<Camera> rendererView;
-    private:
-        /* These functions are only used by friend Resource Manager class */
-        virtual std::shared_ptr<Shader> createShader(const std::string &source, Shader::Type type) = 0;
-        virtual std::shared_ptr<ShaderProgram> createShaderProgram() = 0;
-        virtual std::shared_ptr<Mesh> createMesh() = 0;
-        virtual std::shared_ptr<Texture> createTexture(std::shared_ptr<Image> image) = 0;
-
-        /* These classes have access to create* methods */
-        friend class Shader;
-        friend class ShaderProgram;
-        friend class Texture;
-        friend class Model;
     protected:
         RenderTargetList renderTargets;
         Color clearColor;
@@ -52,6 +46,13 @@ namespace black::render {
         virtual std::string getName() = 0;
 
         virtual std::shared_ptr<ui::Window> createRendererWindow(std::string name) = 0;
+        virtual std::shared_ptr<Shader> createShader(const std::string &source, Shader::Type type) = 0;
+        virtual std::shared_ptr<ShaderProgram> createShaderProgram() = 0;
+        virtual std::shared_ptr<Mesh> createMesh() = 0;
+        virtual std::shared_ptr<Texture> createTexture(std::shared_ptr<Image> image) = 0;
+
+        virtual void setWireframeMode(bool on) = 0;
+        virtual void setFaceCulling(Culling culling) = 0;
 
         /**
          * Renders all object to current render target.
