@@ -49,8 +49,8 @@ void SimpleApplication::initialize() {
 
     this->currentObject = this->object;
 
-    this->generateTrees(50);
-    this->generateGrass(400);
+    this->generateTrees(150);
+    this->generateGrass(1000);
 }
 
 void SimpleApplication::processInput() {

@@ -23,7 +23,11 @@ namespace black::render {
     public:
         void setWireframeMode(bool on) override;
 
-        void setFaceCulling(Culling culling) override;
+        void enableFaceCulling(Culling culling) override;
+
+        void disableFaceCulling() override;
+
+        void setFrontFace(FaceOrdering ordering) override;
 
         std::string getName() override;
 

@@ -65,6 +65,12 @@ namespace black {
         setMainScene();
         setMainCamera();
 
+        // Enable backface culling
+        //this->core->getCurrentRenderer()->enableFaceCulling(render::Culling::BACK);
+
+        // Set clockwise faces as front
+        this->core->getCurrentRenderer()->setFrontFace(render::FaceOrdering::CW);
+
         this->isInitialized = true;
     }
 

@@ -27,6 +27,11 @@ namespace black::render {
         BOTH
     };
 
+    enum class FaceOrdering {
+        CW,     // Clockwise
+        CCW,    // Counter Clockwise
+    };
+
     /**
      * Abstract class for all renderers.
      */
@@ -51,7 +56,9 @@ namespace black::render {
         virtual std::shared_ptr<Texture> createTexture(std::shared_ptr<Image> image) = 0;
 
         virtual void setWireframeMode(bool on) = 0;
-        virtual void setFaceCulling(Culling culling) = 0;
+        virtual void enableFaceCulling(Culling culling) = 0;
+        virtual void disableFaceCulling() = 0;
+        virtual void setFrontFace(FaceOrdering ordering) = 0;
 
         /**
          * Renders all object to current render target.

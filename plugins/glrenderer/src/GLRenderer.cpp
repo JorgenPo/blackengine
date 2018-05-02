@@ -92,13 +92,26 @@ namespace black::render {
         }
     }
 
-    void GLRenderer::setFaceCulling(Culling culling) {
+    void GLRenderer::enableFaceCulling(Culling culling) {
+        glEnable(GL_CULL_FACE);
         if (culling == Culling::FRONT) {
             glCullFace(GL_FRONT);
         } else if (culling == Culling::BACK) {
             glCullFace(GL_BACK);
         } else {
             glCullFace(GL_FRONT_AND_BACK);
+        }
+    }
+
+    void GLRenderer::disableFaceCulling() {
+        glDisable(GL_CULL_FACE);
+    }
+
+    void GLRenderer::setFrontFace(FaceOrdering ordering) {
+        if (ordering == FaceOrdering::CW) {
+            glFrontFace(GL_CW);
+        } else {
+            glFrontFace(GL_CW);
         }
     }
 }
