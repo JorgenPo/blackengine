@@ -21,6 +21,10 @@ namespace black::render {
         std::shared_ptr<Texture> createTexture(std::shared_ptr<Image> image) override;
 
     public:
+        void setWireframeMode(bool on) override;
+
+        void setFaceCulling(Culling culling) override;
+
         std::string getName() override;
 
         std::shared_ptr<ui::Window> createRendererWindow(std::string name) override;

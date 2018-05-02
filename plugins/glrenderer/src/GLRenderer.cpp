@@ -90,4 +90,22 @@ namespace black::render {
     std::shared_ptr<Texture> GLRenderer::createTexture(std::shared_ptr<Image> image) {
         return std::make_shared<GLTexture>(image);
     }
+
+    void GLRenderer::setWireframeMode(bool on) {
+        if (on) {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        } else {
+            glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+        }
+    }
+
+    void GLRenderer::setFaceCulling(Culling culling) {
+        if (culling == Culling::FRONT) {
+            glCullFace(GL_FRONT);
+        } else if (culling == Culling::BACK) {
+            glCullFace(GL_BACK);
+        } else {
+            glCullFace(GL_FRONT_AND_BACK);
+        }
+    }
 }
