@@ -30,6 +30,8 @@ public:
     void processInput() override;
 
     void generateTrees(int number);
+
+    void generateGrass(int number);
 };
 
 

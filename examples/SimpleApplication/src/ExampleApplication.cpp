@@ -3,6 +3,9 @@
 //
 
 #include "ExampleApplication.h"
+#include <random>
+#include <ctime>
+#include <core/render/Sprite.h>
 
 void SimpleApplication::initialize() {
     Application::initialize();
@@ -47,6 +50,7 @@ void SimpleApplication::initialize() {
     this->currentObject = this->object;
 
     this->generateTrees(50);
+    this->generateGrass(400);
 }
 
 void SimpleApplication::processInput() {
@@ -60,8 +64,7 @@ void SimpleApplication::processInput() {
 }
 
 void SimpleApplication::generateTrees(int number) {
-    std::srand(unsigned(std::time(nullptr)));
-
+    auto generator = std::mt19937(static_cast<unsigned>(time(nullptr)));
     auto &rm = this->core->getResourceManager();
 
     std::vector<std::shared_ptr<Model>> treeModels;
@@ -72,18 +75,21 @@ void SimpleApplication::generateTrees(int number) {
         return;
     }
 
-    int area = static_cast<int>(terrainSize) / 2;
+    float area = terrainSize / 2;
+
+    auto modelDistribution = std::uniform_int_distribution<unsigned>(0, treeModels.size() - 1);
+    auto positionDistribution = std::uniform_real_distribution<float>(-area, area);
 
     auto model = std::shared_ptr<Model>();
     float x, z = 0;
     for (int i = 0; i < number; ++i) {
-        model = treeModels.at(rand() % treeModels.size());
+        model = treeModels.at(modelDistribution(generator));
 
         auto tree = std::make_shared<GameEntity>();
         tree->addComponent(model);
 
-        x = rand() % area - area / 2;
-        z = rand() % area - area / 2;
+        x = positionDistribution(generator);
+        z = positionDistribution(generator);
 
         tree->transform->setPosition({x, 0.0f, z});
 
@@ -94,4 +100,28 @@ void SimpleApplication::generateTrees(int number) {
 SimpleApplication::SimpleApplication()
     : Application("SimpleApplication example. BlackEngine v3", 1024, 748), terrainSize(1000.0f)
 {
+}
+
+void SimpleApplication::generateGrass(int number) {
+    auto &rm = this->core->getResourceManager();
+
+    auto grassShader = rm->load<ShaderProgram>("simple.shader");
+    auto grassTexture = rm->load<Texture>("leaf_10.bmp");
+
+    float area = terrainSize / 2;
+
+    auto generator = std::mt19937(static_cast<unsigned>(time(nullptr)));
+    auto positionDistribution = std::uniform_real_distribution<float>(-area, area);
+
+    float x, z;
+    for(int i = 0; i < number; ++i) {
+        x = positionDistribution(generator);
+        z = positionDistribution(generator);
+
+        auto grassEntity = std::make_shared<Sprite>(grassTexture, grassShader);
+        grassEntity->transform->translate({x, 0.0f, z});
+        grassEntity->transform->scale(10.0f);
+
+        this->mainScene->addEntity(grassEntity);
+    }
 }
