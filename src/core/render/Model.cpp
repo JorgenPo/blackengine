@@ -80,4 +80,14 @@ namespace black::render {
             }
         }
     }
+
+    std::shared_ptr<Model> Model::createSingleMaterialModel(const std::shared_ptr<Mesh> &mesh,
+                                                            std::shared_ptr<Material> material) {
+        MaterialList list;
+        list.push_back(material);
+
+        std::vector<std::pair<int, int>> materialOffsets = {{0, 0}};
+
+        return std::shared_ptr<Model>(new Model(mesh, list, materialOffsets));
+    }
 }

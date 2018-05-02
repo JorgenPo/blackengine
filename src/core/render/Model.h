@@ -27,6 +27,9 @@ namespace black::render {
     public:
         static std::shared_ptr<Model> fromFile(std::string fileName);
 
+        static std::shared_ptr<Model> createSingleMaterialModel(const std::shared_ptr<Mesh> &mesh,
+                                                                std::shared_ptr<Material> material);
+
         static std::string getName() { return "Model"; }
 
         Model(std::shared_ptr<Mesh> mesh, const MaterialList &materials, const std::vector<std::pair<int, int>> &materialOffsets);
