@@ -125,3 +125,8 @@ void SimpleApplication::generateGrass(int number) {
         this->mainScene->addEntity(grassEntity);
     }
 }
+
+void SimpleApplication::update() {
+    auto pc = this->core->getPerformanceCounter();
+    Logger::info("Average mpf = %v; Average fps = %v", pc->getAverageMpf(), pc->getAverageFps());
+}

@@ -26,13 +26,6 @@ namespace black::render {
     }
 
     void GLRenderer::render(const GameEntityList &objectList) {
-        static float currentFrame = static_cast<float>(glfwGetTime());
-        static float lastFrame = static_cast<float>(glfwGetTime());
-
-        currentFrame = static_cast<float>(glfwGetTime());
-        this->deltaTime = currentFrame - lastFrame;
-        lastFrame = currentFrame;
-
         double timeValue = glfwGetTime();
 
         auto color = this->clearColor;

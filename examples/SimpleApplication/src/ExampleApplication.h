@@ -29,6 +29,9 @@ public:
 
     void processInput() override;
 
+    void update() override;
+
+private:
     void generateTrees(int number);
 
     void generateGrass(int number);

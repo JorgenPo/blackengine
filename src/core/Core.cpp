@@ -65,6 +65,9 @@ namespace black {
         // Responsible for manage resources
         this->resourceManager = std::make_unique<resources::ResourceManager>();
 
+        // Responsible for measure fps and mpf
+        this->performanceCounter = std::make_shared<performance::PerformanceCounter>();
+
         determineTargetPlatform();
     }
 
@@ -132,6 +135,9 @@ namespace black {
         if (this->currentScene == nullptr) {
             throw SceneNotSetException();
         }
+
+        // Count performance
+        this->performanceCounter->update();
 
         /* Updates camera position and rotation */
         auto camera = this->currentScene->getCurrentCamera();
@@ -219,10 +225,6 @@ namespace black {
         return nullptr;
     }
 
-    float Core::getFrameDeltaTime() {
-        return this->getCurrentRenderer()->getDeltaTime();
-    }
-
     void Core::registerCameraPrototype(std::string name, std::shared_ptr<Camera> prototype) {
         this->cameraPrototypes[name] = std::move(prototype);
     }
@@ -241,5 +243,9 @@ namespace black {
 
     std::shared_ptr<ui::Window> Core::getEventWindow() {
         return this->eventWindow;
+    }
+
+    const std::shared_ptr<performance::PerformanceCounter> &Core::getPerformanceCounter() const {
+        return performanceCounter;
     }
 }

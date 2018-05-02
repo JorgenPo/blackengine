@@ -15,6 +15,7 @@
 #include <core/scene/Scene.h>
 #include <core/resources/ResourceManager.h>
 #include <core/parsers/ModelParser.h>
+#include <core/performance/PerformanceCounter.h>
 
 
 #include "PluginManager.h"
@@ -117,6 +118,8 @@ namespace black {
         std::shared_ptr<render::Renderer> currentRenderer;
         std::shared_ptr<scene::Scene> currentScene;
         std::shared_ptr<ui::Window> eventWindow;
+
+        std::shared_ptr<performance::PerformanceCounter> performanceCounter;
 
         Core();
         ~Core() = default;
@@ -269,12 +272,6 @@ namespace black {
         void renderFrame();
 
         /**
-         * Returns a time took a last frame rendering
-         * @return
-         */
-        float getFrameDeltaTime();
-
-        /**
          * Registers a camera prototype
          *
          * @param name Camera type name
@@ -289,6 +286,13 @@ namespace black {
          * @return Camera object with desired prototype
          */
         std::shared_ptr<Camera> createCamera(std::string prototypeName);
+
+        /**
+         * Returns the performance counter
+         *
+         * @return performance::PerformanceCounter
+         */
+        const std::shared_ptr<performance::PerformanceCounter> &getPerformanceCounter() const;
 
     private:
         /**

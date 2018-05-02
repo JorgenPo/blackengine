@@ -38,6 +38,7 @@ file(GLOB COMMON_SOURCES
         "src/core/events/*.h"
         "src/core/components/*.h"
         "src/core/resources/*.h"
+        "src/core/performance/*.h"
 
         "src/core/*.cpp"
         "src/core/ui/*.cpp"
@@ -46,6 +47,7 @@ file(GLOB COMMON_SOURCES
         "src/core/events/*.cpp"
         "src/core/components/*.cpp"
         "src/core/resources/*.cpp"
+        "src/core/performance/*.cpp"
 
         "3dparty/logging/easylogging++.cc"
         )

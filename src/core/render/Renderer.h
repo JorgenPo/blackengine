@@ -33,9 +33,8 @@ namespace black::render {
     class Renderer {
     protected:
         std::shared_ptr<RenderTarget> currentRenderTarget;
-        float deltaTime;
-
         std::shared_ptr<Camera> rendererView;
+
     protected:
         RenderTargetList renderTargets;
         Color clearColor;
@@ -73,12 +72,6 @@ namespace black::render {
         const Color &getClearColor() const;
 
         void setClearColor(const Color &clearColor);
-
-        /**
-         * Returns a time last frame render took
-         * @return
-         */
-        float getDeltaTime() const;
 
         const std::shared_ptr<Camera> &getRendererView() const;
 

@@ -71,10 +71,6 @@ namespace black::render {
         Renderer::clearColor = clearColor;
     }
 
-    float Renderer::getDeltaTime() const {
-        return this->deltaTime;
-    }
-
     const std::shared_ptr<Camera> &Renderer::getRendererView() const {
         return rendererView;
     }
