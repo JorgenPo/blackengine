@@ -11,10 +11,16 @@ namespace black::performance {
     PerformanceCounter::PerformanceCounter()
         : minMpf(10000), maxMpf(-0.0f), averageMpf(0.0f), measurements(0)
     {
-        this->lastTime = std::chrono::high_resolution_clock::now();
     }
 
     void PerformanceCounter::update() {
+        static bool firstTime = true;
+
+        if (firstTime) {
+            this->lastTime = std::chrono::high_resolution_clock::now();
+            firstTime = false;
+        }
+
         auto now = std::chrono::high_resolution_clock::now();
 
         long long int millisecondsPassed = std::chrono::duration_cast<std::chrono::milliseconds>
