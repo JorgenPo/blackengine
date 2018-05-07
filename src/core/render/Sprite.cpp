@@ -10,7 +10,7 @@ namespace black::render {
     std::shared_ptr<Mesh> Sprite::quadMesh;
 
     Sprite::Sprite(std::shared_ptr<Texture> texture,
-                   std::shared_ptr<ShaderProgram> shader)
+                   std::shared_ptr<ShaderProgram> shader) : GameEntity("")
     {
         if (Sprite::quadMesh == nullptr) {
             this->generateQuadMesh();

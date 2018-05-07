@@ -92,7 +92,7 @@ namespace black {
      */
     class Core {
         using PluginsMap = std::map<std::string, std::shared_ptr<Plugin>>;
-        using ScenePrototypeList = std::list<std::shared_ptr<scene::Scene>>;
+        using ScenePrototypeMap = std::map<std::string, std::shared_ptr<scene::Scene>>;
         using SceneMap = std::map<std::string, std::shared_ptr<scene::Scene>>;
         using RendererSet = std::set<std::shared_ptr<render::Renderer>>;
         using ModelParsersMap = std::map<std::string, std::shared_ptr<parsers::ModelParser>>;
@@ -108,13 +108,13 @@ namespace black {
 
         PluginsMap plugins;
         RendererSet renderers;
-        ScenePrototypeList scenePrototypes;
+        ScenePrototypeMap scenePrototypes;
         CameraPrototypeMap cameraPrototypes;
         SceneMap scenes;
         ModelParsersMap modelParsers;
 
-        std::unique_ptr<PluginManager> pluginManager;
-        std::unique_ptr<resources::ResourceManager> resourceManager;
+        std::shared_ptr<PluginManager> pluginManager;
+        std::shared_ptr<resources::ResourceManager> resourceManager;
         std::shared_ptr<render::Renderer> currentRenderer;
         std::shared_ptr<scene::Scene> currentScene;
         std::shared_ptr<ui::Window> eventWindow;
@@ -135,11 +135,11 @@ namespace black {
             return instance;
         }
 
-        static const std::unique_ptr<PluginManager> &GetPluginManager() {
+        static const std::shared_ptr<PluginManager> &GetPluginManager() {
             return instance->getPluginManager();
         }
 
-        static const std::unique_ptr<resources::ResourceManager> &GetResourceManager() {
+        static const std::shared_ptr<resources::ResourceManager> &GetResourceManager() {
             return instance->getResourceManager();
         }
 
@@ -157,13 +157,13 @@ namespace black {
          * Returns a pointer to plugin manager instance
          * @return PluginManager pointer
          */
-        const std::unique_ptr<PluginManager> &getPluginManager() const;
+        const std::shared_ptr<PluginManager> &getPluginManager() const;
 
         /**
          * Returns a pointer to resource manager instance
          * @return ResourceManager pointer
          */
-        const std::unique_ptr<resources::ResourceManager> &getResourceManager() const;
+        const std::shared_ptr<resources::ResourceManager> &getResourceManager() const;
 
         /**
          * Initialize concrete subclass of SharedLibrary suitable for user
@@ -221,7 +221,7 @@ namespace black {
          * @param prototype Pointer to a scene class object. That object will be
          * copied every time user creates scene with this type
          */
-        void registerScenePrototype(std::shared_ptr<scene::Scene> prototype);
+        void registerScenePrototype(const std::shared_ptr<scene::Scene> &prototype, std::string name);
 
         /**
          * Creates scene with given prototypeName string.

@@ -31,7 +31,7 @@ namespace black::render {
 
     std::shared_ptr<Model> Model::fromFile(std::string filename) {
         auto core = Core::getInstance();
-        auto &rm = core->getResourceManager();
+        auto rm = core->getResourceManager();
 
         std::string extension = FileUtils::getFileExtension(filename);
 

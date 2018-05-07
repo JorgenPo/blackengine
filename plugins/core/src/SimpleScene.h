@@ -1,5 +1,5 @@
 //
-// Created by popof on 19.04.2018.
+// Created by popof on 07.05.2018.
 //
 
 #ifndef BLACKENGINE_SIMPLESCENE_H
@@ -8,39 +8,12 @@
 #include <core/scene/Scene.h>
 
 namespace black::scene {
-    using namespace render;
-
     /**
-     * Simple scene. Not optimized for concrete case
+     * Simple scene Implementation
      */
     class SimpleScene : public Scene {
-        const std::string name = "Simple Scene";
-
-        GameEntityList objects;
-
-        std::shared_ptr<Camera> currentCamera;
     public:
-
-        std::string getPrototypeName() override;
-
-        void clear() override;
-
-        void addEntity(std::shared_ptr<GameEntity> object) override;
-
-        void addEntities(const GameEntityList &objectList) override;
-
-        void removeEntity(std::shared_ptr<GameEntity> object) override;
-
-        const GameEntityList &getEntityList() override;
-
-        std::shared_ptr<Camera> getCurrentCamera() override;
-
-        void setCurrentCamera(std::shared_ptr<Camera> camera) override;
-
-        void addEntity(std::shared_ptr<Camera> camera) override;
-
-        // Copyable interface
-        SimpleScene* copy() const override;
+        SimpleScene *copy() const override;
     };
 }
 

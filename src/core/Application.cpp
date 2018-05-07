@@ -68,9 +68,6 @@ namespace black {
         // Enable backface culling
         //this->core->getCurrentRenderer()->enableFaceCulling(render::Culling::BACK);
 
-        // Set clockwise faces as front
-        this->core->getCurrentRenderer()->setFrontFace(render::FaceOrdering::CW);
-
         this->isInitialized = true;
     }
 
@@ -124,8 +121,7 @@ namespace black {
     }
 
     void Application::setMainCamera() {
-        this->mainCamera = this->core->createCamera("spectator");
+        this->mainCamera = this->mainScene->createCamera("spectator", "mainCamera");
         this->mainCamera->transform->setPosition({0.0f, 1.0f, 100.0f});
-        this->mainScene->addEntity(this->mainCamera);
     }
 }

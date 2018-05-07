@@ -80,7 +80,7 @@ namespace black::render {
         }
 
         auto core = Core::getInstance();
-        auto &rm = core->getResourceManager();
+        auto rm = core->getResourceManager();
 
         auto shaderProgram = core->getCurrentRenderer()->createShaderProgram();
         std::shared_ptr<Shader> vertexShader;

@@ -9,7 +9,7 @@
 namespace black {
 
     Camera::Camera(glm::vec4 viewport, glm::vec3 position, glm::vec3 up, float pitch, float yaw, float roll)
-        : up(up), movementSpeed(1.0f), softness(0.5f), zoom(1.0f), viewport(viewport)
+        : GameEntity(""), up(up), movementSpeed(1.0f), softness(0.5f), zoom(1.0f), viewport(viewport)
     {
         this->worldUp = up;
         this->fov = 45.0f;

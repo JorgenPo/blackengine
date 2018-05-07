@@ -60,10 +60,10 @@ namespace black {
         Logger::initialize();
 
         // Responsible for manage plugins
-        this->pluginManager = std::make_unique<PluginManager>();
+        this->pluginManager = std::make_shared<PluginManager>();
 
         // Responsible for manage resources
-        this->resourceManager = std::make_unique<resources::ResourceManager>();
+        this->resourceManager = std::make_shared<resources::ResourceManager>();
 
         // Responsible for measure fps and mpf
         this->performanceCounter = std::make_shared<performance::PerformanceCounter>();
@@ -71,7 +71,7 @@ namespace black {
         determineTargetPlatform();
     }
 
-    const std::unique_ptr<PluginManager> &Core::getPluginManager() const {
+    const std::shared_ptr<PluginManager> &Core::getPluginManager() const {
         return pluginManager;
     }
 
@@ -146,22 +146,20 @@ namespace black {
             this->currentRenderer->setRendererView(camera);
         }
 
-        auto objects = this->currentScene->getEntityList();
+        auto objects = this->currentScene->getEntities();
         this->currentRenderer->renderToAllTargets(objects);
     }
 
-    void Core::registerScenePrototype(std::shared_ptr<scene::Scene> prototype) {
-        this->scenePrototypes.push_back(prototype);
+    void Core::registerScenePrototype(const std::shared_ptr<scene::Scene> &prototype, std::string name) {
+        this->scenePrototypes[std::move(name)] = prototype;
     }
 
     std::shared_ptr<scene::Scene> Core::createSceneWithType(std::string prototypeName) {
-        for (const auto &prototype : this->scenePrototypes) {
-            if (prototype->getPrototypeName() == prototypeName) {
-                return std::shared_ptr<scene::Scene>(prototype->copy());
-            }
+        if (this->scenePrototypes.find(prototypeName) == this->scenePrototypes.end()) {
+            throw ScenePrototypeNotFoundException(prototypeName);
         }
 
-        throw ScenePrototypeNotFoundException(prototypeName);
+        return std::shared_ptr<scene::Scene>(this->scenePrototypes[prototypeName]->copy());
     }
 
     void Core::addScene(std::shared_ptr<scene::Scene> newScene, std::string name) {
@@ -209,7 +207,7 @@ namespace black {
         return this->currentRenderer;
     }
 
-    const std::unique_ptr<resources::ResourceManager> &Core::getResourceManager() const {
+    const std::shared_ptr<resources::ResourceManager> &Core::getResourceManager() const {
         return resourceManager;
     }
 

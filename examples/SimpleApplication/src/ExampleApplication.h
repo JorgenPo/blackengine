@@ -20,6 +20,8 @@ class SimpleApplication : public Application {
 
     std::shared_ptr<GameEntity> currentObject;
 
+    std::shared_ptr<scene::Scene> girlScene;
+
     float terrainSize;
 public:
 

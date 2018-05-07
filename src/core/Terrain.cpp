@@ -7,9 +7,10 @@
 #include "Core.h"
 
 namespace black {
-    Terrain::Terrain(std::shared_ptr<render::Texture> terrainTexture, std::shared_ptr<render::ShaderProgram> terrainShader,
+    Terrain::Terrain(std::shared_ptr<render::Texture> terrainTexture,
+                     std::shared_ptr<render::ShaderProgram> terrainShader,
                      float width, float height, int levelOfDetails)
-        : width(width), height(height)
+        : GameEntity(""), width(width), height(height)
     {
         this->tileWidth = width / levelOfDetails;
         this->tileHeight = height / levelOfDetails;

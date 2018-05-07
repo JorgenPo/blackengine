@@ -11,7 +11,7 @@ void SimpleApplication::initialize() {
     Application::initialize();
     this->core->getCurrentRenderer()->setClearColor(Color(Color::WHITE));
 
-    auto &rm = this->core->getResourceManager();
+    auto rm = this->core->getResourceManager();
 
     // Add resource directory to resource manager
     rm->addResourceFolder("resources/");
@@ -21,33 +21,20 @@ void SimpleApplication::initialize() {
     rm->addResourceFolder("resources/trees/");
     rm->addResourceFolder("resources/house/");
 
-    auto islandModel = rm->load<Model>("island.fbx");
-    auto houseModel = rm->load<Model>("house1.fbx");
-    auto statueModel = rm->load<Model>("statue.fbx");
+    try {
+        this->object = this->mainScene->createEntityWithModel("object", "island.fbx");
+        this->object1 = this->mainScene->createEntityWithModel("object1", "house1.fbx");
+        this->object2 = this->mainScene->createEntityWithModel("object2", "statue.fbx");
+    } catch(const Exception &e) {
 
-    this->object = std::make_shared<GameEntity>();
-    this->object1 = std::make_shared<GameEntity>();
-    this->object2 = std::make_shared<GameEntity>();
-
-    this->object->addComponent(islandModel);
-    this->object1->addComponent(houseModel);
-    this->object2->addComponent(statueModel);
+    }
 
     this->object->transform->setPosition({-200.0f, -75.0f, 50.0f});
     this->object1->transform->setPosition({60.0f, 0.0f, 50.0f});
     this->object2->transform->setPosition({-20.0f, 0.0f, 50.0f});
-
-    auto terrainShader = rm->load<ShaderProgram>("terrain.shader");
-    auto terrainTexture = rm->load<Texture>("prontera_grass.bmp");
-
-    auto terrain = std::make_shared<Terrain>(terrainTexture, terrainShader, terrainSize, terrainSize, 5);
-
-    this->mainScene->addEntity(object);
-    this->mainScene->addEntity(object1);
-    this->mainScene->addEntity(object2);
-    this->mainScene->addEntity(terrain);
-
     this->currentObject = this->object;
+
+    auto terrain = this->mainScene->createTerrain("terrain", "prontera_grass.bmp", "terrain.shader", terrainSize, terrainSize, 5);
 
     this->generateTrees(150);
     this->generateGrass(1000);
@@ -65,35 +52,28 @@ void SimpleApplication::processInput() {
 
 void SimpleApplication::generateTrees(int number) {
     auto generator = std::mt19937(static_cast<unsigned>(time(nullptr)));
-    auto &rm = this->core->getResourceManager();
+    auto rm = this->core->getResourceManager();
 
-    std::vector<std::shared_ptr<Model>> treeModels;
-    try {
-        treeModels.push_back(rm->load<Model>("tree1.fbx"));
-        treeModels.push_back(rm->load<Model>("tree2.fbx"));
-    } catch (const Exception &e) {
-        return;
-    }
+    std::vector<std::string> treeModels;
+    treeModels.emplace_back("tree1.fbx");
+    treeModels.emplace_back("tree2.fbx");
+
 
     float area = terrainSize / 2;
 
     auto modelDistribution = std::uniform_int_distribution<unsigned>(0, treeModels.size() - 1);
     auto positionDistribution = std::uniform_real_distribution<float>(-area, area);
 
-    auto model = std::shared_ptr<Model>();
     float x, z = 0;
+    std::string prefix = "tree";
     for (int i = 0; i < number; ++i) {
-        model = treeModels.at(modelDistribution(generator));
-
-        auto tree = std::make_shared<GameEntity>();
-        tree->addComponent(model);
+        auto tree = this->mainScene->createEntityWithModel(prefix + std::to_string(i+1),
+                treeModels.at(modelDistribution(generator)));
 
         x = positionDistribution(generator);
         z = positionDistribution(generator);
 
         tree->transform->setPosition({x, 0.0f, z});
-
-        this->mainScene->addEntity(tree);
     }
 }
 
@@ -103,11 +83,6 @@ SimpleApplication::SimpleApplication()
 }
 
 void SimpleApplication::generateGrass(int number) {
-    auto &rm = this->core->getResourceManager();
-
-    auto grassShader = rm->load<ShaderProgram>("simple.shader");
-    auto grassTexture = rm->load<Texture>("leaf_10.bmp");
-
     float area = terrainSize / 2;
 
     auto generator = std::mt19937(static_cast<unsigned>(time(nullptr)));
@@ -118,11 +93,15 @@ void SimpleApplication::generateGrass(int number) {
         x = positionDistribution(generator);
         z = positionDistribution(generator);
 
-        auto grassEntity = std::make_shared<Sprite>(grassTexture, grassShader);
-        grassEntity->transform->translate({x, 0.0f, z});
-        grassEntity->transform->scale(10.0f);
+        try {
+            auto grassEntity = this->mainScene->createSprite(std::string("grass") + std::to_string(i+1),
+                    "leaf_10.bmp", "simple.shader");
 
-        this->mainScene->addEntity(grassEntity);
+            grassEntity->transform->translate({x, 0.0f, z});
+            grassEntity->transform->scale(10.0f);
+        } catch(const scene::EntityCreationException &e) {
+            continue;
+        }
     }
 }
 

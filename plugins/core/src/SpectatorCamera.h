@@ -6,6 +6,7 @@
 #define BLACKENGINE_FPSCAMERA_H
 
 #include <core/Camera.h>
+#include <core/ui/WindowEventListener.h>
 
 namespace black {
     /**
@@ -19,7 +20,6 @@ namespace black {
 
         SpectatorCamera *copy() override;
 
-    private:
     public:
         void onMouseScrolledDown(ui::Window *window) override;
 

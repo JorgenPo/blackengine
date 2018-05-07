@@ -15,7 +15,7 @@ namespace black {
         this->children.remove(child);
     }
 
-    GameEntity::GameEntity() {
+    GameEntity::GameEntity(std::string name) : name(std::move(name)) {
         this->addComponent(std::make_shared<components::TransformComponent>());
         this->transform = this->getComponent<components::TransformComponent>();
     }
@@ -29,6 +29,28 @@ namespace black {
         transform->translate({position[0], position[1], position[2]});
         this->addComponent(transform);
     }
+
+    const std::string &GameEntity::getName() const {
+        return name;
+    }
+
+    void GameEntity::setName(const std::string &name) {
+        GameEntity::name = name;
+    }
+
+    const std::shared_ptr<GameEntity> &GameEntity::getParent() const {
+        return parent;
+    }
+
+    void GameEntity::setParent(const std::shared_ptr<GameEntity> &parent) {
+        GameEntity::parent = parent;
+    }
+
+    const GameEntityList &GameEntity::getChildren() const {
+        return children;
+    }
+
+    GameEntity::~GameEntity() = default;
 
 
 }

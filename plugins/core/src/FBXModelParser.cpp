@@ -231,9 +231,16 @@ namespace black::parsers {
         auto shader = Core::getInstance()->getResourceManager()
                 ->load<render::ShaderProgram>("simple.shader");
 
+        // If no material - just put one empty material without texture
+        if (this->materialList.empty()) {
+            this->materialList.push_back(std::make_shared<render::Material>(shader));
+            return;
+        }
+
         std::string line;
         for (int i = 0; i < this->materialList.size(); i++) {
             while ((file >> line) && line.find("Material::") == std::string::npos) {}
+
             // TODO: working with path
             size_t pos = line.find_last_of('\\') + 1;
 
@@ -261,6 +268,12 @@ namespace black::parsers {
         for (int i = 0; i < this->numMaterialOffsets; i++) {
             oldIndex = index;
             this->file >> index >> separator;
+
+            // No materials. So use one default material
+            if (index == -1) {
+                this->materialOffsets.emplace_back(0, 0);
+                return;
+            }
 
             // If material index has changed then
             // push offset to materialOffsets

@@ -20,7 +20,9 @@ namespace black {
      * Game entity object
      */
     class GameEntity : public components::ComponentsContainer {
-         GameEntityList children;
+        std::string name;
+        std::shared_ptr<GameEntity> parent;
+        GameEntityList children;
 
     public:
         std::shared_ptr<components::TransformComponent> transform;
@@ -28,7 +30,7 @@ namespace black {
         /**
          * Creates an empty entity with only transform component
          */
-        GameEntity();
+        explicit GameEntity(std::string name);
 
         /**
          * Creates an empty entity with only transform component
@@ -44,8 +46,20 @@ namespace black {
          */
         explicit GameEntity(std::shared_ptr<GameEntity> parent);
 
+        virtual ~GameEntity();
+
         void attachChild(std::shared_ptr<GameEntity> child);
         void detachChild(std::shared_ptr<GameEntity> child);
+
+        const std::string &getName() const;
+
+        void setName(const std::string &name);
+
+        const std::shared_ptr<GameEntity> &getParent() const;
+
+        void setParent(const std::shared_ptr<GameEntity> &parent);
+
+        const GameEntityList &getChildren() const;
     };
 }
 

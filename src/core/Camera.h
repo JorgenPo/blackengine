@@ -46,8 +46,7 @@ namespace black {
         glm::vec4 viewport;
     public:
         explicit Camera(glm::vec4 viewport = glm::vec4(0.0f), glm::vec3 position = {0.0f, 0.0f, 0.0f},
-                glm::vec3 up = {0.0f, 1.0f, 0.0f},
-                float pitch = 0.0f, float yaw = -90.0f, float roll = 0.0f);
+                glm::vec3 up = {0.0f, 1.0f, 0.0f}, float pitch = 0.0f, float yaw = -90.0f, float roll = 0.0f);
 
         float getMovementSpeed() const;
 
