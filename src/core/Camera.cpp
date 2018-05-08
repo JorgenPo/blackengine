@@ -108,8 +108,18 @@ namespace black {
     }
 
     void Camera::updateViewMatrix() {
-        float pitch = this->transform->getRotation().x;
-        float yaw = this->transform->getRotation().y;
+        auto rotation = this->transform->getRotation();
+        auto position = this->transform->getPosition();
+
+        if (this->getParent() != nullptr) {
+            auto parentTransform = this->getParent()->transform;
+
+            position += parentTransform->getPosition();
+            rotation += parentTransform->getRotation();
+        }
+
+        float pitch = rotation.x;
+        float yaw = rotation.y;
 
         glm::vec3 front;
         front.x = static_cast<float>(cos(glm::radians(yaw)) * cos(glm::radians(pitch)));
@@ -120,7 +130,7 @@ namespace black {
         this->right = glm::normalize(glm::cross(this->front, this->worldUp));
         this->up = glm::normalize(glm::cross(this->right, this->front));
 
-        this->view = glm::lookAt(this->transform->getPosition(), this->transform->getPosition() + this->front, this->up);
+        this->view = glm::lookAt(position, position + this->front, this->up);
     }
 
     const glm::vec4 &Camera::getViewport() const {

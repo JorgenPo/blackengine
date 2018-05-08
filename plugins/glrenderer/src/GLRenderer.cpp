@@ -41,14 +41,7 @@ namespace black::render {
         }
 
         for (const auto &object : objectList) {
-            auto model = object->getComponent<render::Model>();
-            auto transform = object->getComponent<components::TransformComponent>();
-
-            if (model == nullptr) {
-                continue;
-            }
-
-            this->renderModel(object, transform->getModelMatrix(), viewMatrix, projectMatrix);
+            this->renderModel(object, object->transform->getModelMatrix(), viewMatrix, projectMatrix);
         }
     }
 
@@ -126,7 +119,9 @@ namespace black::render {
         for (const auto &child : entity->getChildren()) {
             auto childModelMatrix = child->transform->getModelMatrix();
 
-            this->renderModel(child, modelMatrix * childModelMatrix, viewMatrix, projectMatrix);
+            if (child->getComponent<render::Model>() != nullptr) {
+                this->renderModel(child, modelMatrix * childModelMatrix, viewMatrix, projectMatrix);
+            }
         }
     }
 }

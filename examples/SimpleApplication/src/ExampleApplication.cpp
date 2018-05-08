@@ -36,6 +36,9 @@ void SimpleApplication::initialize() {
 
     this->currentObject = this->object;
 
+    this->object1->attachChild(this->mainCamera);
+    this->mainCamera->transform->setPosition({0.0f, 100.0f, -20.0f});
+
     auto terrain = this->mainScene->createTerrain("prontera_grass.bmp", "terrain.shader", terrainSize, terrainSize, 5);
 
     this->generateTrees(150);
