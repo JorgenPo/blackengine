@@ -19,7 +19,7 @@ namespace black {
     /**
      * Game entity object
      */
-    class GameEntity : public components::ComponentsContainer {
+    class GameEntity : public components::ComponentsContainer, public std::enable_shared_from_this<GameEntity> {
         std::string name;
         std::shared_ptr<GameEntity> parent;
         GameEntityList children;

@@ -20,6 +20,7 @@ namespace black::render {
         std::shared_ptr<ShaderProgram> createShaderProgram() override;
         std::shared_ptr<Texture> createTexture(std::shared_ptr<Image> image) override;
 
+        double time;
     public:
         void setWireframeMode(bool on) override;
 
@@ -34,6 +35,9 @@ namespace black::render {
         std::shared_ptr<ui::Window> createRendererWindow(std::string name) override;
 
         void render(const GameEntityList &objectList) override;
+
+    private:
+        void renderModel(const std::shared_ptr<GameEntity> &model, glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projMatrix);
     };
 
 }

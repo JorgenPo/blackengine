@@ -8,6 +8,10 @@
 
 namespace black::scene {
 
+    Scene::Scene() {
+        this->sceneEntity = std::make_shared<GameEntity>();
+    }
+
     EntityCreationException::EntityCreationException(const std::string &reason) {
         std::stringstream ss;
         ss << "Failed to create an entity. Reason: " << reason;
@@ -22,8 +26,7 @@ namespace black::scene {
 
     std::shared_ptr<GameEntity> Scene::createEntity() {
         auto entity = std::make_shared<GameEntity>();
-        this->objects.push_back(entity);
-
+        this->sceneEntity->attachChild(entity);
         return entity;
     }
 
@@ -42,7 +45,7 @@ namespace black::scene {
     }
 
     std::shared_ptr<GameEntity> Scene::getEntity(std::string name) {
-        for (const auto &object : this->objects) {
+        for (const auto &object : this->sceneEntity->getChildren()) {
             if (object->getName() == name) {
                 return object;
             }
@@ -55,7 +58,7 @@ namespace black::scene {
         try {
             auto camera = Core::getInstance()->createCamera(std::move(type));
 
-            this->objects.push_back(camera);
+            this->sceneEntity->attachChild(camera);
 
             if (this->currentCamera == nullptr) {
                 this->currentCamera = camera;
@@ -97,7 +100,7 @@ namespace black::scene {
 
             auto terrain = std::make_shared<Terrain>(texture, program, width, height, levelOfDetails);
 
-            this->objects.push_back(terrain);
+            this->sceneEntity->attachChild(terrain);
 
             return terrain;
         } catch (const Exception &e) {
@@ -119,7 +122,7 @@ namespace black::scene {
 
             auto sprite = std::make_shared<render::Sprite>(texture, program);
 
-            this->objects.push_back(sprite);
+            this->sceneEntity->attachChild(sprite);
 
             return sprite;
         } catch (const Exception &e) {
@@ -131,7 +134,103 @@ namespace black::scene {
         return std::dynamic_pointer_cast<render::Sprite>(this->getEntity(std::move(name)));
     }
 
-    GameEntityList &Scene::getEntities() {
-        return this->objects;
+    const GameEntityList &Scene::getEntities() {
+        return this->sceneEntity->getChildren();
+    }
+
+    // ITERATOR
+
+    SceneIterator Scene::begin() const {
+        return SceneIterator(this, this->sceneEntity);
+    }
+
+    SceneIterator Scene::end() const {
+        return SceneIterator(this, std::shared_ptr<GameEntity>());
+    }
+
+    // Scene iterator
+    SceneIterator::~SceneIterator() = default;
+
+    SceneIterator::SceneIterator(const SceneIterator &another) {
+        this->scene = another.scene;
+        this->entity = another.entity;
+    }
+
+    SceneIterator::SceneIterator(const Scene *scene, const std::shared_ptr<GameEntity> &entity)
+            : scene(scene), entity(entity)
+    {
+    }
+
+    bool operator==(const SceneIterator &first, const SceneIterator &second) {
+        return first.entity == second.entity;
+    }
+
+    bool operator!=(const SceneIterator &first, const SceneIterator &second) {
+        return first.entity != second.entity;
+    }
+
+    std::shared_ptr<GameEntity> &SceneIterator::operator*() {
+        return this->entity;
+    }
+
+    std::shared_ptr<GameEntity> &SceneIterator::operator->() {
+        return this->entity;
+    }
+
+    SceneIterator &SceneIterator::operator=(const SceneIterator &iterator) {
+        this->entity = iterator.entity;
+    }
+
+    SceneIterator &SceneIterator::operator++() {
+        return this->incrementOperator();
+    }
+
+    const SceneIterator SceneIterator::operator++(int a) {
+        SceneIterator iterator = *this;
+        this->incrementOperator();
+        return iterator;
+    }
+
+    SceneIterator &SceneIterator::incrementOperator() {
+        // If empty tree - return the end
+        if (this->entity->getParent() == nullptr && this->entity->getChildren().empty()) {
+            *this = this->scene->end();
+            return *this;
+        }
+
+        if (!this->entity->getChildren().empty()) {
+            for (const auto &child : this->entity->getChildren()) {
+                this->queue.push(child);
+            }
+        }
+
+        if (this->queue.empty()) {
+            *this = this->scene->end();
+            return *this;
+        }
+
+        this->entity = this->queue.front();
+        this->queue.pop();
+
+        return *this;
+    }
+
+    std::shared_ptr<GameEntity> SceneIterator::getNextSiblingOrNull(std::shared_ptr<GameEntity> entity) {
+        auto siblings = entity->getParent()->getChildren();
+
+        bool returnNext = false;
+        for (const auto &sibling : siblings) {
+            if (sibling == entity) {
+                returnNext = true;
+                continue;
+            }
+
+            if (returnNext) {
+                return sibling;
+            }
+        }
+
+        // No siblings
+        return std::shared_ptr<GameEntity>();
     }
 }

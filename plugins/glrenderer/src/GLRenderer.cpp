@@ -26,11 +26,11 @@ namespace black::render {
     }
 
     void GLRenderer::render(const GameEntityList &objectList) {
-        double timeValue = glfwGetTime();
-
         auto color = this->clearColor;
         glClearColor(color.r, color.g, color.b, color.a);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        this->time = glfwGetTime();
 
         auto viewMatrix = glm::mat4(1.0f);
         auto projectMatrix = glm::mat4(1.0f);
@@ -48,23 +48,7 @@ namespace black::render {
                 continue;
             }
 
-            // TODO: this is the bad optimization
-            // Just assume that all materials using one shader program
-            auto program = model->getMaterials().front()->getShaderProgram();
-
-            program->use();
-
-            // Update uniforms
-            program->setUniformVariable("time", static_cast<float>(timeValue));
-            program->setUniformVariable("transparentColor", {1.0f, 0.0f, 1.0f, 1.0f});
-
-            // Set matrices
-            program->setUniformVariable("model", transform->getModelMatrix());
-            program->setUniformVariable("projection", projectMatrix);
-            program->setUniformVariable("view", viewMatrix);
-
-            // Render all model parts
-            model->render();
+            this->renderModel(object, transform->getModelMatrix(), viewMatrix, projectMatrix);
         }
     }
 
@@ -111,7 +95,38 @@ namespace black::render {
         if (ordering == FaceOrdering::CW) {
             glFrontFace(GL_CW);
         } else {
-            glFrontFace(GL_CW);
+            glFrontFace(GL_CCW);
+        }
+    }
+
+    void GLRenderer::renderModel(const std::shared_ptr<GameEntity> &entity,
+                                 glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectMatrix)
+    {
+        auto model = entity->getComponent<render::Model>();
+
+        // TODO: this is the bad optimization
+        // Just assume that all materials using one shader program
+        auto program = model->getMaterials().front()->getShaderProgram();
+
+        program->use();
+
+        // Update uniforms
+        program->setUniformVariable("time", static_cast<float>(this->time));
+        program->setUniformVariable("transparentColor", {1.0f, 0.0f, 1.0f, 1.0f});
+
+        // Set matrices
+        program->setUniformVariable("model", modelMatrix);
+        program->setUniformVariable("projection", projectMatrix);
+        program->setUniformVariable("view", viewMatrix);
+
+        // Render all model parts
+        model->render();
+
+        // Render all children entities
+        for (const auto &child : entity->getChildren()) {
+            auto childModelMatrix = child->transform->getModelMatrix();
+
+            this->renderModel(child, modelMatrix * childModelMatrix, viewMatrix, projectMatrix);
         }
     }
 }

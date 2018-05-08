@@ -12,11 +12,44 @@
 #include <core/Terrain.h>
 #include <core/render/Sprite.h>
 
+#include <queue>
+
 namespace black::scene {
+
+    class Scene;
+
+    /**
+     * Iterate game entities tree
+     */
+    class SceneIterator {
+        const Scene *scene;
+        std::shared_ptr<GameEntity> entity;
+        std::queue<std::shared_ptr<GameEntity>> queue;
+
+    public:
+        explicit SceneIterator(const Scene *scene, const std::shared_ptr<GameEntity> &entity);
+
+        SceneIterator(const SceneIterator &another);
+
+        virtual ~SceneIterator();
+
+        SceneIterator &operator++();   // Prefix
+        const SceneIterator operator++(int); // Postfix
+        SceneIterator &operator=(const SceneIterator &iterator);
+        std::shared_ptr<GameEntity> &operator*();
+        std::shared_ptr<GameEntity> &operator->();
+
+        friend bool operator==(const SceneIterator& first, const SceneIterator& second);
+        friend bool operator!=(const SceneIterator& first, const SceneIterator& second);
+
+    private:
+        SceneIterator &incrementOperator();
+        std::shared_ptr<GameEntity> getNextSiblingOrNull(std::shared_ptr<GameEntity> entity);
+    };
 
     class EntityCreationException : public Exception {
     public:
-        EntityCreationException(const std::string &reason);
+        explicit EntityCreationException(const std::string &reason);
     };
 
     class EntityNotFoundException : public Exception {
@@ -34,9 +67,11 @@ namespace black::scene {
      */
     class Scene : public Copyable {
         std::shared_ptr<Camera> currentCamera;
-        GameEntityList objects;
+        std::shared_ptr<GameEntity> sceneEntity;
 
     public:
+        Scene();
+
         Scene *copy() const override = 0;
 
         std::shared_ptr<Camera> createCamera(std::string type);
@@ -55,7 +90,10 @@ namespace black::scene {
         std::shared_ptr<render::Sprite> createSprite(std::string spriteTexture, std::string spriteProgram);
         std::shared_ptr<render::Sprite> getSprite(std::string name);
 
-        GameEntityList &getEntities();
+        const GameEntityList &getEntities();
+
+        SceneIterator begin() const;
+        SceneIterator end() const;
     };
 }
 

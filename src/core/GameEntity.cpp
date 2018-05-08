@@ -9,6 +9,12 @@ namespace black {
 
     void GameEntity::attachChild(std::shared_ptr<GameEntity> child) {
         this->children.push_back(child);
+
+        if (child->parent != nullptr) {
+            child->parent->detachChild(child);
+        }
+
+        child->setParent(shared_from_this());
     }
 
     void GameEntity::detachChild(std::shared_ptr<GameEntity> child) {
@@ -43,7 +49,7 @@ namespace black {
     }
 
     void GameEntity::setParent(const std::shared_ptr<GameEntity> &parent) {
-        GameEntity::parent = parent;
+        this->parent = parent;
     }
 
     const GameEntityList &GameEntity::getChildren() const {
@@ -51,6 +57,4 @@ namespace black {
     }
 
     GameEntity::~GameEntity() = default;
-
-
 }

@@ -25,13 +25,15 @@ void SimpleApplication::initialize() {
         this->object = this->mainScene->createEntityWithModel("island.fbx");
         this->object1 = this->mainScene->createEntityWithModel("house1.fbx");
         this->object2 = this->mainScene->createEntityWithModel("statue.fbx");
+        this->object->attachChild(this->object2);
     } catch(const Exception &e) {
 
     }
 
     this->object->transform->setPosition({-200.0f, -75.0f, 50.0f});
     this->object1->transform->setPosition({60.0f, 0.0f, 50.0f});
-    this->object2->transform->setPosition({-20.0f, 0.0f, 50.0f});
+    this->object2->transform->setPosition({-20.0f, 100.0f, 50.0f});
+
     this->currentObject = this->object;
 
     auto terrain = this->mainScene->createTerrain("prontera_grass.bmp", "terrain.shader", terrainSize, terrainSize, 5);
@@ -104,6 +106,5 @@ void SimpleApplication::generateGrass(int number) {
 }
 
 void SimpleApplication::update() {
-    auto pc = this->core->getPerformanceCounter();
-    Logger::info("Average mpf = %v; Average fps = %v", pc->getAverageMpf(), pc->getAverageFps());
+    this->object2->transform->rotateY(0.01f);
 }
