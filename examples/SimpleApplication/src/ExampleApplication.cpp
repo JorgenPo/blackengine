@@ -22,9 +22,9 @@ void SimpleApplication::initialize() {
     rm->addResourceFolder("resources/house/");
 
     try {
-        this->object = this->mainScene->createEntityWithModel("object", "island.fbx");
-        this->object1 = this->mainScene->createEntityWithModel("object1", "house1.fbx");
-        this->object2 = this->mainScene->createEntityWithModel("object2", "statue.fbx");
+        this->object = this->mainScene->createEntityWithModel("island.fbx");
+        this->object1 = this->mainScene->createEntityWithModel("house1.fbx");
+        this->object2 = this->mainScene->createEntityWithModel("statue.fbx");
     } catch(const Exception &e) {
 
     }
@@ -34,7 +34,7 @@ void SimpleApplication::initialize() {
     this->object2->transform->setPosition({-20.0f, 0.0f, 50.0f});
     this->currentObject = this->object;
 
-    auto terrain = this->mainScene->createTerrain("terrain", "prontera_grass.bmp", "terrain.shader", terrainSize, terrainSize, 5);
+    auto terrain = this->mainScene->createTerrain("prontera_grass.bmp", "terrain.shader", terrainSize, terrainSize, 5);
 
     this->generateTrees(150);
     this->generateGrass(1000);
@@ -67,8 +67,7 @@ void SimpleApplication::generateTrees(int number) {
     float x, z = 0;
     std::string prefix = "tree";
     for (int i = 0; i < number; ++i) {
-        auto tree = this->mainScene->createEntityWithModel(prefix + std::to_string(i+1),
-                treeModels.at(modelDistribution(generator)));
+        auto tree = this->mainScene->createEntityWithModel(treeModels.at(modelDistribution(generator)));
 
         x = positionDistribution(generator);
         z = positionDistribution(generator);
@@ -94,8 +93,7 @@ void SimpleApplication::generateGrass(int number) {
         z = positionDistribution(generator);
 
         try {
-            auto grassEntity = this->mainScene->createSprite(std::string("grass") + std::to_string(i+1),
-                    "leaf_10.bmp", "simple.shader");
+            auto grassEntity = this->mainScene->createSprite("leaf_10.bmp", "simple.shader");
 
             grassEntity->transform->translate({x, 0.0f, z});
             grassEntity->transform->scale(10.0f);

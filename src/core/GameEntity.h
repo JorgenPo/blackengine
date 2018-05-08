@@ -30,7 +30,7 @@ namespace black {
         /**
          * Creates an empty entity with only transform component
          */
-        explicit GameEntity(std::string name);
+        explicit GameEntity(std::string name = "");
 
         /**
          * Creates an empty entity with only transform component

@@ -121,7 +121,7 @@ namespace black {
     }
 
     void Application::setMainCamera() {
-        this->mainCamera = this->mainScene->createCamera("spectator", "mainCamera");
+        this->mainCamera = this->mainScene->createCamera("spectator");
         this->mainCamera->transform->setPosition({0.0f, 1.0f, 100.0f});
     }
 }

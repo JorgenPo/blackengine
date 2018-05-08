@@ -8,9 +8,9 @@
 
 namespace black::scene {
 
-    EntityCreationException::EntityCreationException(const std::string &name, const std::string &reason) {
+    EntityCreationException::EntityCreationException(const std::string &reason) {
         std::stringstream ss;
-        ss << "Failed to create an entity with name '" << name << "'. Reason: " << reason;
+        ss << "Failed to create an entity. Reason: " << reason;
         this->message = ss.str();
     }
 
@@ -20,24 +20,24 @@ namespace black::scene {
         this->message = ss.str();
     }
 
-    std::shared_ptr<GameEntity> Scene::createEntity(std::string name) {
-        auto entity = std::make_shared<GameEntity>(name);
+    std::shared_ptr<GameEntity> Scene::createEntity() {
+        auto entity = std::make_shared<GameEntity>();
         this->objects.push_back(entity);
 
         return entity;
     }
 
-    std::shared_ptr<GameEntity> Scene::createEntityWithModel(std::string name, std::string modelFile) {
+    std::shared_ptr<GameEntity> Scene::createEntityWithModel(std::string modelFile) {
         auto rm = Core::GetResourceManager();
 
         try {
             auto model = rm->load<render::Model>(std::move(modelFile));
-            auto entity = this->createEntity(name);
+            auto entity = this->createEntity();
             entity->addComponent(model);
 
             return entity;
         } catch(const Exception &e) {
-            throw EntityCreationException(name, e.getMessage());
+            throw EntityCreationException(e.getMessage());
         }
     }
 
@@ -51,10 +51,9 @@ namespace black::scene {
         return std::shared_ptr<GameEntity>();
     }
 
-    std::shared_ptr<Camera> Scene::createCamera(std::string type, std::string name) {
+    std::shared_ptr<Camera> Scene::createCamera(std::string type) {
         try {
             auto camera = Core::getInstance()->createCamera(std::move(type));
-            camera->setName(name);
 
             this->objects.push_back(camera);
 
@@ -64,7 +63,7 @@ namespace black::scene {
 
             return camera;
         } catch (const Exception &e) {
-            throw EntityCreationException(name, e.getMessage());
+            throw EntityCreationException(e.getMessage());
         }
     }
 
@@ -87,7 +86,7 @@ namespace black::scene {
     }
 
     std::shared_ptr<Terrain>
-    Scene::createTerrain(std::string name, std::string terrainTexture, std::string terrainProgram, float width,
+    Scene::createTerrain(std::string terrainTexture, std::string terrainProgram, float width,
                          float height, int levelOfDetails)
     {
         auto rm = Core::GetResourceManager();
@@ -97,13 +96,12 @@ namespace black::scene {
             auto texture = rm->load<render::Texture>(std::move(terrainTexture));
 
             auto terrain = std::make_shared<Terrain>(texture, program, width, height, levelOfDetails);
-            terrain->setName(name);
 
             this->objects.push_back(terrain);
 
             return terrain;
         } catch (const Exception &e) {
-            throw EntityCreationException(name, e.getMessage());
+            throw EntityCreationException(e.getMessage());
         }
     }
 
@@ -112,7 +110,7 @@ namespace black::scene {
     }
 
     std::shared_ptr<render::Sprite>
-    Scene::createSprite(std::string name, std::string spriteTexture, std::string spriteProgram) {
+    Scene::createSprite(std::string spriteTexture, std::string spriteProgram) {
         auto rm = Core::GetResourceManager();
 
         try {
@@ -120,13 +118,12 @@ namespace black::scene {
             auto texture = rm->load<render::Texture>(std::move(spriteTexture));
 
             auto sprite = std::make_shared<render::Sprite>(texture, program);
-            sprite->setName(name);
 
             this->objects.push_back(sprite);
 
             return sprite;
         } catch (const Exception &e) {
-            throw EntityCreationException(name, e.getMessage());
+            throw EntityCreationException(e.getMessage());
         }
     }
 
