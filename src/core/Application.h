@@ -62,7 +62,7 @@ namespace black {
         virtual void update();
     private:
         void setDefaultRenderer();
-        void setMainWindow();
+        void setMainWindowAndRenderer();
         void setMainScene();
 
         void setMainCamera();

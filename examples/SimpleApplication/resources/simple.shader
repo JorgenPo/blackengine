@@ -1,2 +1,0 @@
-simple.vert
-simple.frag

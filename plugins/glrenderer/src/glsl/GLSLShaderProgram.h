@@ -42,6 +42,8 @@ namespace black::render {
 
         void setUniformVariable(const std::string &name, glm::mat4 matrix) override;
 
+        void setUniformVariable(const std::string &name, glm::vec3 vector) override;
+
     private:
         bool isLinkedSuccessfully();
         std::string getLinkError();

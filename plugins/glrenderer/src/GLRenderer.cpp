@@ -25,6 +25,15 @@ namespace black::render {
         return std::make_shared<ui::GLFWWindow>(std::move(name));
     }
 
+    void GLRenderer::initialize() {
+        auto rm = Core::GetResourceManager();
+        rm->addResourceFolder("shaders/");
+
+        this->staticShader = rm->load<ShaderProgram>("static.shader");
+        this->spriteShader = rm->load<ShaderProgram>("sprite.shader");
+        this->terrainShader = rm->load<ShaderProgram>("terrain.shader");
+    }
+
     void GLRenderer::render(const GameEntityList &objectList) {
         auto color = this->clearColor;
         glClearColor(color.r, color.g, color.b, color.a);
@@ -51,10 +60,6 @@ namespace black::render {
 
     std::shared_ptr<Mesh> GLRenderer::createMesh() {
         return std::make_shared<GLMesh>();
-    }
-
-    std::shared_ptr<ShaderProgram> GLRenderer::createShaderProgram() {
-        return std::make_shared<GLSLShaderProgram>();
     }
 
     std::shared_ptr<Texture> GLRenderer::createTexture(std::shared_ptr<Image> image) {
@@ -97,6 +102,10 @@ namespace black::render {
     {
         auto model = entity->getComponent<render::Model>();
 
+        if (model == nullptr) {
+            return;
+        }
+
         // TODO: this is the bad optimization
         // Just assume that all materials using one shader program
         auto program = model->getMaterials().front()->getShaderProgram();
@@ -112,6 +121,10 @@ namespace black::render {
         program->setUniformVariable("projection", projectMatrix);
         program->setUniformVariable("view", viewMatrix);
 
+        if (program->isLightSupported() && this->rendererView != nullptr) {
+            program->setUniformVariable("cameraPosition", this->rendererView->transform->getPosition());
+        }
+
         // Render all model parts
         model->render();
 
@@ -123,5 +136,21 @@ namespace black::render {
                 this->renderModel(child, modelMatrix * childModelMatrix, viewMatrix, projectMatrix);
             }
         }
+    }
+
+    std::shared_ptr<ShaderProgram> GLRenderer::getStaticShader() {
+        return this->staticShader;
+    }
+
+    std::shared_ptr<ShaderProgram> GLRenderer::getTerrainShader() {
+        return this->terrainShader;
+    }
+
+    std::shared_ptr<ShaderProgram> GLRenderer::getSpriteShader() {
+        return this->spriteShader;
+    }
+
+    std::shared_ptr<ShaderProgram> GLRenderer::createShaderProgram() {
+        return std::make_shared<GLSLShaderProgram>();
     }
 }

@@ -201,6 +201,7 @@ namespace black {
 
     void Core::setRenderer(std::shared_ptr<render::Renderer> renderer) {
         this->currentRenderer = std::move(renderer);
+        this->currentRenderer->initialize();
     }
 
     std::shared_ptr<render::Renderer> Core::getCurrentRenderer() {

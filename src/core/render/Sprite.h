@@ -19,7 +19,7 @@ namespace black::render {
         std::shared_ptr<Model> model;
 
     public:
-        Sprite(std::shared_ptr<Texture> texture, std::shared_ptr<ShaderProgram> shader);
+        Sprite(std::shared_ptr<Texture> texture);
 
     private:
         void generateQuadMesh();

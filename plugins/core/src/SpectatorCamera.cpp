@@ -7,21 +7,8 @@
 
 namespace black {
 
-    SpectatorCamera::SpectatorCamera() {
-        auto eventWindow = Core::getInstance()->getEventWindow();
-        if (eventWindow != nullptr) {
-            eventWindow->listen(this);
-        }
-    }
-
     SpectatorCamera *SpectatorCamera::copy() {
         return new SpectatorCamera();
-    }
-
-    void SpectatorCamera::updateCamera() {
-        handleInput();
-
-        Camera::updateCamera();
     }
 
     void SpectatorCamera::handleInput() {

@@ -60,8 +60,8 @@ namespace black {
     }
 
     void Application::initialize() {
+        setMainWindowAndRenderer();
         setDefaultRenderer();
-        setMainWindow();
         setMainScene();
         setMainCamera();
 
@@ -82,14 +82,18 @@ namespace black {
         throw ApplicationInitializationException("No available renderers found");
     }
 
-    void Application::setMainWindow() {
-        if (this->core->getCurrentRenderer() == nullptr) {
-            throw ApplicationInitializationException("Failed to set up main window: no renderer");
+    void Application::setMainWindowAndRenderer() {
+        auto renderers = this->core->getAvailableRenderers();
+
+        if (renderers.empty()) {
+            throw ApplicationInitializationException("No available renderers found");
         }
+
+        auto firstRenderer = *(renderers.begin());
 
         // Create window for renderFrame using this renderer
         try {
-            this->mainWindow = this->core->getCurrentRenderer()->createRendererWindow(this->windowTitle);
+            this->mainWindow = firstRenderer->createRendererWindow(this->windowTitle);
             this->mainWindow->setTitle(this->windowTitle);
             this->mainWindow->setWidth(this->windowWidth);
             this->mainWindow->setHeight(this->windowHeight);
@@ -98,6 +102,7 @@ namespace black {
             throw ApplicationInitializationException("Failed to init main window: " + e.getMessage());
         }
 
+        this->core->setRenderer(firstRenderer);
         this->core->getCurrentRenderer()->addRenderTarget(this->mainWindow);
 
         // Listen for windows event
@@ -123,5 +128,6 @@ namespace black {
     void Application::setMainCamera() {
         this->mainCamera = this->mainScene->createCamera("spectator");
         this->mainCamera->transform->setPosition({0.0f, 1.0f, 100.0f});
+        this->mainCamera->setSoftness(0.1f);
     }
 }

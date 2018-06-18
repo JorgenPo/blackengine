@@ -8,12 +8,14 @@
 #include <core/Core.h>
 #include <core/Application.h>
 #include <core/Terrain.h>
+#include "Player.h"
 
 using namespace black;
 using namespace black::render;
 
 // Simple example application
 class SimpleApplication : public Application {
+    std::shared_ptr<Player> player;
     std::shared_ptr<GameEntity> object;
     std::shared_ptr<GameEntity> object1;
     std::shared_ptr<GameEntity> object2;
@@ -26,6 +28,8 @@ class SimpleApplication : public Application {
 public:
 
     SimpleApplication();
+
+    virtual ~SimpleApplication();
 
     void initialize() override;
 

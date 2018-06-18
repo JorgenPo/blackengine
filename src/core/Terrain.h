@@ -22,8 +22,7 @@ namespace black {
         float tileHeight;
 
     public:
-        Terrain(std::shared_ptr<render::Texture> terrainTexture, std::shared_ptr<render::ShaderProgram> terrainShader,
-                float width = 200.0f, float height = 200.0f, int levelOfDetails = 10);
+        Terrain(std::shared_ptr<render::Texture> terrainTexture, float width = 200.0f, float height = 200.0f, int levelOfDetails = 10);
 
         std::shared_ptr<render::Mesh> generateMesh();
 

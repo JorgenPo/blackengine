@@ -40,7 +40,6 @@ namespace black::render {
         std::shared_ptr<RenderTarget> currentRenderTarget;
         std::shared_ptr<Camera> rendererView;
 
-    protected:
         RenderTargetList renderTargets;
         Color clearColor;
 
@@ -49,11 +48,13 @@ namespace black::render {
 
         virtual std::string getName() = 0;
 
+        virtual void initialize() = 0;
+
         virtual std::shared_ptr<ui::Window> createRendererWindow(std::string name) = 0;
         virtual std::shared_ptr<Shader> createShader(const std::string &source, Shader::Type type) = 0;
-        virtual std::shared_ptr<ShaderProgram> createShaderProgram() = 0;
         virtual std::shared_ptr<Mesh> createMesh() = 0;
         virtual std::shared_ptr<Texture> createTexture(std::shared_ptr<Image> image) = 0;
+        virtual std::shared_ptr<ShaderProgram> createShaderProgram() = 0;
 
         virtual void setWireframeMode(bool on) = 0;
         virtual void enableFaceCulling(Culling culling) = 0;
@@ -85,6 +86,10 @@ namespace black::render {
         void setRendererView(const std::shared_ptr<Camera> &rendererView);
 
         void updateRendererView() const;
+
+        virtual std::shared_ptr<ShaderProgram> getStaticShader() = 0;
+        virtual std::shared_ptr<ShaderProgram> getTerrainShader() = 0;
+        virtual std::shared_ptr<ShaderProgram> getSpriteShader() = 0;
     };
 }
 

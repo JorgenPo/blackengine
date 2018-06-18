@@ -9,14 +9,15 @@ namespace black::render {
 
     std::shared_ptr<Mesh> Sprite::quadMesh;
 
-    Sprite::Sprite(std::shared_ptr<Texture> texture,
-                   std::shared_ptr<ShaderProgram> shader) : GameEntity("")
+    Sprite::Sprite(std::shared_ptr<Texture> texture) : GameEntity("")
     {
         if (Sprite::quadMesh == nullptr) {
             this->generateQuadMesh();
         }
 
-        auto material = std::make_shared<Material>(shader);
+        auto renderer = Core::getInstance()->getCurrentRenderer();
+
+        auto material = std::make_shared<Material>(renderer->getSpriteShader());
         material->setDiffuseTexture(texture);
 
         this->model = Model::createSingleMaterialModel(quadMesh, material);

@@ -24,6 +24,11 @@ namespace black {
 
         this->transform->setPosition(position);
         this->transform->setRotation(glm::vec3{pitch, yaw, roll});
+
+        auto eventWindow = Core::getInstance()->getEventWindow();
+        if (eventWindow != nullptr) {
+            eventWindow->listen(this);
+        }
     }
 
     float Camera::getMovementSpeed() const {
@@ -115,7 +120,7 @@ namespace black {
             auto parentTransform = this->getParent()->transform;
 
             position += parentTransform->getPosition();
-            rotation += parentTransform->getRotation();
+            rotation -= parentTransform->getRotation();
         }
 
         float pitch = rotation.x;
@@ -142,6 +147,9 @@ namespace black {
     }
 
     void Camera::updateCamera() {
+
+        this->handleInput();
+
         this->updateViewMatrix();
         this->updateProjectionMatrix();
     }
@@ -168,5 +176,9 @@ namespace black {
 
     void Camera::moveDown() {
         this->transform->setPosition(this->transform->getPosition() - this->up * this->movementSpeed);
+    }
+
+    void Camera::handleInput() {
+
     }
 }

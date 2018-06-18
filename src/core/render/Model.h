@@ -42,6 +42,7 @@ namespace black::render {
 
         void setMaterials(const MaterialList &materials);
 
+
         /**
          * Draws model
          */

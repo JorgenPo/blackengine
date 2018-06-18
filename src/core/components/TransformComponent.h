@@ -46,6 +46,7 @@ namespace black::components {
         void rotateX(float angle);
         void rotateY(float angle);
         void rotateZ(float angle);
+
         void translate(glm::vec3 translation);
         void translateX(float value);
         void translateY(float value);

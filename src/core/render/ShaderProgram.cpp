@@ -13,7 +13,7 @@ namespace black::render {
                                  const std::shared_ptr<Shader> &fragmentShader,
                                  const std::shared_ptr<Shader> &geometryShader)
             : vertexShader(vertexShader), fragmentShader(fragmentShader), geometryShader(geometryShader) {
-
+        this->lightSupported = true;
     }
 
     const std::shared_ptr<Shader> &ShaderProgram::getVertexShader() const {
@@ -53,7 +53,9 @@ namespace black::render {
         return linked;
     }
 
-    ShaderProgram::ShaderProgram() = default;
+    ShaderProgram::ShaderProgram() : lightSupported(true) {
+
+    }
 
     ShaderProgramLinkException::ShaderProgramLinkException(const std::string &message) : Exception(message) {}
 
@@ -114,4 +116,13 @@ namespace black::render {
 
         return shaderProgram;
     }
+
+    bool ShaderProgram::isLightSupported() const {
+        return lightSupported;
+    }
+
+    void ShaderProgram::setLightSupported(bool lightSupported) {
+        ShaderProgram::lightSupported = lightSupported;
+    }
+
 }

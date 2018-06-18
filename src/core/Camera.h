@@ -7,6 +7,7 @@
 
 #include <glm/glm.hpp>
 #include <core/GameEntity.h>
+#include <core/ui/WindowEventListener.h>
 #include "core/components/Component.h"
 
 namespace black {
@@ -19,7 +20,7 @@ namespace black {
     /**
      * Camera component class
      */
-    class Camera : public GameEntity {
+    class Camera : public GameEntity, public ui::WindowEventListener {
     protected:
         glm::vec3 worldUp;
         glm::vec3 up;
@@ -94,9 +95,11 @@ namespace black {
         void moveDown();
 
         /**
-         * Updates a camera. Concrete subclasses should set this
+         * Updates a camera.
          */
-        virtual void updateCamera();
+        void updateCamera();
+
+        virtual void handleInput();
 
         virtual Camera *copy() = 0;
     private:

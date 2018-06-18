@@ -7,9 +7,7 @@
 #include "Core.h"
 
 namespace black {
-    Terrain::Terrain(std::shared_ptr<render::Texture> terrainTexture,
-                     std::shared_ptr<render::ShaderProgram> terrainShader,
-                     float width, float height, int levelOfDetails)
+    Terrain::Terrain(std::shared_ptr<render::Texture> terrainTexture, float width, float height, int levelOfDetails)
         : GameEntity(""), width(width), height(height)
     {
         this->tileWidth = width / levelOfDetails;
@@ -17,7 +15,9 @@ namespace black {
 
         auto mesh = this->generateMesh();
 
-        auto material = std::make_shared<render::Material>(terrainShader);
+        auto renderer = Core::getInstance()->getCurrentRenderer();
+
+        auto material = std::make_shared<render::Material>(renderer->getTerrainShader());
         material->setDiffuseTexture(terrainTexture);
 
         this->model = render::Model::createSingleMaterialModel(mesh, material);

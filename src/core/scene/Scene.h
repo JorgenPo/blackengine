@@ -83,11 +83,11 @@ namespace black::scene {
         std::shared_ptr<GameEntity> createEntityWithModel(std::string modelFile);
         std::shared_ptr<GameEntity> getEntity(std::string name);
 
-        std::shared_ptr<Terrain> createTerrain(std::string terrainTexture, std::string terrainProgram,
-                                               float width = 200.0f, float height = 200.0f, int levelOfDetails = 10);
+        std::shared_ptr<Terrain> createTerrain(std::string terrainTexture, float width = 200.0f,
+                float height = 200.0f, int levelOfDetails = 10);
         std::shared_ptr<Terrain> getTerrain(std::string name);
 
-        std::shared_ptr<render::Sprite> createSprite(std::string spriteTexture, std::string spriteProgram);
+        std::shared_ptr<render::Sprite> createSprite(std::string spriteTexture);
         std::shared_ptr<render::Sprite> getSprite(std::string name);
 
         const GameEntityList &getEntities();

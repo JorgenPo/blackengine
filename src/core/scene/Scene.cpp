@@ -89,16 +89,15 @@ namespace black::scene {
     }
 
     std::shared_ptr<Terrain>
-    Scene::createTerrain(std::string terrainTexture, std::string terrainProgram, float width,
+    Scene::createTerrain(std::string terrainTexture, float width,
                          float height, int levelOfDetails)
     {
         auto rm = Core::GetResourceManager();
 
         try {
-            auto program = rm->load<render::ShaderProgram>(std::move(terrainProgram));
             auto texture = rm->load<render::Texture>(std::move(terrainTexture));
 
-            auto terrain = std::make_shared<Terrain>(texture, program, width, height, levelOfDetails);
+            auto terrain = std::make_shared<Terrain>(texture, width, height, levelOfDetails);
 
             this->sceneEntity->attachChild(terrain);
 
@@ -113,14 +112,13 @@ namespace black::scene {
     }
 
     std::shared_ptr<render::Sprite>
-    Scene::createSprite(std::string spriteTexture, std::string spriteProgram) {
+    Scene::createSprite(std::string spriteTexture) {
         auto rm = Core::GetResourceManager();
 
         try {
-            auto program = rm->load<render::ShaderProgram>(std::move(spriteProgram));
             auto texture = rm->load<render::Texture>(std::move(spriteTexture));
 
-            auto sprite = std::make_shared<render::Sprite>(texture, program);
+            auto sprite = std::make_shared<render::Sprite>(texture);
 
             this->sceneEntity->attachChild(sprite);
 

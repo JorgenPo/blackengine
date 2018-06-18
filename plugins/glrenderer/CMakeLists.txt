@@ -26,3 +26,4 @@ target_link_libraries(GLRendererPlugin ${LIBRARIES})
 
 install(TARGETS GLRendererPlugin DESTINATION plugins/)
 install(TARGETS GLRendererPlugin DESTINATION examples/)
+install(DIRECTORY src/glsl/shaders/ DESTINATION examples/)

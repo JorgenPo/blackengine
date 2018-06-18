@@ -37,6 +37,8 @@ namespace black::render {
         std::shared_ptr<Shader> geometryShader;
 
         bool linked;
+
+        bool lightSupported;
     public:
         /**
          * Loads a program from file and tries to compile
@@ -77,6 +79,7 @@ namespace black::render {
         virtual void setUniformVariable(const std::string &name, std::array<float, 3> value) = 0;
         virtual void setUniformVariable(const std::string &name, std::array<float, 2> value) = 0;
         virtual void setUniformVariable(const std::string &name, glm::mat4 matrix) = 0;
+        virtual void setUniformVariable(const std::string &name, glm::vec3 vector) = 0;
 
         const std::shared_ptr<Shader> &getVertexShader() const;
         const std::shared_ptr<Shader> &getFragmentShader() const;
@@ -87,6 +90,10 @@ namespace black::render {
         void setGeometryShader(const std::shared_ptr<Shader> &geometryShader);
 
         bool isLinked() const;
+
+        bool isLightSupported() const;
+
+        void setLightSupported(bool lightSupported);
     };
 
 }
