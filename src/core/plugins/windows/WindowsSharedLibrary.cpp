@@ -20,7 +20,7 @@ namespace black::os {
 
     void WindowsSharedLibrary::unload() {
         // This will cause sig fault
-        //FreeLibrary(this->hLib);
+        FreeLibrary(this->hLib);
     }
 
     WindowsSharedLibrary::WindowsSharedLibrary(std::string name) :

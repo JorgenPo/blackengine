@@ -19,7 +19,7 @@ namespace black {
         this->message << "Plugin with name '" << pluginName << "' not found. Searching dirs are: [";
 
         for (const auto &dir : pluginDirs) {
-            this->message << "\"" << dir << "\"";
+            this->message << "\"" << dir << "\", ";
         }
 
         this->message << "]";
@@ -29,6 +29,12 @@ namespace black {
     {
         /* Default folders */
         this->addPluginDirs({"", "plugins/"});
+
+        /* Linux */
+        if (Constants::RuntimePlatform == Platform::LINUX) {
+            this->addPluginDir("/lib64/blackengine/plugins/");
+            this->addPluginDir("/lib/blackengine/plugins/");
+        }
 
         this->logger = Logger::Get("PluginManager");
     }
@@ -105,7 +111,8 @@ namespace black {
             exitPoint();
 
             // Free memory
-            plugin->unload();
+            // #BUG This is causing segfault
+            // plugin->unload();
         } catch(const Exception &e) {
             this->logger->critical(e.getMessage());
             return;
