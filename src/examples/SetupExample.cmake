@@ -14,7 +14,6 @@ function(SetupExample exampleName)
     # Set output directory to the main library dir
     set_target_properties(${exampleName} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
-    install(TARGETS ${exampleName} DESTINATION debug CONFIGURATIONS Debug)
-    install(TARGETS ${exampleName} DESTINATION release CONFIGURATIONS Release)
+    install(TARGETS ${exampleName} DESTINATION ${CMAKE_INSTALL_PREFIX}/blackengine/examples)
 
 endfunction(SetupExample)

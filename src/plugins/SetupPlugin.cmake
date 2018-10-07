@@ -11,14 +11,20 @@ function(SetupPlugin pluginName)
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
     add_library(${pluginName} SHARED ${SOURCES} ${ADDITIONAL_SOURCES})
+
     target_link_libraries(${pluginName} ${BLACKENGINE_TARGET} ${GLFW_LIBRARIES})
 
     # Set output directory to the main library dir
     set_target_properties(${pluginName} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/plugins)
     set_target_properties(${pluginName} PROPERTIES PREFIX "")
 
-    install(TARGETS ${pluginName} DESTINATION debug/plugins CONFIGURATIONS Debug)
-    install(TARGETS ${pluginName} DESTINATION release/plugins CONFIGURATIONS Release)
+    get_target_property(OUTPUT_DIR ${pluginName} RUNTIME_OUTPUT_DIRECTORY)
+    message(INFO " output dir is ${OUTPUT_DIR}")
+
+    # Without this on linux executable does not find black engine library
+    set_target_properties(${pluginName} PROPERTIES INSTALL_RPATH_USE_LINK_PATH TRUE)
+
+    install(TARGETS ${pluginName} DESTINATION ${CMAKE_INSTALL_PREFIX}/blackengine/plugins)
 
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS OFF)
 endfunction(SetupPlugin)
