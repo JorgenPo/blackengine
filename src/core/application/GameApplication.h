@@ -35,6 +35,9 @@ namespace black {
 
     private:
         void run() override;
+
+    protected:
+        void init() override;
     };
 }
 

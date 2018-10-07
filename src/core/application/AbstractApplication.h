@@ -24,7 +24,7 @@ namespace black {
         std::shared_ptr<Logger> logger;
         int windowWidth;
         int windowHeight;
-        bool isFullScreen;
+        bool isWindowFullScreen;
 
     public:
         explicit AbstractApplication(const std::string &name, int windowWidth, int windowHeight, bool isFullScreen);
@@ -33,15 +33,31 @@ namespace black {
         const std::string &getName() const;
 
         /**
-         * Init an engine and run application.
+         * Run the application.
          */
         void start();
+
+        void setName(const std::string &name);
+
+        int getWindowWidth() const;
+
+        void setWindowWidth(int windowWidth);
+
+        int getWindowHeight() const;
+
+        void setWindowHeight(int windowHeight);
+
+        bool isFullScreen() const;
+
+        void setFullScreen(bool isFullScreen);
 
     protected:
         /**
         * Update game logic and scene
         */
         virtual void update() = 0;
+
+        virtual void init();
 
     private:
         /**
