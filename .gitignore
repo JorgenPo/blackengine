@@ -3,3 +3,4 @@ cmake-build-*/
 bin/*
 
 src/core/Config.h
+src/core/Exported.h
