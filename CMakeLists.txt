@@ -52,5 +52,4 @@ message(INFO " Platform is ${BLACK_PLATFORM}")
 message(INFO " Installation path is: " ${CMAKE_INSTALL_PREFIX})
 
 # Install main target
-install(TARGETS ${PROJECT_NAME} DESTINATION release CONFIGURATIONS Release)
-install(TARGETS ${PROJECT_NAME} DESTINATION debug CONFIGURATIONS Debug)
+install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX})
