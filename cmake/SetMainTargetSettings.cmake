@@ -7,7 +7,11 @@ endif(WIN32)
 
 # Set default installation build
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-    set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/bin CACHE PATH "..." FORCE)
+    if (WIN32)
+        set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/bin CACHE PATH "..." FORCE)
+    elseif(UNIX)
+        set(CMAKE_INSTALL_PREFIX /usr/local/lib CACHE PATH "..." FORCE)
+    endif(WIN32)
 endif()
 
 include(GenerateExportHeader)

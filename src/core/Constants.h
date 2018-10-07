@@ -20,11 +20,11 @@ namespace black {
 
     class BLACK_EXPORTED Constants {
     public:
-#ifdef BLACK_PLATFORM_WINDOWS
+#if defined(BLACK_PLATFORM_WINDOWS)
     static const Platform RuntimePlatform = Platform::WINDOWS;
-#elif BLACK_PLATFORM_LINUX
+#elif defined(BLACK_PLATFORM_LINUX)
     static const Platform RuntimePlatform = Platform::LINUX;
-#elif BLACK_PLATFORM_MACOSX
+#elif defined(BLACK_PLATFORM_MACOSX)
     static const Platform RuntimePlatform = Platform::MACOSX;
 #endif
 

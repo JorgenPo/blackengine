@@ -9,7 +9,8 @@ using namespace black;
 
 class BlackEngineApplication : public GameApplication {
 public:
-    BlackEngineApplication() : GameApplication("BlackEngineApplication", 800, 600, false) {
+    BlackEngineApplication() : GameApplication(std::string("BlackEngineApplication") + Constants::RuntimePlatformString,
+            800, 600, false) {
         //this->logger->info("Starting initialization example");
     }
 
