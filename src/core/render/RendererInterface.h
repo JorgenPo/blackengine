@@ -6,6 +6,7 @@
 #define BLACKENGINE_RENDERERINTERFACE_H
 
 #include <CommonHeaders.h>
+#include <Mesh.h>
 #include "RenderTargetInterface.h"
 
 namespace black {
@@ -16,7 +17,7 @@ namespace black {
         /**
          * Renders a next frame
          */
-        virtual void render() = 0;
+        virtual void render(std::shared_ptr<Mesh> mesh) = 0;
 
         /**
          * Set renderer viewport so all rendering will be in this bounds.
