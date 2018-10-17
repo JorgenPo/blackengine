@@ -6,6 +6,7 @@
 #define BLACKENGINE_RENDERSYSTEMINTERFACE_H
 
 #include <CommonHeaders.h>
+#include <Mesh.h>
 #include "RendererInterface.h"
 #include "AbstractRenderWindow.h"
 
@@ -46,7 +47,19 @@ namespace black {
          */
         virtual std::shared_ptr<RendererInterface> getRenderer() = 0;
 
+        /**
+         * Return a main renderer window
+         *
+         * @return Pointer for the renderer window
+         */
         virtual std::shared_ptr<AbstractRenderWindow> getRenderWindow() = 0;
+
+        /**
+         * Create a mesh
+         *
+         * @return Pointer to the created mesh
+         */
+        virtual std::shared_ptr<Mesh> createMesh(std::vector<float> vertices) = 0;
     };
 }
 

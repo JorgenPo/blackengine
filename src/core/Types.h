@@ -24,10 +24,19 @@ namespace black {
 #endif
 
     /**
-     * Black engine types
+     * Renderer Draw mode
      */
-    class BLACK_EXPORTED Types {
-    public:
+    enum class DrawMode {
+        POINTS,
+        LINES,
+        LINE_LOOP,
+        LINE_STRIP,
+        TRIANGLE_STRIP,
+        TRIANGLE_FAN,
+        TRIANGLES,
+        QUAD_STRIP,
+        QUADS,
+        POLYGON
     };
 }
 

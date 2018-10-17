@@ -3,6 +3,7 @@
 //
 
 #include "OpenGLRenderSystem.h"
+#include "GLMesh.h"
 
 namespace black {
 
@@ -20,8 +21,8 @@ namespace black {
         this->logger->info("Using OpenGL 3.3 Core profile");
 
         glfwInit();
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 #ifdef BLACK_PLATFORM_MACOSX
@@ -38,6 +39,8 @@ namespace black {
             glfwTerminate();
             throw RenderSystemInitializationException("Failed to initialize OpenGL Context");
         }
+
+        this->renderer = std::make_shared<GLRenderer>();
     }
 
     void OpenGLRenderSystem::shutdown() {
@@ -47,7 +50,7 @@ namespace black {
     }
 
     std::shared_ptr<RendererInterface> OpenGLRenderSystem::getRenderer() {
-        return nullptr;
+        return this->renderer;
     }
 
     OpenGLRenderSystem::~OpenGLRenderSystem() {
@@ -56,5 +59,9 @@ namespace black {
 
     std::shared_ptr<AbstractRenderWindow> OpenGLRenderSystem::getRenderWindow() {
         return this->window;
+    }
+
+    std::shared_ptr<Mesh> OpenGLRenderSystem::createMesh(std::vector<float> vertices) {
+        return std::make_shared<GLMesh>(vertices);
     }
 }
