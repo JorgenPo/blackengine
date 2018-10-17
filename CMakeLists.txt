@@ -17,6 +17,7 @@ file(GLOB SOURCES "${BLACKENGINE_SOURCE_DIR}/*.h" "${BLACKENGINE_SOURCE_DIR}/*.c
         "${BLACKENGINE_SOURCE_DIR}/log/*.h" "${BLACKENGINE_SOURCE_DIR}/log/*.cpp"
         "${BLACKENGINE_SOURCE_DIR}/plugins/*.h" "${BLACKENGINE_SOURCE_DIR}/plugins/*.cpp"
         "${BLACKENGINE_SOURCE_DIR}/application/*.h" "${BLACKENGINE_SOURCE_DIR}/application/*.cpp"
+        "${BLACKENGINE_SOURCE_DIR}/util/*.h" "${BLACKENGINE_SOURCE_DIR}/util/*.cpp"
         "${BLACKENGINE_SOURCE_DIR}/render/*.h" "${BLACKENGINE_SOURCE_DIR}/render/*.cpp")
 
 # Link with appropriate libraries
