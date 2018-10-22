@@ -32,10 +32,17 @@ namespace black {
 
         void shutdown() override;
 
+        static std::string getErrorString(GLenum error);
+
         std::shared_ptr<RendererInterface> getRenderer() override;
         std::shared_ptr<AbstractRenderWindow> getRenderWindow() override;
 
         std::shared_ptr<Mesh> createMesh(std::vector<float> vertices) override;
+
+        std::shared_ptr<Shader> createShader(std::string source, Shader::Type type) override;
+
+        std::shared_ptr<ShaderProgram>
+        createShaderProgram(std::shared_ptr<Shader> vertexShader, std::shared_ptr<Shader> fragmentShader) override;
     };
 }
 

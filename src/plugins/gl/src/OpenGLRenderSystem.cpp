@@ -64,4 +64,18 @@ namespace black {
     std::shared_ptr<Mesh> OpenGLRenderSystem::createMesh(std::vector<float> vertices) {
         return std::make_shared<GLMesh>(vertices);
     }
+
+    std::shared_ptr<Shader> OpenGLRenderSystem::createShader(std::string source, Shader::Type type) {
+        return std::shared_ptr<Shader>();
+    }
+
+    std::shared_ptr<ShaderProgram> OpenGLRenderSystem::createShaderProgram(std::shared_ptr<Shader> vertexShader,
+                                                                           std::shared_ptr<Shader> fragmentShader) {
+        return std::shared_ptr<ShaderProgram>();
+    }
+
+    std::string OpenGLRenderSystem::getErrorString(GLenum error) {
+        // TODO: make switch
+        return std::string(std::to_string(error));
+    }
 }

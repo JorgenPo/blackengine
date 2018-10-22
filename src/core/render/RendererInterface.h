@@ -10,6 +10,11 @@
 #include "RenderTargetInterface.h"
 
 namespace black {
+    class RendererInitializationException : public Exception {
+    public:
+        explicit RendererInitializationException(const std::string &message) : Exception(message) {}
+    };
+
     class BLACK_EXPORTED RendererInterface {
     public:
         virtual void setCurrentRenderTarget(std::shared_ptr<RenderTargetInterface> target) = 0;

@@ -31,6 +31,6 @@ namespace black {
     }
 
     size_t Mesh::getVerticesCount() {
-        return this->vertices.size() / static_cast<int>(this->drawMode);
+        return this->vertices.size() / this->polygonSize;
     }
 }

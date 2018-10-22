@@ -7,6 +7,9 @@
 
 #include <CommonHeaders.h>
 #include <Mesh.h>
+#include <shader/Shader.h>
+#include <shader/ShaderProgram.h>
+
 #include "RendererInterface.h"
 #include "AbstractRenderWindow.h"
 
@@ -60,6 +63,10 @@ namespace black {
          * @return Pointer to the created mesh
          */
         virtual std::shared_ptr<Mesh> createMesh(std::vector<float> vertices) = 0;
+
+        virtual std::shared_ptr<Shader> createShader(std::string source, Shader::Type type) = 0;
+        virtual std::shared_ptr<ShaderProgram> createShaderProgram(std::shared_ptr<Shader> vertexShader,
+                std::shared_ptr<Shader> fragmentShader) = 0;
     };
 }
 

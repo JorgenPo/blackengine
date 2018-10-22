@@ -24,7 +24,9 @@ private:
     }
 
     void initializeResources() override {
-        this->triangleMesh = Meshes::create({1.0f, 1.0f, 0.0f});
+        this->triangleMesh = Meshes::create({-0.5f, -0.5f, 0.0f,
+                                             0.5f, -0.5f, 0.0f,
+                                             0.0f,  0.5f, 0.0f});
     }
 };
 

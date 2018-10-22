@@ -9,6 +9,7 @@
 #include <render/RendererInterface.h>
 
 #include "OpenGLCommonHeaders.h"
+#include "GLSLShaderProgram.h"
 
 namespace black {
 
@@ -18,6 +19,10 @@ namespace black {
     class GLRenderer : public RendererInterface {
         std::shared_ptr<RenderTargetInterface> currentTarget;
 
+        std::shared_ptr<GLSLShaderProgram> diffuseShader;
+
+        std::shared_ptr<Logger> logger;
+
     public:
         GLRenderer();
 
@@ -26,6 +31,9 @@ namespace black {
         void render(std::shared_ptr<Mesh> mesh) override;
 
         void setViewPort(int x, int y, int width, int height) override;
+
+    private:
+        void createShaders();
     };
 
 }
