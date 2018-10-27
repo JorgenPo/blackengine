@@ -10,6 +10,9 @@ namespace black {
 
     void GLRenderer::setCurrentRenderTarget(std::shared_ptr<RenderTargetInterface> target) {
         this->currentTarget = target;
+
+        this->projection = glm::perspective(glm::radians(45.0f), this->currentTarget->getRenderTargetAspectRatio(), 0.1f, 100.0f);
+        this->view = glm::translate(this->view, glm::vec3(0.0f, 0.0f, -3.0f));
     }
 
     void GLRenderer::render(std::shared_ptr<Mesh> mesh, glm::mat4 modelMatrix) {

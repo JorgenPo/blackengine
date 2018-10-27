@@ -27,8 +27,8 @@ public:
 private:
     void update(float dt) override {
         this->translation = glm::translate(this->translation, glm::vec3(0.0001f, 0.0f, 0.0f));
-        this->scale = glm::scale(this->scale, glm::vec3(1.0f + 0.0001f));
-        this->rotation = glm::rotate(this->rotation, glm::radians(0.2f), glm::vec3(0.0f, 0.0f, 1.0f));
+        this->scale = glm::scale(this->scale, glm::vec3(1.0f - 0.0001f));
+        this->rotation = glm::rotate(this->rotation, glm::radians(0.2f), glm::vec3(0.0f, 1.0f, 0.0f));
 
         this->modelMatrix = this->translation * this->rotation * this->scale;
 
@@ -36,7 +36,7 @@ private:
     }
 
     void initializeResources() override {
-        this->triangleMesh = MeshManager::createSquare(0.2f);
+        this->triangleMesh = MeshManager::createEquilateralTriangle(0.5f);
     }
 };
 
