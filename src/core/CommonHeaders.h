@@ -43,6 +43,10 @@
 #include <Types.h>
 
 #include <log/Logger.h>
+#include <performance/PerformanceCounter.h>
 
+// Matrices
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #endif //BLACKENGINE_COMMONHEADERS_H

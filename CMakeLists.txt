@@ -19,6 +19,7 @@ file(GLOB SOURCES "${BLACKENGINE_SOURCE_DIR}/*.h" "${BLACKENGINE_SOURCE_DIR}/*.c
         "${BLACKENGINE_SOURCE_DIR}/application/*.h" "${BLACKENGINE_SOURCE_DIR}/application/*.cpp"
         "${BLACKENGINE_SOURCE_DIR}/util/*.h" "${BLACKENGINE_SOURCE_DIR}/util/*.cpp"
         "${BLACKENGINE_SOURCE_DIR}/shader/*.h" "${BLACKENGINE_SOURCE_DIR}/shader/*.cpp"
+        "${BLACKENGINE_SOURCE_DIR}/performance/*.h" "${BLACKENGINE_SOURCE_DIR}/performance/*.cpp"
         "${BLACKENGINE_SOURCE_DIR}/render/*.h" "${BLACKENGINE_SOURCE_DIR}/render/*.cpp")
 
 # Link with appropriate libraries
