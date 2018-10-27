@@ -5,7 +5,7 @@
 #include <memory>
 #include <Engine.h>
 #include <application/GameApplication.h>
-#include <util/Meshes.h>
+#include <util/MeshManager.h>
 
 using namespace black;
 
@@ -24,9 +24,7 @@ private:
     }
 
     void initializeResources() override {
-        this->triangleMesh = Meshes::create({-0.5f, -0.5f, 0.0f,
-                                             0.5f, -0.5f, 0.0f,
-                                             0.0f,  0.5f, 0.0f});
+        this->triangleMesh = MeshManager::createCube();
     }
 };
 
