@@ -12,7 +12,7 @@ namespace black {
         this->currentTarget = target;
     }
 
-    void GLRenderer::render(std::shared_ptr<Mesh> mesh) {
+    void GLRenderer::render(std::shared_ptr<Mesh> mesh, glm::mat4 modelMatrix) {
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
@@ -25,9 +25,13 @@ namespace black {
         // Make the diffuse shader current
         this->diffuseShader->use();
 
+        this->diffuseShader->setUniformVariable("model", modelMatrix);
+        this->diffuseShader->setUniformVariable("view", this->view);
+        this->diffuseShader->setUniformVariable("projection", this->projection);
+
         mesh->bind();
 
-        glDrawArrays(mesh->getDrawMode(), 0, static_cast<GLsizei>(mesh->getVerticesCount()));
+        glDrawArrays(static_cast<GLenum>(mesh->getDrawMode()), 0, static_cast<GLsizei>(mesh->getVerticesCount()));
     }
 
     void GLRenderer::setViewPort(int x, int y, int width, int height) {
@@ -35,9 +39,11 @@ namespace black {
     }
 
     GLRenderer::GLRenderer()
-        : currentTarget() {
+        : currentTarget(), model(1.0f), view(1.0f), projection(1.0f) {
 
         this->logger = Logger::Get("GLRenderer");
+
+        //this->projection = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f, 0.1f, 100.0f);
 
         try {
             createShaders();

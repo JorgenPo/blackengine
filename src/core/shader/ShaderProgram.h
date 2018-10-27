@@ -60,8 +60,8 @@ namespace black {
         virtual void setUniformVariable(const std::string &name, std::array<float, 4> value) = 0;
         virtual void setUniformVariable(const std::string &name, std::array<float, 3> value) = 0;
         virtual void setUniformVariable(const std::string &name, std::array<float, 2> value) = 0;
-        //virtual void setUniformVariable(const std::string &name, glm::mat4 matrix) = 0;
-        //virtual void setUniformVariable(const std::string &name, glm::vec3 vector) = 0;
+        virtual void setUniformVariable(const std::string &name, glm::mat4 matrix) = 0;
+        virtual void setUniformVariable(const std::string &name, glm::vec3 vector) = 0;
 
         const std::shared_ptr<Shader> &getVertexShader() const;
         const std::shared_ptr<Shader> &getFragmentShader() const;

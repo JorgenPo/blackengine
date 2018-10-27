@@ -17,9 +17,14 @@ namespace black {
                 "#version 330 core\n"
                 "layout (location = 0) in vec3 pos;\n"
                 "\n"
+                "uniform mat4 projection;\n"
+                "uniform mat4 view;\n"
+                "uniform mat4 model;\n"
+                ""
+                "\n"
                 "void main()\n"
                 "{\n"
-                "    gl_Position = vec4(pos.x, pos.y, pos.z, 1.0);\n"
+                "    gl_Position = projection * view * model * vec4(pos, 1.0);\n"
                 "}";
 
         /**
