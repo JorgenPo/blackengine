@@ -9,6 +9,7 @@ namespace black {
 
     GameApplication::GameApplication(const std::string &name, int windowWidth, int windowHeight, bool isFullScreen)
         : AbstractApplication(name, windowWidth, windowHeight, isFullScreen) {
+        this->timer = std::make_shared<PerformanceCounter>();
 
         this->setName(std::string("BlackEngine ") + Constants::RuntimePlatformString + " application");
     }
@@ -17,9 +18,12 @@ namespace black {
         this->logger->info("Starting application game loop");
 
         while (!this->window->shouldClose()) {
-            this->update();
+            this->timer->update();
+            this->update(this->timer->getTimeSinceLastUpdate());
             this->window->updateRenderTarget();
             this->window->pollEvents();
+            this->timer->update();
+
         }
 
         this->logger->info("Finishing application game loop");

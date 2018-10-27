@@ -19,6 +19,7 @@ namespace black {
     protected:
         std::shared_ptr<AbstractRenderWindow> window;
         std::shared_ptr<RendererInterface> renderer;
+        std::shared_ptr<PerformanceCounter> timer;
 
     public:
         /**
