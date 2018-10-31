@@ -44,6 +44,10 @@
 
 #include <log/Logger.h>
 #include <performance/PerformanceCounter.h>
+#include <Copyable.h>
+
+#include <util/Strings.h>
+#include <util/Paths.h>
 
 // Matrices
 #include <glm/glm.hpp>
