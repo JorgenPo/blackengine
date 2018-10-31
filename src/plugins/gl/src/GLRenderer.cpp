@@ -15,7 +15,7 @@ namespace black {
         this->view = glm::translate(this->view, glm::vec3(0.0f, 0.0f, -3.0f));
     }
 
-    void GLRenderer::render(std::shared_ptr<Mesh> mesh, glm::mat4 modelMatrix) {
+    void GLRenderer::render(std::shared_ptr<Model> model, glm::mat4 modelMatrix) {
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
@@ -32,9 +32,9 @@ namespace black {
         this->diffuseShader->setUniformVariable("view", this->view);
         this->diffuseShader->setUniformVariable("projection", this->projection);
 
-        mesh->bind();
-
-        glDrawArrays(static_cast<GLenum>(mesh->getDrawMode()), 0, static_cast<GLsizei>(mesh->getVerticesCount()));
+        std::for_each(model->getParts().begin(), model->getParts().end(), [](const auto &part) {
+            glDrawArrays(static_cast<GLenum>(part.mesh->getDrawMode()), 0, static_cast<GLsizei>(part.mesh->getVerticesCount()));
+        });
     }
 
     void GLRenderer::setViewPort(int x, int y, int width, int height) {

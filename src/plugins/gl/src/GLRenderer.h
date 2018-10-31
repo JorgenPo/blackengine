@@ -32,7 +32,7 @@ namespace black {
 
         void setCurrentRenderTarget(std::shared_ptr<RenderTargetInterface> target) override;
 
-        void render(std::shared_ptr<Mesh> mesh, glm::mat4 modelMatrix) override;
+        void render(std::shared_ptr<Model> model, glm::mat4 modelMatrix) override;
 
         void setViewPort(int x, int y, int width, int height) override;
 
