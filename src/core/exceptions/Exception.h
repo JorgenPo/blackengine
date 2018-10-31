@@ -18,7 +18,7 @@ namespace black {
     /**
      * Base class for all Engine exceptions.
      */
-    class BLACK_EXPORTED Exception : std::exception {
+    class BLACK_EXPORTED Exception : public std::exception {
     protected:
         // Underlying string stream for better performance
         std::stringstream message;
