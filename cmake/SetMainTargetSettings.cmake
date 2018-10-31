@@ -1,3 +1,4 @@
+cmake_minimum_required(VERSION 3.12)
 # Setting a main target (Engine) properties
 
 # Remove 'lib' prefix on windows builds

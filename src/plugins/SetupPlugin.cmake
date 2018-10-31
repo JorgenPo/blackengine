@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 3.12)
+
 # Adds a new target with a given plugin
 function(SetupPlugin pluginName)
     project(${pluginName})

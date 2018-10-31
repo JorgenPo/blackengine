@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 3.12)
+
 # GL Plugin
 # Author: george popoff <popoff96@live.com>
 

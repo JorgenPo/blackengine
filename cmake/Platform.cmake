@@ -1,3 +1,4 @@
+cmake_minimum_required(VERSION 3.12)
 # Detecting build system
 
 message(INFO " Size of void is ${CMAKE_SIZEOF_VOID_P}")
