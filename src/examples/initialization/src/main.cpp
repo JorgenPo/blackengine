@@ -5,12 +5,12 @@
 #include <memory>
 #include <Engine.h>
 #include <application/GameApplication.h>
-#include <util/MeshManager.h>
+#include <util/ModelManager.h>
 
 using namespace black;
 
 class BlackEngineApplication : public GameApplication {
-    std::shared_ptr<Mesh> triangleMesh;
+    std::shared_ptr<Model> model;
     glm::mat4 modelMatrix;
     glm::mat4 translation;
     glm::mat4 scale;
@@ -32,11 +32,15 @@ private:
 
         this->modelMatrix = this->translation * this->rotation * this->scale;
 
-        this->renderer->render(this->triangleMesh, this->modelMatrix);
+        this->renderer->render(this->model, this->modelMatrix);
     }
 
     void initializeResources() override {
-        this->triangleMesh = MeshManager::createEquilateralTriangle(0.5f);
+        try {
+            this->model = ModelManager::CreateFromFile("doesnotexist.obj");
+        } catch(const ParseException &e) {
+            throw ApplicationInitializationException("Failed to load model from file: " + e.getMessage());
+        }
     }
 };
 
