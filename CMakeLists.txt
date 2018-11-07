@@ -34,7 +34,7 @@ include(Platform)
 
 message(INFO " Linking with libs: ${LINKLIBS_LIBRARIES}")
 add_library(${PROJECT_NAME} SHARED ${SOURCES} ${PLATFORM_SOURCES})
-target_link_libraries(${PROJECT_NAME} INTERFACE ${LINKLIBS_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} PUBLIC ${LINKLIBS_LIBRARIES})
 
 # Examples
 add_subdirectory(src/examples)

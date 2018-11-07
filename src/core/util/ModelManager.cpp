@@ -3,7 +3,9 @@
 //
 
 #include "ModelManager.h"
+
 #include <memory>
+#include <fstream>
 
 namespace black {
 
@@ -67,6 +69,10 @@ namespace black {
         try {
             auto parser = parsers.at(fileName);
 
+            if (!Paths::IsFileExist(fileName)) {
+                throw FileNotFoundException(fileName);
+            }
+
             parser->parse(fileName);
             model = parser->getModel();
         } catch(const std::out_of_range &e) {
@@ -74,6 +80,10 @@ namespace black {
             throw UnknownFormatException(extension);
         } catch(const ParseException &e) {
             logger->error("Failed to parse model from file '{0}': {1}", fileName, e.getMessage());
+            throw;
+        } catch(const FileNotFoundException &e) {
+            logger->debug("File '{0}' does not exists", fileName);
+            throw;
         }
 
         return model;

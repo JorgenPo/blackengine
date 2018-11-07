@@ -1,10 +1,11 @@
-#include <utility>
-
 //
 // Created by popof on 31.10.2018.
 //
 
 #include "Paths.h"
+#include <memory>
+
+#include <boost/filesystem.hpp>
 
 namespace black {
 
@@ -17,5 +18,9 @@ namespace black {
 
         // Return the last element as an extension
         return splitVector.back();
+    }
+
+    bool Paths::IsFileExist(std::string path) {
+        return boost::filesystem::exists(path);
     }
 }

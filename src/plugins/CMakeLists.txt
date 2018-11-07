@@ -6,3 +6,4 @@ include(SetupPlugin.cmake)
 
 # Add examples
 add_subdirectory(gl)
+add_subdirectory(modelParsers)

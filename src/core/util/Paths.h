@@ -24,6 +24,15 @@ namespace black {
          * @return File extension
          */
         static std::string GetFileExtension(std::string path);
+
+        /**
+         * Check file existing
+         *
+         * @param path Path to the file
+         *
+         * @return Is the file exist
+         */
+        static bool IsFileExist(std::string path);
     };
 
 }

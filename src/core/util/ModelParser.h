@@ -11,7 +11,10 @@
 namespace black {
     class ParseException : public Exception {
     public:
-        explicit ParseException(const std::string &message) : Exception(message) {}
+        explicit ParseException(std::string file, const std::string &message)
+            : Exception(message) {
+            this->message << "Failed to parse " << file << ": " << message << std::endl;
+        }
     };
 
     class WrongModelFormatException : public Exception {
@@ -22,7 +25,7 @@ namespace black {
     /**
      * Abstract class for all model parsers
      */
-    class ModelParser : public Copyable {
+    class ModelParser {
     public:
         /**
          * Parse model file. After this user can retrieve all model components using
@@ -47,6 +50,13 @@ namespace black {
          * @return Parsed model object
          */
         virtual std::shared_ptr<Model> getModel() = 0;
+
+        /**
+         * Return a shared ptr to the model parser of this type
+         *
+         * @return Model parser of this type
+         */
+        virtual std::shared_ptr<ModelParser> copy() = 0;
     };
 }
 

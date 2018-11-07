@@ -19,16 +19,22 @@ find_package(GLFW REQUIRED)
 set(GLAD_INCLUDE_DIRS ${BLACKENGINE_LIBRARY_DIR}/glad/include)
 set(GLAD_SOURCES ${BLACKENGINE_LIBRARY_DIR}/glad/src/glad.c)
 
+# Set to ON to see additional FindBoost log
+set(Boost_DEBUG ON)
+
 if (WIN32)
-    message(INFO " You must mannualy set BOOST_ROOT on windows")
+    message(INFO " You must mannualy set BOOST_ROOT and BOOST_LIBRARYDIR on windows")
     set(BOOST_ROOT "" CACHE PATH "Path to the directory containing boost")
+    set(BOOST_LIBRARYDIR "" CACHE PATH "Path to the directory containing boost built libraryes")
     message(INFO " BOOST_ROOT=" ${BOOST_ROOT})
+    message(INFO " BOOST_LIBRARY_DIR=" ${BOOST_LIBRARYDIR})
 endif(WIN32)
 
-find_package(Boost 1.67.0 REQUIRED)
+find_package(Boost 1.67.0 REQUIRED COMPONENTS filesystem)
 
-message(INFO " BOOST_INCLUDES=" ${Boost_INCLUDE_DIRS})
+message(STATUS "BOOST_INCLUDES=${Boost_INCLUDE_DIR}")
+message(STATUS "BOOST_LIBRARIES=${Boost_LIBRARIES}")
 
-set(LINKLIBS_LIBRARIES ${LINKLIBS_LIBRARIES} ${GLFW_LIBRARIES} ${Boost_LIBRARY_DIR})
+set(LINKLIBS_LIBRARIES ${LINKLIBS_LIBRARIES} ${GLFW_LIBRARIES} ${Boost_LIBRARIES})
 set(LINKLIBS_INCLUDE_DIRS ${LINKLIBS_INCLUDE_DIRS} ${GLFW_INCLUDE_DIRS} ${GLAD_INCLUDE_DIRS} ${Boost_INCLUDE_DIR})
 set(LINKLIBS_SOURCES ${GLAD_SOURCES})
