@@ -27,6 +27,7 @@ function(SetupPlugin pluginName)
     set_target_properties(${pluginName} PROPERTIES INSTALL_RPATH_USE_LINK_PATH TRUE)
 
     install(TARGETS ${pluginName} DESTINATION ${CMAKE_INSTALL_PREFIX}/blackengine/plugins)
+    install(TARGETS ${pluginName} DESTINATION ${CMAKE_INSTALL_PREFIX}/blackengine/examples/plugins)
 
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS OFF)
 endfunction(SetupPlugin)

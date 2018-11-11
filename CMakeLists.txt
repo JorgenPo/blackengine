@@ -26,6 +26,8 @@ file(GLOB SOURCES "${BLACKENGINE_SOURCE_DIR}/*.h" "${BLACKENGINE_SOURCE_DIR}/*.c
 # LINKLIBS_LIBRARIES, LINKLIBS_SOURCES and LINKLIBS_INCLUDE_DIRS
 include(Libraries)
 
+include(Functions)
+
 include_directories(${BLACKENGINE_SOURCE_DIR})
 include_directories(${BLACKENGINE_LIBRARY_DIR})
 include_directories(${LINKLIBS_INCLUDE_DIRS})
