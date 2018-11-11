@@ -24,7 +24,7 @@ namespace black {
             this->window->updateRenderTarget();
             this->window->pollEvents();
             this->timer->update();
-            this->logger->info("Average FPS: {0}", this->timer->getAverageFps());
+            //this->logger->info("Average FPS: {0}", this->timer->getAverageFps());
         }
 
         this->logger->info("Finishing application game loop");

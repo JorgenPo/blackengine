@@ -7,7 +7,7 @@
 namespace black {
 
     void GLMesh::bind() {
-
+        glBindVertexArray(this->vao);
     }
 
     GLMesh::GLMesh(const std::vector<float> &vertices)

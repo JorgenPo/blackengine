@@ -28,7 +28,7 @@ namespace black {
     std::shared_ptr<Model> ModelManager::CreateFromMesh(std::shared_ptr<Mesh> mesh) {
         auto modelPart = ModelPart("Default", mesh, std::make_shared<Material>());
 
-        std::list<ModelPart> parts;
+        std::vector<ModelPart> parts;
         parts.emplace_back(modelPart);
 
         return std::make_shared<Model>(parts);

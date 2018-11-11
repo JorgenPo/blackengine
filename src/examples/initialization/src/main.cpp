@@ -20,24 +20,25 @@ public:
     BlackEngineApplication() : GameApplication(std::string("BlackEngineApplication") + Constants::RuntimePlatformString,
             800, 600, false), modelMatrix(1.0f) {
         this->translation = glm::mat4(1.0f);
-        this->scale = glm::mat4(1.0f);
+        this->scale = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f));
         this->rotation = glm::mat4(1.0f);
     }
 
 private:
     void update(float dt) override {
         //this->translation = glm::translate(this->translation, glm::vec3(0.0000f, 0.0f, 0.00001f));
-        this->scale = glm::scale(this->scale, glm::vec3((1.0f + 0.0001f * dt)));
-        this->rotation = glm::rotate(this->rotation, glm::radians(0.01f), glm::vec3(1.0f, 0.2f, 0.0f));
+        this->scale = glm::scale(this->scale, glm::vec3((1.0f + 0.0005f * dt)));
+        this->rotation = glm::rotate(this->rotation, glm::radians(0.01f), glm::vec3(0.0f, 1.0f, 0.0f));
 
         this->modelMatrix = this->translation * this->rotation * this->scale;
 
         this->renderer->render(this->model, this->modelMatrix);
+
     }
 
     void initializeResources() override {
         //this->model = ModelManager::CreateEquilateralTriangle(0.3f);
-        this->model = ModelManager::CreateFromFile("models/models.obj");
+        this->model = ModelManager::CreateFromFile("models/frog_edited.obj");
         //this->model = ModelManager::CreateFromMesh(fromFile->getPart("Cube").mesh);
     }
 };

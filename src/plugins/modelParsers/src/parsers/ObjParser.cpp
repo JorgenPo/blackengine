@@ -34,7 +34,7 @@ namespace black {
 
         auto defaultMaterial = std::make_shared<Material>();
 
-        auto modelParts = std::list<ModelPart>();
+        auto modelParts = std::vector<ModelPart>();
 
         // Iterate over shapes (model parts)
         for (auto &shape : shapes) {

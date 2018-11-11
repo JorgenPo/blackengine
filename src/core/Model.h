@@ -32,20 +32,20 @@ namespace black {
      * One or more meshes with some material each
      */
     class BLACK_EXPORTED Model {
-        std::list<ModelPart> parts;
+        std::vector<ModelPart> parts;
 
     public:
         /**
          * Construct a model from model parts
          */
-        explicit Model(std::list<ModelPart> parts);
+        explicit Model(std::vector<ModelPart> parts);
 
         /**
          * Return a list of the model parts
          *
          * @return List of model parts
          */
-        const std::list<ModelPart> &getParts() const;
+        const std::vector<ModelPart> &getParts() const;
 
         /**
          * Get the model part with a specific name.

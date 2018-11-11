@@ -8,11 +8,11 @@
 
 namespace black {
 
-    const std::list<ModelPart> &Model::getParts() const {
+    const std::vector<ModelPart> &Model::getParts() const {
         return parts;
     }
 
-    Model::Model(std::list<ModelPart> parts) : parts(std::move(parts)) {
+    Model::Model(std::vector<ModelPart> parts) : parts(std::move(parts)) {
 
     }
 
