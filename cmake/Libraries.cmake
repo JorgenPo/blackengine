@@ -12,7 +12,9 @@ endif(WIN32)
 
 message(STATUS "Searching for GLFW library")
 
-set(GLFW_ROOT "" CACHE PATH "Path to the directory containing glfw")
+if(WIN32)
+    set(GLFW_ROOT "" CACHE PATH "Path to the directory containing glfw")
+endif(WIN32)
 
 find_package(GLFW REQUIRED)
 
@@ -20,7 +22,7 @@ set(GLAD_INCLUDE_DIRS ${BLACKENGINE_LIBRARY_DIR}/glad/include)
 set(GLAD_SOURCES ${BLACKENGINE_LIBRARY_DIR}/glad/src/glad.c)
 
 # Set to ON to see additional FindBoost log
-set(Boost_DEBUG ON)
+set(Boost_DEBUG OFF)
 
 if (WIN32)
     message(INFO " You must mannualy set BOOST_ROOT and BOOST_LIBRARYDIR on windows")
@@ -33,13 +35,16 @@ if (WIN32)
     message(INFO " Using static boost libs")
 endif(WIN32)
 
-
-
 find_package(Boost 1.67.0 REQUIRED COMPONENTS filesystem)
 
 message(STATUS "BOOST_INCLUDES=${Boost_INCLUDE_DIR}")
 message(STATUS "BOOST_LIBRARIES=${Boost_LIBRARIES}")
 
 set(LINKLIBS_LIBRARIES ${LINKLIBS_LIBRARIES} ${GLFW_LIBRARIES} ${Boost_LIBRARIES})
+
+if(UNIX)
+    set(LINKLIBS_LIBRARIES ${LINKLIBS_LIBRARIES} ${CMAKE_DL_LIBS})
+endif()
+
 set(LINKLIBS_INCLUDE_DIRS ${LINKLIBS_INCLUDE_DIRS} ${GLFW_INCLUDE_DIRS} ${GLAD_INCLUDE_DIRS} ${Boost_INCLUDE_DIR})
 set(LINKLIBS_SOURCES ${GLAD_SOURCES})
