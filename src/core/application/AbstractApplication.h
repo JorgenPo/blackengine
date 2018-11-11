@@ -50,7 +50,6 @@ namespace black {
         bool isFullScreen() const;
 
         void setFullScreen(bool isFullScreen);
-
     protected:
         /**
         * Update game logic and scene

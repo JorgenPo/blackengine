@@ -7,6 +7,7 @@
 
 #include <string>
 #include <sstream>
+#include <memory>
 #include <Exported.h>
 
 /**
@@ -18,19 +19,23 @@ namespace black {
     /**
      * Base class for all Engine exceptions.
      */
-    class BLACK_EXPORTED Exception : public std::exception {
+    class BLACK_EXPORTED Exception : public std::exception, std::enable_shared_from_this<Exception> {
     protected:
         // Underlying string stream for better performance
         std::stringstream message;
 
     public:
+        Exception(const Exception &another) {
+            message << another.getMessage();
+        }
+
         explicit Exception() : message() {}
         explicit Exception(const std::string &message) : message() {
             this->message << message;
         }
 
         const char *what() const noexcept override {
-            return message.str().c_str();
+            return this->message.str().c_str();
         }
 
         /**

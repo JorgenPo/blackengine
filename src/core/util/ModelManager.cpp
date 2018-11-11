@@ -67,7 +67,7 @@ namespace black {
 
         std::shared_ptr<Model> model;
         try {
-            auto parser = parsers.at(fileName);
+            auto parser = parsers.at(extension);
 
             if (!Paths::IsFileExist(fileName)) {
                 throw FileNotFoundException(fileName);

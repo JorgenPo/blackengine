@@ -57,10 +57,13 @@ namespace black {
     }
 
     void Engine::initializeEngine() {
+        setTerminateHandler();
+
         logger->trace("Loading core plugins");
 
         try {
             pluginManager->loadPlugin(GL_RENDERER_PLUGIN_NAME);
+            pluginManager->loadPlugin(MODEL_PARSERS_PLUGIN_NAME);
         } catch (const PluginNotFoundException &e) {
             Logger::Get("CoreErr")->critical(e.getMessage());
             throw EngineInitializationException(e.getMessage());
@@ -98,6 +101,26 @@ namespace black {
         // Shutdown plugins when all systems are still on boat
         pluginManager->shutdownPlugins();
         pluginManager->unloadPlugins();
+    }
+
+    void Engine::setTerminateHandler() {
+        std::set_terminate([]() {
+            std::string message("Undefined exception");
+
+            if (auto lastException = std::current_exception()) {
+                try {
+                    std::rethrow_exception(lastException);
+                } catch (const Exception &e) {
+                    message = e.getMessage();
+                } catch (const std::exception &e) {
+                    message = e.what();
+                }
+
+                Logger::Get("Engine")->critical("Program terminated after throwing an exception:\n\t{0}", message);
+            }
+
+            std::abort();
+        });
     }
 
     EngineInitializationException::EngineInitializationException(const std::string &message) : Exception(message) {}

@@ -33,7 +33,6 @@ namespace black {
          * @throws ApplicationInitializationException If failed to init a window
          */
         explicit GameApplication(const std::string &name, int windowWidth, int windowHeight, bool isFullScreen);
-
     private:
         void run() override;
 

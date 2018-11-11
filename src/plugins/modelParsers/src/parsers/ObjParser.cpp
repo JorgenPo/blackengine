@@ -24,7 +24,7 @@ namespace black {
         isParsed = tinyobj::LoadObj(&attributes, &shapes, &materials, &error, file.c_str());
 
         if (isParsed && !error.empty()) {
-            logger->warning("Parsing '{0}' warnings: {1}", file, error);
+            logger->warning("Parsing '{0}' warnings:\n {1}", file, error);
         }
 
         if (!isParsed) {
@@ -47,7 +47,7 @@ namespace black {
             for (auto &faceSize : shape.mesh.num_face_vertices) {
                 // Iterate over vertices in face
                 for (size_t index = 0; index < faceSize; ++index) {
-                    auto idx = shape.mesh.indices[index];
+                    auto idx = shape.mesh.indices[index + indexOffset];
 
                     vertices.push_back(attributes.vertices[3*idx.vertex_index+0]);   // vx
                     vertices.push_back(attributes.vertices[3*idx.vertex_index+1]);   // vy

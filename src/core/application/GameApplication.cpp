@@ -10,6 +10,7 @@ namespace black {
     GameApplication::GameApplication(const std::string &name, int windowWidth, int windowHeight, bool isFullScreen)
         : AbstractApplication(name, windowWidth, windowHeight, isFullScreen) {
         this->timer = std::make_shared<PerformanceCounter>();
+        //this->logger = Logger::Get(name);
 
         this->setName(std::string("BlackEngine ") + Constants::RuntimePlatformString + " application");
     }
@@ -39,6 +40,7 @@ namespace black {
 
             this->renderer = renderSystem->getRenderer();
             this->window = renderSystem->getRenderWindow();
+            this->renderer->setCurrentRenderTarget(window);
         } catch (const Exception &e) {
             throw ApplicationInitializationException(e.getMessage());
         }

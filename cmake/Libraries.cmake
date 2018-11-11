@@ -28,7 +28,12 @@ if (WIN32)
     set(BOOST_LIBRARYDIR "" CACHE PATH "Path to the directory containing boost built libraryes")
     message(INFO " BOOST_ROOT=" ${BOOST_ROOT})
     message(INFO " BOOST_LIBRARY_DIR=" ${BOOST_LIBRARYDIR})
+
+    set(Boost_USE_STATIC_LIBS ON)
+    message(INFO " Using static boost libs")
 endif(WIN32)
+
+
 
 find_package(Boost 1.67.0 REQUIRED COMPONENTS filesystem)
 

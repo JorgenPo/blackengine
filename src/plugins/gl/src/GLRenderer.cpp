@@ -12,7 +12,7 @@ namespace black {
         this->currentTarget = target;
 
         this->projection = glm::perspective(glm::radians(45.0f), this->currentTarget->getRenderTargetAspectRatio(), 0.1f, 100.0f);
-        this->view = glm::translate(this->view, glm::vec3(0.0f, 0.0f, -3.0f));
+        this->view = glm::lookAt(glm::vec3{0.0f, 0.0f, 20.0f}, glm::vec3{0.0f}, glm::vec3{0.0f, 1.0f, 0.0f});
     }
 
     void GLRenderer::render(std::shared_ptr<Model> model, glm::mat4 modelMatrix) {
@@ -32,7 +32,10 @@ namespace black {
         this->diffuseShader->setUniformVariable("view", this->view);
         this->diffuseShader->setUniformVariable("projection", this->projection);
 
-        std::for_each(model->getParts().begin(), model->getParts().end(), [](const auto &part) {
+//        this->view = glm::translate(this->view, glm::vec3(0.0f, 0.0f, 0.0001f));
+
+        std::for_each(model->getParts().begin(), model->getParts().end(), [](const ModelPart &part) {
+            part.mesh->bind();
             glDrawArrays(static_cast<GLenum>(part.mesh->getDrawMode()), 0, static_cast<GLsizei>(part.mesh->getVerticesCount()));
         });
     }

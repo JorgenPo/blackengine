@@ -14,7 +14,7 @@ namespace black {
     }
 
     Mesh::Mesh(std::vector<float> vertices)
-        : vertices(std::move(vertices)), drawMode(DrawMode::TRIANGLES), polygonSize(3) {
+        : vertices(std::move(vertices)), drawMode(DrawMode::TRIANGLE_STRIP), polygonSize(3) {
 
     }
 

@@ -17,6 +17,7 @@ namespace black {
         using RenderSystemMap = std::map<std::string, std::shared_ptr<RenderSystemInterface>>;
 
         static constexpr const char * GL_RENDERER_PLUGIN_NAME = "glPlugin";
+        static constexpr const char * MODEL_PARSERS_PLUGIN_NAME = "modelParsersPlugin";
 
         std::unique_ptr<PluginManager> pluginManager;
         std::shared_ptr<Logger> logger;
@@ -97,6 +98,8 @@ namespace black {
          * Set a default render system. Just took first available.
          */
         void setDefaultRenderSystem();
+
+        void setTerminateHandler();
     };
 }
 
