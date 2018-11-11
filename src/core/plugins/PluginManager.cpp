@@ -32,8 +32,8 @@ namespace black {
 
         /* Linux */
         if (Constants::RuntimePlatform == Platform::LINUX) {
-            this->addPluginDir("/lib64/blackengine/plugins/");
-            this->addPluginDir("/lib/blackengine/plugins/");
+            this->addPluginDir("/usr/lib32/blackengine/plugins/");
+            this->addPluginDir("/usr/lib/blackengine/plugins/");
         }
 
         this->logger = Logger::Get("PluginManager");
