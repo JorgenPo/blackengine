@@ -4,6 +4,7 @@
 
 #include "OpenGLRenderSystem.h"
 #include "GLMesh.h"
+#include "GLTexture.h"
 
 namespace black {
 
@@ -61,8 +62,9 @@ namespace black {
         return this->window;
     }
 
-    std::shared_ptr<Mesh> OpenGLRenderSystem::createMesh(std::vector<float> vertices) {
-        return std::make_shared<GLMesh>(vertices);
+    std::shared_ptr<Mesh> OpenGLRenderSystem::createMesh(
+            std::vector<float> vertices, std::vector<float> textureCoords) {
+        return std::make_shared<GLMesh>(vertices, textureCoords);
     }
 
     std::shared_ptr<Shader> OpenGLRenderSystem::createShader(std::string source, Shader::Type type) {
@@ -77,5 +79,15 @@ namespace black {
     std::string OpenGLRenderSystem::getErrorString(GLenum error) {
         // TODO: make switch
         return std::string(std::to_string(error));
+    }
+
+    std::shared_ptr<Texture>
+    OpenGLRenderSystem::createTexture(const std::shared_ptr<Image> &image, bool generateMipMaps,
+                                      TextureFiltering filtering, TextureWrapping wrapping) {
+        return std::make_shared<GLTexture>(image, generateMipMaps, filtering, wrapping);
+    }
+
+    std::shared_ptr<SystemInterface> OpenGLRenderSystem::getSystemInterface() {
+        return this->window;
     }
 }

@@ -16,15 +16,18 @@ namespace black {
         static constexpr auto SimpleVertex =
                 "#version 330 core\n"
                 "layout (location = 0) in vec3 pos;\n"
+                "layout (location = 1) in vec2 texCoord;\n"
                 "\n"
                 "uniform mat4 projection;\n"
                 "uniform mat4 view;\n"
                 "uniform mat4 model;\n"
-                ""
+                "\n"
+                "out vec2 TexCoord;\n"
                 "\n"
                 "void main()\n"
                 "{\n"
                 "    gl_Position = projection * view * model * vec4(pos, 1.0);\n"
+                "    TexCoord = texCoord;\n"
                 "}";
 
         /**
@@ -34,9 +37,12 @@ namespace black {
                 "#version 330 core\n"
                 "out vec4 FragColor;\n"
                 "\n"
+                "in vec2 TexCoord;\n"
+                "\n"
+                "uniform sampler2D texture;\n"
                 "void main()\n"
                 "{\n"
-                "    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+                "    FragColor = texture(texture, TexCoord);\n"
                 "} ";
 
     public:

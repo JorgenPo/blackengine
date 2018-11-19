@@ -26,6 +26,7 @@ namespace black {
 
         ModelPart(const std::string &name, const std::shared_ptr<Mesh> &mesh,
                   const std::shared_ptr<Material> &material);
+
     };
 
     /**
@@ -45,7 +46,7 @@ namespace black {
          *
          * @return List of model parts
          */
-        const std::vector<ModelPart> &getParts() const;
+        std::vector<ModelPart> &getParts();
 
         /**
          * Get the model part with a specific name.
@@ -54,7 +55,7 @@ namespace black {
          * @return Part of the model corresponding a given name
          * @throws ModelPartNotFoundException If ModelPart with a given name has not been found
          */
-        const ModelPart &getPart(std::string name);
+        ModelPart &getPart(std::string name);
     };
 
 }

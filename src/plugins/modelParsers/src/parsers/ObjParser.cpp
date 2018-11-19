@@ -39,7 +39,9 @@ namespace black {
         // Iterate over shapes (model parts)
         for (auto &shape : shapes) {
             auto vertices = std::vector<float>();
+            auto textureCoords = std::vector<float>();
             vertices.reserve(shape.mesh.indices.size());
+            textureCoords.reserve(shape.mesh.indices.size());
 
             size_t indexOffset = 0;
 
@@ -52,12 +54,14 @@ namespace black {
                     vertices.push_back(attributes.vertices[3*idx.vertex_index+0]);   // vx
                     vertices.push_back(attributes.vertices[3*idx.vertex_index+1]);   // vy
                     vertices.push_back(attributes.vertices[3*idx.vertex_index+2]);   // vz
-                }
+                    textureCoords.push_back(attributes.texcoords[2*idx.texcoord_index+0]);   // tx
+                    textureCoords.push_back(attributes.texcoords[2*idx.texcoord_index+1]);   // ty
 
+                }
                 indexOffset += faceSize;
             }
 
-            auto mesh = Engine::GetCurrentRenderSystem()->createMesh(vertices);
+            auto mesh = Engine::GetCurrentRenderSystem()->createMesh(vertices, textureCoords);
             modelParts.emplace_back(shape.name, mesh, defaultMaterial);
         }
 

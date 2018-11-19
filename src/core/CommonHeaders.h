@@ -41,12 +41,15 @@
 #include <exceptions/Exception.h>
 
 #include <Types.h>
+#include <Color.h>
 
 #include <log/Logger.h>
 #include <performance/PerformanceCounter.h>
 
 #include <util/Strings.h>
 #include <util/Paths.h>
+
+#include <input/SystemInterface.h>
 
 // Matrices
 #include <glm/glm.hpp>

@@ -3,3 +3,9 @@
 //
 
 #include "Material.h"
+
+namespace black {
+
+    Material::Material(const std::shared_ptr<Texture> &texture) : texture(texture) {}
+    Material::Material() {}
+}

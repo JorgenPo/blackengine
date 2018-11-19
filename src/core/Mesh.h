@@ -14,14 +14,18 @@ namespace black {
     class BLACK_EXPORTED Mesh {
     protected:
         std::vector<float> vertices;
+        std::vector<float> textureCoords;
+
         DrawMode drawMode;
         int polygonSize;
 
     public:
-        Mesh(std::vector<float> vertices);
+        Mesh(std::vector<float> vertices, std::vector<float> textureCoords);
 
         // Getters setters
         const std::vector<float> &getVertices() const;
+
+        const std::vector<float> &getTextureCoords() const;
 
         int getPolygonSize() const;
         void setPolygonSize(int polygonSize);

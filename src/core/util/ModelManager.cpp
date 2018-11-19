@@ -20,6 +20,12 @@ namespace black {
             halfSide, -halfSide, 0.0f,
             -halfSide, halfSide, 0.0f,
             -halfSide, -halfSide, 0.0f,
+            halfSide, -halfSide, 0.0f,}, {
+            halfSide, halfSide, 0.0f,
+            -halfSide, halfSide, 0.0f,
+            halfSide, -halfSide, 0.0f,
+            -halfSide, halfSide, 0.0f,
+            -halfSide, -halfSide, 0.0f,
             halfSide, -halfSide, 0.0f,});
 
         return ModelManager::CreateFromMesh(mesh);
@@ -40,6 +46,9 @@ namespace black {
         auto mesh = Engine::GetCurrentRenderSystem()->createMesh({
             0.0f, halfSide, 0.0f,
             -halfSide, -halfSide, 0.0f,
+            halfSide, -halfSide, 0.0f, },{
+            0.0f, halfSide, 0.0f,
+            -halfSide, -halfSide, 0.0f,
             halfSide, -halfSide, 0.0f, });
 
         return ModelManager::CreateFromMesh(mesh);
@@ -50,6 +59,13 @@ namespace black {
         const auto halfB = b / 2;
 
         auto mesh = Engine::GetCurrentRenderSystem()->createMesh({
+            halfA, halfB, 0.0f,
+            -halfA, halfB, 0.0f,
+            halfA, -halfB, 0.0f,
+            -halfA, halfB, 0.0f,
+            -halfA, -halfB, 0.0f,
+            halfA, -halfB, 0.0f,
+        },{
             halfA, halfB, 0.0f,
             -halfA, halfB, 0.0f,
             halfA, -halfB, 0.0f,

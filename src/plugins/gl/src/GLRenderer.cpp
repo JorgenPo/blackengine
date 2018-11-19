@@ -10,14 +10,11 @@ namespace black {
 
     void GLRenderer::setCurrentRenderTarget(std::shared_ptr<RenderTargetInterface> target) {
         this->currentTarget = target;
-
-        this->projection = glm::perspective(glm::radians(45.0f), this->currentTarget->getRenderTargetAspectRatio(), 0.1f, 100.0f);
-        this->view = glm::lookAt(glm::vec3{0.0f, 0.0f, 20.0f}, glm::vec3{0.0f}, glm::vec3{0.0f, 1.0f, 0.0f});
     }
 
-    void GLRenderer::render(std::shared_ptr<Model> model, glm::mat4 modelMatrix) {
+    void GLRenderer::render(std::shared_ptr<Model> model, glm::mat4 modelMatrix, std::shared_ptr<Camera> camera) {
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         auto lastError = glGetError();
 
@@ -29,15 +26,22 @@ namespace black {
         this->diffuseShader->use();
 
         this->diffuseShader->setUniformVariable("model", modelMatrix);
-        this->diffuseShader->setUniformVariable("view", this->view);
-        this->diffuseShader->setUniformVariable("projection", this->projection);
+        this->diffuseShader->setUniformVariable("view", camera->getViewMatrix());
+        this->diffuseShader->setUniformVariable("projection", camera->getProjectionMatrix());
 
-//        this->view = glm::translate(this->view, glm::vec3(0.0f, 0.0f, 0.0001f));
-
-        std::for_each(model->getParts().begin(), model->getParts().end(), [](const ModelPart &part) {
+        for (const auto &part : model->getParts()) {
             part.mesh->bind();
+
+            if (part.material->texture != nullptr) {
+                part.material->texture->bind();
+            }
+
             glDrawArrays(static_cast<GLenum>(part.mesh->getDrawMode()), 0, static_cast<GLsizei>(part.mesh->getVerticesCount()));
-        });
+
+            if (part.material->texture != nullptr) {
+                part.material->texture->unbind();
+            }
+        }
     }
 
     void GLRenderer::setViewPort(int x, int y, int width, int height) {
@@ -45,11 +49,9 @@ namespace black {
     }
 
     GLRenderer::GLRenderer()
-        : currentTarget(), model(1.0f), view(1.0f), projection(1.0f) {
+        : currentTarget(), model(1.0f) {
 
         this->logger = Logger::Get("GLRenderer");
-
-        //this->projection = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f, 0.1f, 100.0f);
 
         try {
             createShaders();
@@ -57,6 +59,9 @@ namespace black {
             logger->critical("Failed to create shader programs: " + e.getMessage());
             throw RendererInitializationException("Failed to compile shaders: " + e.getMessage());
         }
+
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_CW);
     }
 
     void GLRenderer::createShaders() {
@@ -70,5 +75,7 @@ namespace black {
         this->diffuseShader->setFragmentShader(fragmentShader);
         this->diffuseShader->setVertexShader(vertexShader);
         this->diffuseShader->link();
+
+        glEnable(GL_DEPTH_TEST);
     }
 }

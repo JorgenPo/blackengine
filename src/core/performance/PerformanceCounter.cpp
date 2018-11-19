@@ -17,6 +17,7 @@ namespace black {
 
         if (firstTime) {
             this->lastTime = std::chrono::high_resolution_clock::now();
+            this->startTime = std::chrono::high_resolution_clock::now();
         }
 
         auto now = std::chrono::high_resolution_clock::now();
@@ -65,5 +66,12 @@ namespace black {
 
     float PerformanceCounter::getTimeSinceLastUpdate() const {
         return this->delta;
+    }
+
+    long long int PerformanceCounter::getUptime() const {
+        auto now = std::chrono::high_resolution_clock::now();
+
+        return std::chrono::duration_cast<std::chrono::milliseconds>
+                (now - this->startTime).count();
     }
 }

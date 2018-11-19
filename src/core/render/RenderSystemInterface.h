@@ -9,9 +9,11 @@
 #include <Mesh.h>
 #include <shader/Shader.h>
 #include <shader/ShaderProgram.h>
+#include <input/SystemInterface.h>
 
 #include "RendererInterface.h"
 #include "AbstractRenderWindow.h"
+
 
 namespace black {
 
@@ -57,16 +59,27 @@ namespace black {
          */
         virtual std::shared_ptr<AbstractRenderWindow> getRenderWindow() = 0;
 
+
+        /**
+         * Return a pointer to the System Interface
+         * @return System interface pointer
+         */
+        virtual std::shared_ptr<SystemInterface> getSystemInterface() = 0;
+
         /**
          * Create a mesh
          *
          * @return Pointer to the created mesh
          */
-        virtual std::shared_ptr<Mesh> createMesh(std::vector<float> vertices) = 0;
+        virtual std::shared_ptr<Mesh> createMesh(std::vector<float> vertices, std::vector<float> textureCoords) = 0;
 
         virtual std::shared_ptr<Shader> createShader(std::string source, Shader::Type type) = 0;
         virtual std::shared_ptr<ShaderProgram> createShaderProgram(std::shared_ptr<Shader> vertexShader,
                 std::shared_ptr<Shader> fragmentShader) = 0;
+
+        virtual std::shared_ptr<Texture> createTexture(const std::shared_ptr<Image> &image, bool generateMipMaps = true,
+                                               TextureFiltering filtering = TextureFiltering::NEAREST,
+                                               TextureWrapping wrapping = TextureWrapping::CLAMP_TO_BORDER) = 0;
     };
 }
 

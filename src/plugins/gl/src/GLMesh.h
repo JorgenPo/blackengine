@@ -16,10 +16,11 @@ namespace black {
      */
     class GLMesh : public Mesh {
         GLuint positionVbo;
+        GLuint textureVbo;
         GLuint vao;
 
     public:
-        explicit GLMesh(const std::vector<float> &vertices);
+        explicit GLMesh(std::vector<float> vertices, std::vector<float> textureCoords);
 
         void bind() override;
 

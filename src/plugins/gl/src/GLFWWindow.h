@@ -8,9 +8,10 @@
 #include "OpenGLCommonHeaders.h"
 
 #include <render/AbstractRenderWindow.h>
+#include <input/SystemInterface.h>
 
 namespace black {
-    class GLFWWindow : public AbstractRenderWindow {
+    class GLFWWindow : public AbstractRenderWindow, public SystemInterface {
         std::unique_ptr<GLFWwindow, void(*)(GLFWwindow * )> window;
 
         bool isWindowShown;
@@ -26,26 +27,22 @@ namespace black {
 
         // RenderTargetInterface
         void updateRenderTarget() override;
-
         void setRenderTargetCurrent() override;
-
         float getRenderTargetWidth() override;
-
         float getRenderTargetHeight() override;
-
         float getRenderTargetAspectRatio() override;
 
         // AbstractRenderWindow Interface
 
         void show() override;
-
         void hide() override;
-
         bool isShown() override;
-
         bool shouldClose() override;
-
         void pollEvents() override;
+
+        // SystemInterface
+        bool isKeyPressed(Key key) override;
+        bool isKeyPressed(int key) override;
     };
 }
 

@@ -21,6 +21,7 @@ namespace black {
         size_t measurements;
 
         std::chrono::time_point<std::chrono::high_resolution_clock> lastTime;
+        std::chrono::time_point<std::chrono::high_resolution_clock> startTime;
     public:
         PerformanceCounter();
 
@@ -37,6 +38,12 @@ namespace black {
         float getAverageFps() const;
         float getMinFps() const;
         float getMaxFps() const;
+
+        /**
+         * Return a time since first update
+         * @return An uptime
+         */
+        long long int getUptime() const;
 
         float getTimeSinceLastUpdate() const;
     };

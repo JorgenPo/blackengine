@@ -17,6 +17,10 @@ namespace black {
         }
 
         this->window = std::unique_ptr<GLFWwindow, void(*)(GLFWwindow * )>(glfwWindow, glfwDestroyWindow);
+
+        glfwSetFramebufferSizeCallback(this->window.get(), [](GLFWwindow *window, int width, int height) {
+            glViewport(0, 0, width, height);
+        });
     }
 
     void GLFWWindow::updateRenderTarget() {
@@ -59,5 +63,13 @@ namespace black {
 
     void GLFWWindow::pollEvents() {
         glfwPollEvents();
+    }
+
+    bool GLFWWindow::isKeyPressed(Key key) {
+        return glfwGetKey(this->window.get(), static_cast<int>(key)) == GLFW_PRESS;
+    }
+
+    bool GLFWWindow::isKeyPressed(int key) {
+        return glfwGetKey(this->window.get(), key) == GLFW_PRESS;
     }
 }

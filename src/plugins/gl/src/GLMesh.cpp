@@ -10,10 +10,11 @@ namespace black {
         glBindVertexArray(this->vao);
     }
 
-    GLMesh::GLMesh(const std::vector<float> &vertices)
-        : Mesh(vertices) {
+    GLMesh::GLMesh(std::vector<float> vertices, std::vector<float> textureCoords)
+        : Mesh(std::move(vertices), std::move(textureCoords)) {
 
         glGenBuffers(1, &this->positionVbo);
+        glGenBuffers(1, &this->textureVbo);
         glGenVertexArrays(1, &this->vao);
 
         createMesh();
@@ -28,6 +29,13 @@ namespace black {
 
         glVertexAttribPointer(0, this->polygonSize, GL_FLOAT, GL_FALSE, this->polygonSize * sizeof(float), nullptr);
         glEnableVertexAttribArray(0);
+
+        // Texture coords
+        glBindBuffer(GL_ARRAY_BUFFER, this->textureVbo);
+        glBufferData(GL_ARRAY_BUFFER, this->textureCoords.size() * sizeof(float), this->textureCoords.data(), GL_STATIC_DRAW);
+
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), nullptr);
+        glEnableVertexAttribArray(1);
     }
 
     int GLMesh::getDrawMode() const {

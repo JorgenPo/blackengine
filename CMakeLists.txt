@@ -12,16 +12,6 @@ set(BLACKENGINE_TARGET ${PROJECT_NAME})
 set(BLACKENGINE_SOURCE_DIR ${CMAKE_SOURCE_DIR}/src/core)
 set(BLACKENGINE_LIBRARY_DIR ${CMAKE_SOURCE_DIR}/src/libs)
 
-file(GLOB SOURCES "${BLACKENGINE_SOURCE_DIR}/*.h" "${BLACKENGINE_SOURCE_DIR}/*.cpp"
-        "${BLACKENGINE_SOURCE_DIR}/exceptions/*.h" "${BLACKENGINE_SOURCE_DIR}/exceptions/*.cpp"
-        "${BLACKENGINE_SOURCE_DIR}/log/*.h" "${BLACKENGINE_SOURCE_DIR}/log/*.cpp"
-        "${BLACKENGINE_SOURCE_DIR}/plugins/*.h" "${BLACKENGINE_SOURCE_DIR}/plugins/*.cpp"
-        "${BLACKENGINE_SOURCE_DIR}/application/*.h" "${BLACKENGINE_SOURCE_DIR}/application/*.cpp"
-        "${BLACKENGINE_SOURCE_DIR}/util/*.h" "${BLACKENGINE_SOURCE_DIR}/util/*.cpp"
-        "${BLACKENGINE_SOURCE_DIR}/shader/*.h" "${BLACKENGINE_SOURCE_DIR}/shader/*.cpp"
-        "${BLACKENGINE_SOURCE_DIR}/performance/*.h" "${BLACKENGINE_SOURCE_DIR}/performance/*.cpp"
-        "${BLACKENGINE_SOURCE_DIR}/render/*.h" "${BLACKENGINE_SOURCE_DIR}/render/*.cpp")
-
 # Link with appropriate libraries
 # LINKLIBS_LIBRARIES, LINKLIBS_SOURCES and LINKLIBS_INCLUDE_DIRS
 include(Libraries)
@@ -33,6 +23,14 @@ include_directories(${BLACKENGINE_LIBRARY_DIR})
 include_directories(${LINKLIBS_INCLUDE_DIRS})
 
 include(Platform)
+
+file(GLOB_RECURSE SOURCES "${BLACKENGINE_SOURCE_DIR}/*.h" "${BLACKENGINE_SOURCE_DIR}/*.cpp")
+
+list(FILTER SOURCES EXCLUDE REGEX "(.*)windows(.*)")
+list(FILTER SOURCES EXCLUDE REGEX "(.*)linux(.*)")
+list(FILTER SOURCES EXCLUDE REGEX "(.*)macos(.*)")
+
+set(SOURCES ${SOURCES} ${PLATFORM_SOURCES})
 
 message(INFO " Linking with libs: ${LINKLIBS_LIBRARIES}")
 add_library(${PROJECT_NAME} SHARED ${SOURCES} ${PLATFORM_SOURCES})

@@ -8,7 +8,7 @@
 
 namespace black {
 
-    const std::vector<ModelPart> &Model::getParts() const {
+    std::vector<ModelPart> &Model::getParts() {
         return parts;
     }
 
@@ -16,7 +16,7 @@ namespace black {
 
     }
 
-    const ModelPart &Model::getPart(std::string name) {
+    ModelPart &Model::getPart(std::string name) {
         auto foundPart = std::find_if(this->parts.begin(), this->parts.end(), [name](const auto &part) {
             return part.name == name;
         });

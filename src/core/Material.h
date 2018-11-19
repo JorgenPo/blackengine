@@ -6,13 +6,20 @@
 #define BLACKENGINE_MATERIAL_H
 
 #include <CommonHeaders.h>
+#include <Texture.h>
 
-/**
- * Some shader information about concrete material.
- */
-class BLACK_EXPORTED Material {
+namespace black {
+    /**
+     * Some shader information about concrete material.
+     */
+    struct BLACK_EXPORTED Material {
+        std::shared_ptr<Texture> texture;
 
-};
+        Material(const std::shared_ptr<Texture> &texture);
 
+        Material();
+    };
+
+}
 
 #endif //BLACKENGINE_MATERIAL_H

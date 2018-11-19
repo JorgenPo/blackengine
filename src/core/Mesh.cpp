@@ -13,8 +13,9 @@ namespace black {
         return polygonSize;
     }
 
-    Mesh::Mesh(std::vector<float> vertices)
-        : vertices(std::move(vertices)), drawMode(DrawMode::TRIANGLES), polygonSize(3) {
+    Mesh::Mesh(std::vector<float> vertices, std::vector<float> textureCoords)
+        : vertices(std::move(vertices)), textureCoords(std::move(textureCoords)),
+        drawMode(DrawMode::TRIANGLES), polygonSize(3) {
 
     }
 
@@ -32,5 +33,9 @@ namespace black {
 
     size_t Mesh::getVerticesCount() {
         return this->vertices.size() / this->polygonSize;
+    }
+
+    const std::vector<float> &Mesh::getTextureCoords() const {
+        return textureCoords;
     }
 }
