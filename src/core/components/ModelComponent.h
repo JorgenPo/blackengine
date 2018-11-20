@@ -9,6 +9,8 @@
 #include <render/Mesh.h>
 #include <render/Material.h>
 
+#include "Component.h"
+
 namespace black {
 
     class BLACK_EXPORTED ModelPartNotFoundException : public Exception {
@@ -32,14 +34,16 @@ namespace black {
     /**
      * One or more meshes with some material each
      */
-    class BLACK_EXPORTED Model {
+    class BLACK_EXPORTED ModelComponent : public Component {
         std::vector<ModelPart> parts;
 
     public:
+        static std::string GetName();
+
         /**
          * Construct a model from model parts
          */
-        explicit Model(std::vector<ModelPart> parts);
+        explicit ModelComponent(std::vector<ModelPart> parts);
 
         /**
          * Return a list of the model parts

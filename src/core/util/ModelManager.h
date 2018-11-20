@@ -27,11 +27,11 @@ namespace black {
         static std::unordered_map<std::string, std::shared_ptr<ModelParser>> parsers;
 
     public:
-        static std::shared_ptr<Model> CreateSquare(float sideSize);
+        static std::shared_ptr<ModelComponent> CreateSquare(float sideSize);
 
-        static std::shared_ptr<Model> CreateEquilateralTriangle(float sideSize);
+        static std::shared_ptr<ModelComponent> CreateEquilateralTriangle(float sideSize);
 
-        static std::shared_ptr<Model> CreateRectangle(float a, float b);
+        static std::shared_ptr<ModelComponent> CreateRectangle(float a, float b);
 
         /**
          * Creates a model from a given file name.
@@ -42,7 +42,7 @@ namespace black {
          *
          * @throws UnknownFormatException If no appropriate model parser was found for this model type
          */
-        static std::shared_ptr<Model> CreateFromFile(std::string fileName);
+        static std::shared_ptr<ModelComponent> CreateFromFile(std::string fileName);
 
         /**
          * Creates a model from a single mesh using default material.
@@ -50,7 +50,7 @@ namespace black {
          * @param mesh Mesh to be added to model
          * @return Model of the mesh
          */
-        static std::shared_ptr<Model> CreateFromMesh(std::shared_ptr<Mesh> mesh);
+        static std::shared_ptr<ModelComponent> CreateFromMesh(std::shared_ptr<Mesh> mesh);
 
         /**
          * Add model parser for a given extension.

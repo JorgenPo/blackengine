@@ -12,7 +12,7 @@ namespace black {
 
     class ObjParser : public ModelParser {
         bool isObjParsed;
-        std::shared_ptr<Model> model;
+        std::shared_ptr<ModelComponent> model;
 
     public:
         ObjParser();
@@ -23,7 +23,7 @@ namespace black {
 
         bool isParsed() override;
 
-        std::shared_ptr<Model> getModel() override;
+        std::shared_ptr<ModelComponent> getModel() override;
     };
 }
 

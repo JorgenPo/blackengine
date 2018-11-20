@@ -65,7 +65,7 @@ namespace black {
             modelParts.emplace_back(shape.name, mesh, defaultMaterial);
         }
 
-        this->model = std::make_shared<Model>(modelParts);
+        this->model = std::make_shared<ModelComponent>(modelParts);
         this->isObjParsed = true;
     }
 
@@ -73,7 +73,7 @@ namespace black {
         return isObjParsed;
     }
 
-    std::shared_ptr<Model> ObjParser::getModel() {
+    std::shared_ptr<ModelComponent> ObjParser::getModel() {
         return this->model;
     }
 

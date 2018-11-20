@@ -6,13 +6,16 @@
 #include "GLSLShader.h"
 #include "OpenGLRenderSystem.h"
 
+#include <GameEntity.h>
+#include <components/ModelComponent.h>
+
 namespace black {
 
     void GLRenderer::setCurrentRenderTarget(std::shared_ptr<RenderTargetInterface> target) {
         this->currentTarget = target;
     }
 
-    void GLRenderer::render(std::shared_ptr<Model> model, glm::mat4 modelMatrix, std::shared_ptr<Camera> camera) {
+    void GLRenderer::render(std::shared_ptr<GameEntity> object, std::shared_ptr<Camera> camera) {
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -25,11 +28,17 @@ namespace black {
         // Make the diffuse shader current
         this->diffuseShader->use();
 
-        this->diffuseShader->setUniformVariable("model", modelMatrix);
+        this->diffuseShader->setUniformVariable("model", object->transform->getModelMatrix());
         this->diffuseShader->setUniformVariable("view", camera->getViewMatrix());
         this->diffuseShader->setUniformVariable("projection", camera->getProjectionMatrix());
 
-        for (const auto &part : model->getParts()) {
+        auto modelComponent = object->get<ModelComponent>();
+        if (modelComponent == nullptr) {
+            return;
+        }
+
+
+        for (const auto &part : modelComponent->getParts()) {
             part.mesh->bind();
 
             if (part.material->texture != nullptr) {

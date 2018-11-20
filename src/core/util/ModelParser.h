@@ -6,7 +6,7 @@
 #define BLACKENGINE_MODELPARSER_H
 
 #include <CommonHeaders.h>
-#include <render/Model.h>
+#include <components/ModelComponent.h>
 
 namespace black {
     class ParseException : public Exception {
@@ -49,7 +49,7 @@ namespace black {
          *
          * @return Parsed model object
          */
-        virtual std::shared_ptr<Model> getModel() = 0;
+        virtual std::shared_ptr<ModelComponent> getModel() = 0;
 
         /**
          * Return a shared ptr to the model parser of this type

@@ -11,7 +11,7 @@ namespace black {
 
     std::unordered_map<std::string, std::shared_ptr<ModelParser>> ModelManager::parsers;
 
-    std::shared_ptr<Model> ModelManager::CreateSquare(float sideSize) {
+    std::shared_ptr<ModelComponent> ModelManager::CreateSquare(float sideSize) {
         const auto halfSide = sideSize / 2;
 
         auto mesh = Engine::GetCurrentRenderSystem()->createMesh({
@@ -31,16 +31,16 @@ namespace black {
         return ModelManager::CreateFromMesh(mesh);
     }
 
-    std::shared_ptr<Model> ModelManager::CreateFromMesh(std::shared_ptr<Mesh> mesh) {
+    std::shared_ptr<ModelComponent> ModelManager::CreateFromMesh(std::shared_ptr<Mesh> mesh) {
         auto modelPart = ModelPart("Default", mesh, std::make_shared<Material>());
 
         std::vector<ModelPart> parts;
         parts.emplace_back(modelPart);
 
-        return std::make_shared<Model>(parts);
+        return std::make_shared<ModelComponent>(parts);
     }
 
-    std::shared_ptr<Model> ModelManager::CreateEquilateralTriangle(float sideSize) {
+    std::shared_ptr<ModelComponent> ModelManager::CreateEquilateralTriangle(float sideSize) {
         const auto halfSide = sideSize / 2;
 
         auto mesh = Engine::GetCurrentRenderSystem()->createMesh({
@@ -54,7 +54,7 @@ namespace black {
         return ModelManager::CreateFromMesh(mesh);
     }
 
-    std::shared_ptr<Model> ModelManager::CreateRectangle(float a, float b) {
+    std::shared_ptr<ModelComponent> ModelManager::CreateRectangle(float a, float b) {
         const auto halfA = a / 2;
         const auto halfB = b / 2;
 
@@ -77,11 +77,11 @@ namespace black {
         return ModelManager::CreateFromMesh(mesh);
     }
 
-    std::shared_ptr<Model> ModelManager::CreateFromFile(std::string fileName) {
+    std::shared_ptr<ModelComponent> ModelManager::CreateFromFile(std::string fileName) {
         auto extension = Paths::GetFileExtension(fileName);
         auto logger = Logger::Get("ModelManager");
 
-        std::shared_ptr<Model> model;
+        std::shared_ptr<ModelComponent> model;
         try {
             auto parser = parsers.at(extension);
 

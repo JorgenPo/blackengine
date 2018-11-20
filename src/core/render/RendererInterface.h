@@ -6,8 +6,9 @@
 #define BLACKENGINE_RENDERERINTERFACE_H
 
 #include <CommonHeaders.h>
-#include <render/Model.h>
+#include <components/ModelComponent.h>
 #include <Camera.h>
+#include <GameEntity.h>
 
 #include "RenderTargetInterface.h"
 
@@ -24,7 +25,7 @@ namespace black {
         /**
          * Renders a next frame
          */
-        virtual void render(std::shared_ptr<Model> model, glm::mat4 modelMatrix, std::shared_ptr<Camera> camera) = 0;
+        virtual void render(std::shared_ptr<GameEntity> object, std::shared_ptr<Camera> camera) = 0;
 
         /**
          * Set renderer viewport so all rendering will be in this bounds.

@@ -28,8 +28,7 @@ namespace black {
 
         void setCurrentRenderTarget(std::shared_ptr<RenderTargetInterface> target) override;
 
-        void render(std::shared_ptr<Model> model, glm::mat4 modelMatrix,
-                std::shared_ptr<Camera> camera) override;
+        void render(std::shared_ptr<GameEntity> object, std::shared_ptr<Camera> camera) override;
 
         void setViewPort(int x, int y, int width, int height) override;
 

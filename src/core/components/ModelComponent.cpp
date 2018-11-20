@@ -4,19 +4,22 @@
 // Created by popof on 28.10.2018.
 //
 
-#include "Model.h"
+#include "ModelComponent.h"
 
 namespace black {
 
-    std::vector<ModelPart> &Model::getParts() {
+    std::string ModelComponent::GetName() {
+        return "ModelComponent";
+    }
+
+    std::vector<ModelPart> &ModelComponent::getParts() {
         return parts;
     }
 
-    Model::Model(std::vector<ModelPart> parts) : parts(std::move(parts)) {
-
+    ModelComponent::ModelComponent(std::vector<ModelPart> parts) : parts(std::move(parts)) {
     }
 
-    ModelPart &Model::getPart(std::string name) {
+    ModelPart &ModelComponent::getPart(std::string name) {
         auto foundPart = std::find_if(this->parts.begin(), this->parts.end(), [name](const auto &part) {
             return part.name == name;
         });
