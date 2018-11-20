@@ -6,7 +6,7 @@
 #define BLACKENGINE_RENDERERINTERFACE_H
 
 #include <CommonHeaders.h>
-#include <Model.h>
+#include <render/Model.h>
 #include <Camera.h>
 
 #include "RenderTargetInterface.h"

@@ -6,7 +6,7 @@
 #define BLACKENGINE_RENDERSYSTEMINTERFACE_H
 
 #include <CommonHeaders.h>
-#include <Mesh.h>
+#include <render/Mesh.h>
 #include <shader/Shader.h>
 #include <shader/ShaderProgram.h>
 #include <input/SystemInterface.h>

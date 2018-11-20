@@ -6,7 +6,7 @@
 #define BLACKENGINE_MODELPARSER_H
 
 #include <CommonHeaders.h>
-#include <Model.h>
+#include <render/Model.h>
 
 namespace black {
     class ParseException : public Exception {

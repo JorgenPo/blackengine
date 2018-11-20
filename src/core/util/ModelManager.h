@@ -7,7 +7,7 @@
 
 #include <CommonHeaders.h>
 #include <Engine.h>
-#include <Mesh.h>
+#include <render/Mesh.h>
 #include <util/ModelParser.h>
 
 namespace black {

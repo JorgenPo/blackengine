@@ -6,8 +6,8 @@
 #define BLACKENGINE_MODEL_H
 
 #include <CommonHeaders.h>
-#include <Mesh.h>
-#include <Material.h>
+#include <render/Mesh.h>
+#include <render/Material.h>
 
 namespace black {
 

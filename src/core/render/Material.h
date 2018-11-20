@@ -6,7 +6,7 @@
 #define BLACKENGINE_MATERIAL_H
 
 #include <CommonHeaders.h>
-#include <Texture.h>
+#include <render/Texture.h>
 
 namespace black {
     /**

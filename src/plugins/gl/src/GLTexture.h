@@ -7,7 +7,7 @@
 
 #include "OpenGLCommonHeaders.h"
 #include <CommonHeaders.h>
-#include <Texture.h>
+#include <render/Texture.h>
 
 namespace black {
     class GLTexture : public Texture {

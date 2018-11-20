@@ -6,7 +6,7 @@
 #define BLACKENGINE_GLMESH_H
 
 #include <CommonHeaders.h>
-#include <Mesh.h>
+#include <render/Mesh.h>
 
 #include "OpenGLCommonHeaders.h"
 
