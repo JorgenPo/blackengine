@@ -10,7 +10,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 # Name of the main target to use in sub projects
 set(BLACKENGINE_TARGET ${PROJECT_NAME})
 set(BLACKENGINE_SOURCE_DIR ${CMAKE_SOURCE_DIR}/src/core)
-set(BLACKENGINE_LIBRARY_DIR ${CMAKE_SOURCE_DIR}/src/libs)
+set(BLACKENGINE_LIBRARY_DIR ${CMAKE_SOURCE_DIR}/libs)
 
 # Link with appropriate libraries
 # LINKLIBS_LIBRARIES, LINKLIBS_SOURCES and LINKLIBS_INCLUDE_DIRS
@@ -19,7 +19,7 @@ include(Libraries)
 include(Functions)
 
 include_directories(${BLACKENGINE_SOURCE_DIR})
-include_directories(${BLACKENGINE_LIBRARY_DIR})
+include_directories(${BLACKENGINE_LIBRARY_DIR}/glad/include ${BLACKENGINE_LIBRARY_DIR})
 include_directories(${LINKLIBS_INCLUDE_DIRS})
 
 include(Platform)
@@ -30,11 +30,11 @@ list(FILTER SOURCES EXCLUDE REGEX "(.*)windows(.*)")
 list(FILTER SOURCES EXCLUDE REGEX "(.*)linux(.*)")
 list(FILTER SOURCES EXCLUDE REGEX "(.*)macos(.*)")
 
-set(SOURCES ${SOURCES} ${PLATFORM_SOURCES})
+set(SOURCES ${SOURCES} ${PLATFORM_SOURCES} ${LINKLIBS_SOURCES})
 
 message(INFO " Linking with libs: ${LINKLIBS_LIBRARIES}")
-add_library(${PROJECT_NAME} SHARED ${SOURCES} ${PLATFORM_SOURCES})
-target_link_libraries(${PROJECT_NAME} PUBLIC ${LINKLIBS_LIBRARIES})
+add_library(${PROJECT_NAME} SHARED ${SOURCES})
+target_link_libraries(${PROJECT_NAME} PRIVATE ${LINKLIBS_LIBRARIES})
 
 # Examples
 add_subdirectory(src/examples)

@@ -39,10 +39,10 @@ namespace black {
                 "\n"
                 "in vec2 TexCoord;\n"
                 "\n"
-                "uniform sampler2D texture;\n"
+                "uniform sampler2D diffuse;\n"
                 "void main()\n"
                 "{\n"
-                "    FragColor = texture(texture, TexCoord);\n"
+                "    FragColor = texture(diffuse, TexCoord);\n"
                 "} ";
 
     public:

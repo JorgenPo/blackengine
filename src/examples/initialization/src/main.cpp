@@ -48,9 +48,9 @@ private:
     }
 
     void initializeResources() override {
-        auto modelComponent = ModelManager::CreateFromFile("models/frog_edited.obj");
+        auto modelComponent = ModelManager::CreateFromFile("models/cube.obj");
 
-        auto frogImage = std::make_shared<Image>("models/frog.jpg", true);
+        auto frogImage = std::make_shared<Image>("models/wall.jpg", true);
         auto frogTexture = Engine::GetCurrentRenderSystem()->createTexture(frogImage);
         auto material = std::make_shared<Material>(frogTexture);
 
@@ -69,7 +69,7 @@ int main(int argc, char **argv) {
         BlackEngineApplication application;
         application.start();
     } catch(const std::exception &e) {
-        std::cout << "Failed to start application: " << e.what() << std::endl;
+        Logger::Get("Initialization example")->critical("Initialization Example error: ", e.what());
         return 1;
     }
 

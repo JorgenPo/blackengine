@@ -14,7 +14,7 @@ function(SetupPlugin pluginName)
 
     add_library(${pluginName} SHARED ${SOURCES} ${ADDITIONAL_SOURCES})
 
-    target_link_libraries(${pluginName} ${BLACKENGINE_TARGET} ${GLFW_LIBRARIES})
+    target_link_libraries(${pluginName} ${BLACKENGINE_TARGET} ${LINKLIBS_LIBRARIES})
 
     # Set output directory to the main library dir
     set_target_properties(${pluginName} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/plugins)
