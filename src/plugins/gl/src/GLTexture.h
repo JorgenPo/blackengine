@@ -10,19 +10,18 @@
 #include <render/Texture.h>
 
 namespace black {
-    class GLTexture : public Texture {
-        GLuint texture;
+class GLTexture : public Texture {
+  GLuint texture;
 
-    public:
-        explicit GLTexture(const std::shared_ptr<Image> &image, bool generateMipMaps = true,
-                           TextureFiltering filtering = TextureFiltering::NEAREST,
-                           TextureWrapping wrapping = TextureWrapping::CLAMP_TO_BORDER);
+public:
+  explicit GLTexture(const std::shared_ptr<Image> &image, bool generateMipMaps = true,
+                     TextureFiltering filtering = TextureFiltering::NEAREST,
+                     TextureWrapping wrapping = TextureWrapping::CLAMP_TO_BORDER);
 
-    private:
-        void bind() override;
-        void unbind() override;
-    };
+private:
+  void bind() override;
+  void unbind() override;
+};
 }
-
 
 #endif //BLACKENGINE_GLTEXTURE_H

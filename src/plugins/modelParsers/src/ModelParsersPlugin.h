@@ -9,22 +9,21 @@
 #include <plugins/PluginInterface.h>
 
 namespace black {
-    /**
-     * Model parsers plugin provides some model parsers to the engine
-     */
-    class ModelParsersPlugin : public PluginInterface  {
-    public:
-        std::string getName() override;
+/**
+ * Model parsers plugin provides some model parsers to the engine
+ */
+class ModelParsersPlugin : public PluginInterface {
+public:
+  std::string getName() override;
 
-        void install() override;
+  void install() override;
 
-        void initialize() override;
+  void initialize() override;
 
-        void shutdown() override;
+  void shutdown() override;
 
-        void uninstall() override;
-    };
+  void uninstall() override;
+};
 }
-
 
 #endif //BLACKENGINE_MODELPARSERSPLUGIN_H

@@ -3,36 +3,40 @@
 //
 
 #include "Screen.h"
+
+#include <render/AbstractRenderWindow.h>
+#include <render/RenderSystemInterface.h>
+
 #include <Engine.h>
 
 namespace black {
-    float Screen::GetAspectRatio() {
-        const auto renderSystem = Engine::GetCurrentRenderSystem();
+float Screen::GetAspectRatio() {
+  const auto renderSystem = Engine::GetCurrentRenderSystem();
 
-        if (!renderSystem || !renderSystem->getRenderWindow()) {
-            return 0.0f;
-        }
+  if (!renderSystem || !renderSystem->getRenderWindow()) {
+    return 0.0f;
+  }
 
-        return renderSystem->getRenderWindow()->getRenderTargetAspectRatio();
-    }
+  return renderSystem->getRenderWindow()->getRenderTargetAspectRatio();
+}
 
-    int Screen::GetWidth() {
-        const auto renderSystem = Engine::GetCurrentRenderSystem();
+int Screen::GetWidth() {
+  const auto renderSystem = Engine::GetCurrentRenderSystem();
 
-        if (!renderSystem || !renderSystem->getRenderWindow()) {
-            return 0;
-        }
+  if (!renderSystem || !renderSystem->getRenderWindow()) {
+    return 0;
+  }
 
-        return renderSystem->getRenderWindow()->getRenderTargetWidth();
-    }
+  return renderSystem->getRenderWindow()->getRenderTargetWidth();
+}
 
-    int Screen::GetHeight() {
-        const auto renderSystem = Engine::GetCurrentRenderSystem();
+int Screen::GetHeight() {
+  const auto renderSystem = Engine::GetCurrentRenderSystem();
 
-        if (!renderSystem || !renderSystem->getRenderWindow()) {
-            return 0;
-        }
+  if (!renderSystem || !renderSystem->getRenderWindow()) {
+    return 0;
+  }
 
-        return renderSystem->getRenderWindow()->getRenderTargetHeight();
-    }
+  return renderSystem->getRenderWindow()->getRenderTargetHeight();
+}
 }

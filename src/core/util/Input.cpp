@@ -3,20 +3,22 @@
 //
 
 #include "Input.h"
+
+#include <render/RenderSystemInterface.h>
 #include <Engine.h>
 
 namespace black {
 
-    bool Input::IsKeyPressed(Key key) {
-        return Input::IsKeyPressed(static_cast<int>(key));
-    }
+bool Input::IsKeyPressed(Key key) {
+  return Input::IsKeyPressed(static_cast<int>(key));
+}
 
-    bool Input::IsKeyPressed(int key) {
-        auto systemInterface = Engine::GetCurrentRenderSystem()->getSystemInterface();
-        if (!systemInterface) {
-            false;
-        }
+bool Input::IsKeyPressed(int key) {
+  auto systemInterface = Engine::GetCurrentRenderSystem()->getSystemInterface();
+  if (!systemInterface) {
+    return false;
+  }
 
-        return systemInterface->isKeyPressed(key);
-    }
+  return systemInterface->isKeyPressed(key);
+}
 }

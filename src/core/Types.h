@@ -9,35 +9,35 @@
 #include <Config.h>
 
 #if defined(BLACK_PLATFORM_WINDOWS)
-    #include <plugins/windows/WindowsSharedLibrary.h>
+#include <plugins/windows/WindowsSharedLibrary.h>
 #elif defined(BLACK_PLATFORM_LINUX)
-    #include <plugins/linux/LinuxSharedLibrary.h>
+#include <plugins/linux/LinuxSharedLibrary.h>
 #endif
 
 namespace black {
 #ifdef BLACK_PLATFORM_WINDOWS
-    using SharedLibrary = os::WindowsSharedLibrary;
+using SharedLibrary = os::WindowsSharedLibrary;
 #elif defined(BLACK_PLATFORM_LINUX)
-    using SharedLibrary = os::LinuxSharedLibrary;
+using SharedLibrary = os::LinuxSharedLibrary;
 #elif defined(BLACK_PLATFORM_MACOSX)
-    using SharedLibrary = os::MacOSSharedLibrary;
+using SharedLibrary = os::MacOSSharedLibrary;
 #endif
 
-    /**
-     * Renderer Draw mode
-     */
-    enum class DrawMode {
-        POINTS,
-        LINES,
-        LINE_LOOP,
-        LINE_STRIP,
-        TRIANGLE_STRIP,
-        TRIANGLE_FAN,
-        TRIANGLES,
-        QUAD_STRIP,
-        QUADS,
-        POLYGON
-    };
+/**
+ * Renderer Draw mode
+ */
+enum class DrawMode {
+  POINTS,
+  LINES,
+  LINE_LOOP,
+  LINE_STRIP,
+  TRIANGLE_STRIP,
+  TRIANGLE_FAN,
+  TRIANGLES,
+  QUAD_STRIP,
+  QUADS,
+  POLYGON
+};
 }
 
 #endif //BLACKENGINE_TYPES_H

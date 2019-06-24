@@ -3,9 +3,13 @@
 //
 
 #include "Material.h"
+#include "Texture.h"
+
+#include <memory>
 
 namespace black {
 
-    Material::Material(const std::shared_ptr<Texture> &texture) : texture(texture) {}
-    Material::Material() {}
+Material::Material(std::shared_ptr<Texture> texture) : texture(std::move(texture)) {}
+Material::Material() = default;
+
 }

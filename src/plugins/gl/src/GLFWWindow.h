@@ -11,40 +11,39 @@
 #include <input/SystemInterface.h>
 
 namespace black {
-    class GLFWWindow : public AbstractRenderWindow, public SystemInterface {
-        std::unique_ptr<GLFWwindow, void(*)(GLFWwindow * )> window;
+class GLFWWindow : public AbstractRenderWindow, public SystemInterface {
+  std::unique_ptr<GLFWwindow, void (*)(GLFWwindow *)> window;
 
-        bool isWindowShown;
+  bool isWindowShown;
 
-    public:
+public:
 
-        /**
-         * Construct a glfw window. Does not show it.
-         *
-         * {@inheritDoc}
-         */
-        GLFWWindow(const std::string &title, int width, int height, bool isFullScreen);
+  /**
+   * Construct a glfw window. Does not show it.
+   *
+   * {@inheritDoc}
+   */
+  GLFWWindow(const std::string &title, int width, int height, bool isFullScreen);
 
-        // RenderTargetInterface
-        void updateRenderTarget() override;
-        void setRenderTargetCurrent() override;
-        float getRenderTargetWidth() override;
-        float getRenderTargetHeight() override;
-        float getRenderTargetAspectRatio() override;
+  // RenderTargetInterface
+  void updateRenderTarget() override;
+  void setRenderTargetCurrent() override;
+  float getRenderTargetWidth() override;
+  float getRenderTargetHeight() override;
+  float getRenderTargetAspectRatio() override;
 
-        // AbstractRenderWindow Interface
+  // AbstractRenderWindow Interface
 
-        void show() override;
-        void hide() override;
-        bool isShown() override;
-        bool shouldClose() override;
-        void pollEvents() override;
+  void show() override;
+  void hide() override;
+  bool isShown() override;
+  bool shouldClose() override;
+  void pollEvents() override;
 
-        // SystemInterface
-        bool isKeyPressed(Key key) override;
-        bool isKeyPressed(int key) override;
-    };
+  // SystemInterface
+  bool isKeyPressed(Key key) override;
+  bool isKeyPressed(int key) override;
+};
 }
-
 
 #endif //BLACKENGINE_GLFWWINDOW_H

@@ -8,24 +8,25 @@
 #include <CommonHeaders.h>
 #include <util/ModelParser.h>
 
+#include <memory>
+
 namespace black {
 
-    class ObjParser : public ModelParser {
-        bool isObjParsed;
-        std::shared_ptr<ModelComponent> model;
+class ObjParser : public ModelParser {
+  bool isObjParsed;
+  std::shared_ptr<ModelComponent> model;
 
-    public:
-        ObjParser();
+public:
+  ObjParser();
 
-        std::shared_ptr<ModelParser> copy() override;
+  std::shared_ptr<ModelParser> copy() override;
 
-        void parse(std::string file) override;
+  void parse(std::string file) override;
 
-        bool isParsed() override;
+  bool isParsed() override;
 
-        std::shared_ptr<ModelComponent> getModel() override;
-    };
+  std::shared_ptr<ModelComponent> getModel() override;
+};
 }
-
 
 #endif //BLACKENGINE_OBJPARSER_H

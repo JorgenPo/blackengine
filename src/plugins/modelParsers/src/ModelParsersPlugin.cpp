@@ -9,23 +9,23 @@
 
 namespace black {
 
-    std::string ModelParsersPlugin::getName() {
-        return "ModelParsers";
-    }
+std::string ModelParsersPlugin::getName() {
+  return "ModelParsers";
+}
 
-    void ModelParsersPlugin::install() {
-        ModelManager::AddModelParser("obj", std::make_shared<ObjParser>());
-    }
+void ModelParsersPlugin::install() {
+  ModelManager::AddModelParser("obj", std::make_shared<ObjParser>());
+}
 
-    void ModelParsersPlugin::initialize() {
+void ModelParsersPlugin::initialize() {
 
-    }
+}
 
-    void ModelParsersPlugin::shutdown() {
+void ModelParsersPlugin::shutdown() {
 
-    }
+}
 
-    void ModelParsersPlugin::uninstall() {
+void ModelParsersPlugin::uninstall() {
 
-    }
+}
 }

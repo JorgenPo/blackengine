@@ -7,15 +7,17 @@
 
 #include <CommonHeaders.h>
 
+#include <input/SystemInterface.h>
+
 namespace black {
-    /**
-     * User input utils
-     */
-    class BLACK_EXPORTED Input {
-    public:
-        static bool IsKeyPressed(Key key);
-        static bool IsKeyPressed(int key);
-    };
+/**
+ * User input utils
+ */
+class BLACK_EXPORTED Input {
+public:
+  static bool IsKeyPressed(Key key);
+  static bool IsKeyPressed(int key);
+};
 
 }
 #endif //BLACKENGINE_INPUT_H

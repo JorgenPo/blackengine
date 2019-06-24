@@ -8,35 +8,37 @@
 #include <CommonHeaders.h>
 
 #include <components/ComponentsContainer.h>
-#include <components/TransformComponent.h>
+
+#include <memory>
+#include <vector>
 
 namespace black {
 
-    class GameEntity;
+class GameEntity;
+class TransformComponent;
 
-    using GameEntityVector = std::vector<std::shared_ptr<GameEntity>>;
+using GameEntityVector = std::vector<std::shared_ptr<GameEntity>>;
 
-    /**
-     * Game entity object
-     */
-    class BLACK_EXPORTED GameEntity : public ComponentsContainer, public std::enable_shared_from_this<GameEntity> {
-        static long long int idCounter;
+/**
+ * Game entity object
+ */
+class BLACK_EXPORTED GameEntity : public ComponentsContainer, public std::enable_shared_from_this<GameEntity> {
+  static long long int idCounter;
 
-        std::string name;
+  std::string name;
 
-    public:
-        std::shared_ptr<TransformComponent> transform;
+public:
+  std::shared_ptr<TransformComponent> transform;
 
-        /**
-         * Creates an empty entity with only transform component
-         */
-        explicit GameEntity(std::string name = "");
-        virtual ~GameEntity();
+  /**
+   * Creates an empty entity with only transform component
+   */
+  explicit GameEntity(std::string name = "");
+  virtual ~GameEntity();
 
-        const std::string &getName() const;
-        void setName(const std::string &name);
-    };
+  const std::string &getName() const;
+  void setName(const std::string &name);
+};
 }
-
 
 #endif //BLACKENGINE_OBJECT_H

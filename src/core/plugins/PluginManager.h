@@ -5,143 +5,146 @@
 #ifndef BLACKENGINE_PLUGINMANAGER_H
 #define BLACKENGINE_PLUGINMANAGER_H
 
-
 #include <CommonHeaders.h>
+#include <exceptions/Exception.h>
 
-#include <plugins/PluginInterface.h>
-#include <plugins/AbstractSharedLibrary.h>
+#include <list>
+#include <map>
 
 namespace black {
 
-    /**
-     * Plugin has not been found
-     */
-    class BLACK_EXPORTED PluginNotFoundException : public Exception {
-        std::string pluginName;
-        std::list<std::string> pluginDirs;
+class Logger;
+class PluginInterface;
+class AbstractSharedLibrary;
 
-    public:
-        /**
-         * Constructor
-         *
-         * @param pluginName Name of a plugin
-         * @param pluginDirs Directories in which plugins are searched
-         */
-        PluginNotFoundException(const std::string &pluginName, const std::list<std::string> &pluginDirs);
-    };
+/**
+ * Plugin has not been found
+ */
+class BLACK_EXPORTED PluginNotFoundException : public Exception {
+  std::string pluginName;
+  std::list<std::string> pluginDirs;
 
-    class BLACK_EXPORTED PluginFunctionNotFound : public Exception {
-        std::string pluginName;
-        std::string entryPointName;
+public:
+  /**
+   * Constructor
+   *
+   * @param pluginName Name of a plugin
+   * @param pluginDirs Directories in which plugins are searched
+   */
+  PluginNotFoundException(const std::string &pluginName, const std::list<std::string> &pluginDirs);
+};
 
-    public:
-        PluginFunctionNotFound(const std::string &pluginName, const std::string &entryPointName);
-    };
+class BLACK_EXPORTED PluginFunctionNotFound : public Exception {
+  std::string pluginName;
+  std::string entryPointName;
 
-    /**
-     * Manages plugin lifecycle. Loading and unloading.
-     * Contains all loaded plugins.
-     */
-    class BLACK_EXPORTED PluginManager {
-        using PluginsLibriesMap = std::map<std::string, std::shared_ptr<AbstractSharedLibrary>>;
-        using PluginsMap = std::map<std::string, std::shared_ptr<PluginInterface>>;
+public:
+  PluginFunctionNotFound(const std::string &pluginName, const std::string &entryPointName);
+};
 
-        const std::string PLUGIN_ENTRY_POINT = "BlackPluginInstall";
-        const std::string PLUGIN_EXIT_POINT = "BlackPluginUninstall";
+/**
+ * Manages plugin lifecycle. Loading and unloading.
+ * Contains all loaded plugins.
+ */
+class BLACK_EXPORTED PluginManager {
+  using PluginsLibriesMap = std::map<std::string, std::shared_ptr<AbstractSharedLibrary>>;
+  using PluginsMap = std::map<std::string, std::shared_ptr<PluginInterface>>;
 
-        PluginsLibriesMap loadedPluginsLibraries;
-        PluginsMap registeredPlugins;
+  const std::string PLUGIN_ENTRY_POINT = "BlackPluginInstall";
+  const std::string PLUGIN_EXIT_POINT = "BlackPluginUninstall";
 
-        std::list<std::string> pluginDirs;
+  PluginsLibriesMap loadedPluginsLibraries;
+  PluginsMap registeredPlugins;
 
-        typedef void (*PluginEntryPoint)();
-        typedef void (*PluginExitPoint)();
+  std::list<std::string> pluginDirs;
 
-        std::shared_ptr<Logger> logger;
-    public:
-        /**
-         * Initialize an empty plugin manager.
-         * You can manually load plugin via loadPlugin() function
-         */
-        PluginManager();
-        ~PluginManager();
+  typedef void (*PluginEntryPoint)();
+  typedef void (*PluginExitPoint)();
 
-        /**
-         * Load a plugin by name. PluginManager looking for
-         * a plugin in all pluginDirectories, appending extension to
-         * its name (.dll for windows, .so for linux and so on...)
-         *
-         * @throws PluginNotFoundException if plugin not found in all
-         * search dirs
-         *
-         * @throws PluginEntryPointNotFoundException if plugin does not contains
-         * an entry point
-         *
-         * @param pluginName Plugin name.
-         */
-        void loadPlugin(std::string pluginName);
+  std::shared_ptr<Logger> logger;
+public:
+  /**
+   * Initialize an empty plugin manager.
+   * You can manually load plugin via loadPlugin() function
+   */
+  PluginManager();
+  ~PluginManager();
 
-        /**
-         * Add directory to search for plugins while loading
-         *
-         * @param pluginDir Directory name
-         */
-        void addPluginDir(const std::string &pluginDir);
+  /**
+   * Load a plugin by name. PluginManager looking for
+   * a plugin in all pluginDirectories, appending extension to
+   * its name (.dll for windows, .so for linux and so on...)
+   *
+   * @throws PluginNotFoundException if plugin not found in all
+   * search dirs
+   *
+   * @throws PluginEntryPointNotFoundException if plugin does not contains
+   * an entry point
+   *
+   * @param pluginName Plugin name.
+   */
+  void loadPlugin(std::string pluginName);
 
-        /**
-         * Add directories to search for plugins while loading
-         * @param pluginDirs
-         */
-        void addPluginDirs(std::list<std::string> pluginDirs);
+  /**
+   * Add directory to search for plugins while loading
+   *
+   * @param pluginDir Directory name
+   */
+  void addPluginDir(const std::string &pluginDir);
 
-        /**
-         * Add plugin object as registered plugin.
-         * Calls an install method of a plugin.
-         */
-        void registerPlugin(std::shared_ptr<PluginInterface> plugin);
+  /**
+   * Add directories to search for plugins while loading
+   * @param pluginDirs
+   */
+  void addPluginDirs(std::list<std::string> pluginDirs);
 
-        /**
-         * Remove plugin from registered plugins list.
-         * Calls an uninstall method of a plugin.
-         */
-        void unregisterPlugin(std::shared_ptr<PluginInterface> plugin);
+  /**
+   * Add plugin object as registered plugin.
+   * Calls an install method of a plugin.
+   */
+  void registerPlugin(std::shared_ptr<PluginInterface> plugin);
 
-        /**
-         * Calls initialize of all plugins loaded at a time of call
-         */
-        void initializePlugins();
+  /**
+   * Remove plugin from registered plugins list.
+   * Calls an uninstall method of a plugin.
+   */
+  void unregisterPlugin(std::shared_ptr<PluginInterface> plugin);
 
-        /**
-         * Call shutdown of all plugins loaded at a time of call
-         */
-        void shutdownPlugins();
+  /**
+   * Calls initialize of all plugins loaded at a time of call
+   */
+  void initializePlugins();
 
-        /**
-         * Called just before plugin manager destruction by core object.
-         * Plugin should finally reset all objects. At this time no other systems or
-         * plugins should be considered as living.
-         *
-         */
-        void unloadPlugins();
-    private:
-        /**
-         * Search for plugin in all plugin directories
-         *
-         * @throws PluginNotFoundException if plugin not found in all
-         * search dirs
-         * @param pluginName Plugin name without extension
-         */
-        std::shared_ptr<AbstractSharedLibrary> searchForPluginLibrary(std::string pluginName);
+  /**
+   * Call shutdown of all plugins loaded at a time of call
+   */
+  void shutdownPlugins();
 
-        /**
-         * Unloads a plugin. Calls PLUGIN_EXIT_POINT function in dll
-         *
-         * @param plugin Plugin to unload
-         */
-        void unloadPlugin(std::shared_ptr<AbstractSharedLibrary> plugin);
-    };
+  /**
+   * Called just before plugin manager destruction by core object.
+   * Plugin should finally reset all objects. At this time no other systems or
+   * plugins should be considered as living.
+   *
+   */
+  void unloadPlugins();
+private:
+  /**
+   * Search for plugin in all plugin directories
+   *
+   * @throws PluginNotFoundException if plugin not found in all
+   * search dirs
+   * @param pluginName Plugin name without extension
+   */
+  std::shared_ptr<AbstractSharedLibrary> searchForPluginLibrary(std::string pluginName);
+
+  /**
+   * Unloads a plugin. Calls PLUGIN_EXIT_POINT function in dll
+   *
+   * @param plugin Plugin to unload
+   */
+  void unloadPlugin(std::shared_ptr<AbstractSharedLibrary> plugin);
+};
 
 }
-
 
 #endif //BLACKENGINE_PLUGINMANAGER_H

@@ -37,7 +37,7 @@ add_library(${PROJECT_NAME} SHARED ${SOURCES})
 target_link_libraries(${PROJECT_NAME} PRIVATE ${LINKLIBS_LIBRARIES})
 
 # Examples
-add_subdirectory(src/examples)
+add_subdirectory(examples)
 
 # Plugins
 add_subdirectory(src/plugins)

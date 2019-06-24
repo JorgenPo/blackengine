@@ -8,35 +8,34 @@
 #include <CommonHeaders.h>
 
 namespace black {
-    /**
-     * Image file
-     */
-    class BLACK_EXPORTED Image {
-        int width;
-        int height;
-        int numColorChannels;
-        unsigned char* data;
+/**
+ * Image file
+ */
+class BLACK_EXPORTED Image {
+  int width;
+  int height;
+  int numColorChannels;
+  unsigned char *data;
 
-    public:
-        explicit Image(std::string fileName, bool flipVertically = false);
+public:
+  explicit Image(std::string fileName, bool flipVertically = false);
 
-        virtual ~Image();
+  virtual ~Image();
 
-        /**
-         * Loads an image from the file.
-         *
-         * @throws FileNotFoundException If file isn't exist
-         * @param fileName
-         */
-        void load(std::string fileName, bool flipVertically = true);
+  /**
+   * Loads an image from the file.
+   *
+   * @throws FileNotFoundException If file isn't exist
+   * @param fileName
+   */
+  void load(std::string fileName, bool flipVertically = true);
 
-        bool isLoaded();
-        int getWidth() const;
-        int getHeight() const;
-        int getNumColorChannels() const;
-        unsigned char *getData() const;
-    };
+  bool isLoaded();
+  int getWidth() const;
+  int getHeight() const;
+  int getNumColorChannels() const;
+  unsigned char *getData() const;
+};
 }
-
 
 #endif //BLACKENGINE_IMAGE_H

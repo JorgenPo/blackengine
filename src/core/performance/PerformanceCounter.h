@@ -9,45 +9,44 @@
 #include <chrono>
 
 namespace black {
-    /**
-     * Counts fps, mpf and min, max, average values
-     */
-    class BLACK_EXPORTED PerformanceCounter {
-        float averageMpf;
-        float minMpf;
-        float maxMpf;
-        float delta;
+/**
+ * Counts fps, mpf and min, max, average values
+ */
+class BLACK_EXPORTED PerformanceCounter {
+  float averageMpf;
+  float minMpf;
+  float maxMpf;
+  float delta;
 
-        size_t measurements;
+  size_t measurements;
 
-        std::chrono::time_point<std::chrono::high_resolution_clock> lastTime;
-        std::chrono::time_point<std::chrono::high_resolution_clock> startTime;
-    public:
-        PerformanceCounter();
+  std::chrono::time_point<std::chrono::high_resolution_clock> lastTime;
+  std::chrono::time_point<std::chrono::high_resolution_clock> startTime;
+public:
+  PerformanceCounter();
 
-        /**
-         * This method updates values, should be
-         * called before render method
-         */
-        void update();
+  /**
+   * This method updates values, should be
+   * called before render method
+   */
+  void update();
 
-        float getAverageMpf() const;
-        float getMinMpf() const;
-        float getMaxMpf() const;
+  float getAverageMpf() const;
+  float getMinMpf() const;
+  float getMaxMpf() const;
 
-        float getAverageFps() const;
-        float getMinFps() const;
-        float getMaxFps() const;
+  float getAverageFps() const;
+  float getMinFps() const;
+  float getMaxFps() const;
 
-        /**
-         * Return a time since first update
-         * @return An uptime
-         */
-        long long int getUptime() const;
+  /**
+   * Return a time since first update
+   * @return An uptime
+   */
+  long long int getUptime() const;
 
-        float getTimeSinceLastUpdate() const;
-    };
+  float getTimeSinceLastUpdate() const;
+};
 }
-
 
 #endif //BLACKENGINE_PERFORMANCECOUNTER_H

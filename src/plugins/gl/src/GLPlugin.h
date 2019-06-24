@@ -9,24 +9,23 @@
 
 namespace black {
 
-    class GLPlugin : public PluginInterface {
-        static std::shared_ptr<Logger> logger;
+class GLPlugin : public PluginInterface {
+  static std::shared_ptr<Logger> logger;
 
-    public:
-        GLPlugin();
+public:
+  GLPlugin();
 
-        std::string getName() override;
+  std::string getName() override;
 
-        void install() override;
+  void install() override;
 
-        void initialize() override;
+  void initialize() override;
 
-        void shutdown() override;
+  void shutdown() override;
 
-        void uninstall() override;
-    };
+  void uninstall() override;
+};
 
 }
-
 
 #endif //BLACKENGINE_GLPLUGIN_H

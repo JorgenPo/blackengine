@@ -5,83 +5,86 @@
 #ifndef BLACKENGINE_RENDERSYSTEMINTERFACE_H
 #define BLACKENGINE_RENDERSYSTEMINTERFACE_H
 
-#include <CommonHeaders.h>
-#include <render/Mesh.h>
+#include "Texture.h"
+
 #include <shader/Shader.h>
-#include <shader/ShaderProgram.h>
-#include <input/SystemInterface.h>
 
-#include "RendererInterface.h"
-#include "AbstractRenderWindow.h"
+#include <CommonHeaders.h>
 
+#include <vector>
 
 namespace black {
 
-    class RenderSystemInitializationException : public Exception {
-    public:
-        explicit RenderSystemInitializationException(const std::string &message) : Exception(message) {
-        }
-    };
+class RendererInterface;
+class AbstractRenderWindow;
+class SystemInterface;
+class Mesh;
+class Shader;
+class ShaderProgram;
 
-    class RenderSystemInterface {
-    public:
-        /**
-         * Return an unique render system name.
-         *
-         * @return Name of the render system.
-         */
-        virtual std::string getName() const = 0;
+class RenderSystemInitializationException : public Exception {
+public:
+  explicit RenderSystemInitializationException(const std::string &message) : Exception(message) {
+  }
+};
 
-        /**
-         * Initialize a render system.
-         * Also will initialize the renderer and main render window.
-         *
-         * @throws RenderSystemInitializationException
-         */
-        virtual void initialize(std::string title, int width, int height, bool isFullScreen) = 0;
+class RenderSystemInterface {
+public:
+  /**
+   * Return an unique render system name.
+   *
+   * @return Name of the render system.
+   */
+  virtual std::string getName() const = 0;
 
-        /**
-         * Shutdown a render system.
-         */
-        virtual void shutdown() = 0;
+  /**
+   * Initialize a render system.
+   * Also will initialize the renderer and main render window.
+   *
+   * @throws RenderSystemInitializationException
+   */
+  virtual void initialize(std::string title, int width, int height, bool isFullScreen) = 0;
 
-        /**
-         * Create an appropriate render system render and render window.
-         *
-         * @return Renderer for this render system
-         */
-        virtual std::shared_ptr<RendererInterface> getRenderer() = 0;
+  /**
+   * Shutdown a render system.
+   */
+  virtual void shutdown() = 0;
 
-        /**
-         * Return a main renderer window
-         *
-         * @return Pointer for the renderer window
-         */
-        virtual std::shared_ptr<AbstractRenderWindow> getRenderWindow() = 0;
+  /**
+   * Create an appropriate render system render and render window.
+   *
+   * @return Renderer for this render system
+   */
+  virtual std::shared_ptr<RendererInterface> getRenderer() = 0;
 
+  /**
+   * Return a main renderer window
+   *
+   * @return Pointer for the renderer window
+   */
+  virtual std::shared_ptr<AbstractRenderWindow> getRenderWindow() = 0;
 
-        /**
-         * Return a pointer to the System Interface
-         * @return System interface pointer
-         */
-        virtual std::shared_ptr<SystemInterface> getSystemInterface() = 0;
+  /**
+   * Return a pointer to the System Interface
+   * @return System interface pointer
+   */
+  virtual std::shared_ptr<SystemInterface> getSystemInterface() = 0;
 
-        /**
-         * Create a mesh
-         *
-         * @return Pointer to the created mesh
-         */
-        virtual std::shared_ptr<Mesh> createMesh(std::vector<float> vertices, std::vector<float> textureCoords) = 0;
+  /**
+   * Create a mesh
+   *
+   * @return Pointer to the created mesh
+   */
+  virtual std::shared_ptr<Mesh> createMesh(std::vector<float> vertices, std::vector<float> textureCoords) = 0;
 
-        virtual std::shared_ptr<Shader> createShader(std::string source, Shader::Type type) = 0;
-        virtual std::shared_ptr<ShaderProgram> createShaderProgram(std::shared_ptr<Shader> vertexShader,
-                std::shared_ptr<Shader> fragmentShader) = 0;
+  virtual std::shared_ptr<Shader> createShader(std::string source, Shader::Type type) = 0;
+  virtual std::shared_ptr<ShaderProgram> createShaderProgram(std::shared_ptr<Shader> vertexShader,
+                                                             std::shared_ptr<Shader> fragmentShader) = 0;
 
-        virtual std::shared_ptr<Texture> createTexture(const std::shared_ptr<Image> &image, bool generateMipMaps = true,
-                                               TextureFiltering filtering = TextureFiltering::NEAREST,
-                                               TextureWrapping wrapping = TextureWrapping::CLAMP_TO_BORDER) = 0;
-    };
+  virtual std::shared_ptr<Texture> createTexture(const std::shared_ptr<Image> &image, bool generateMipMaps = true,
+                                                 TextureFiltering filtering = TextureFiltering::NEAREST,
+                                                 TextureWrapping wrapping = TextureWrapping::CLAMP_TO_BORDER) = 0;
+};
 }
-
 
 #endif //BLACKENGINE_RENDERSYSTEMINTERFACE_H

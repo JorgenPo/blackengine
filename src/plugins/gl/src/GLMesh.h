@@ -11,25 +11,24 @@
 #include "OpenGLCommonHeaders.h"
 
 namespace black {
-    /**
-     * OpenGL Mesh
-     */
-    class GLMesh : public Mesh {
-        GLuint positionVbo;
-        GLuint textureVbo;
-        GLuint vao;
+/**
+ * OpenGL Mesh
+ */
+class GLMesh : public Mesh {
+  GLuint positionVbo;
+  GLuint textureVbo;
+  GLuint vao;
 
-    public:
-        explicit GLMesh(std::vector<float> vertices, std::vector<float> textureCoords);
+public:
+  explicit GLMesh(std::vector<float> vertices, std::vector<float> textureCoords);
 
-        void bind() override;
+  void bind() override;
 
-        int getDrawMode() const override;
+  int getDrawMode() const override;
 
-    private:
-        void createMesh();
-    };
+private:
+  void createMesh();
+};
 }
-
 
 #endif //BLACKENGINE_GLMESH_H

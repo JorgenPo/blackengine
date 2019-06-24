@@ -2,105 +2,112 @@
 #define BLACKENGINE_LIBRARY_H
 
 #include <CommonHeaders.h>
-#include <plugins/PluginManager.h>
-#include <render/RenderSystemInterface.h>
+#include <exceptions/Exception.h>
+
+#include <memory>
+#include <map>
 
 namespace black {
 
-    class BLACK_EXPORTED EngineInitializationException : public Exception {
-    public:
-        explicit EngineInitializationException(const std::string &message);
-    };
+class RenderSystemInterface;
+class PluginManager;
+class Logger;
+class PluginInterface;
 
-    class BLACK_EXPORTED Engine {
-    private:
-        using RenderSystemMap = std::map<std::string, std::shared_ptr<RenderSystemInterface>>;
+class BLACK_EXPORTED EngineInitializationException : public Exception {
+public:
+  explicit EngineInitializationException(const std::string &message);
+};
 
-        static constexpr const char * GL_RENDERER_PLUGIN_NAME = "glPlugin";
-        static constexpr const char * MODEL_PARSERS_PLUGIN_NAME = "modelParsersPlugin";
+class BLACK_EXPORTED Engine {
+private:
+  using RenderSystemMap = std::map<std::string, std::shared_ptr<RenderSystemInterface>>;
 
-        std::unique_ptr<PluginManager> pluginManager;
-        std::shared_ptr<Logger> logger;
-        RenderSystemMap renderSystems;
-        std::shared_ptr<RenderSystemInterface> currentRenderSystem;
+  static constexpr const char *GL_RENDERER_PLUGIN_NAME = "glPlugin";
+  static constexpr const char *MODEL_PARSERS_PLUGIN_NAME = "modelParsersPlugin";
 
-        /**
-         * This method is private. Use appropriate static methods.
-         *
-         * @return Engine instance.
-         */
-        static std::shared_ptr<Engine> GetInstance() {
-            static std::shared_ptr<Engine> engine;
+  std::unique_ptr<PluginManager> pluginManager;
+  std::shared_ptr<Logger> logger;
+  RenderSystemMap renderSystems;
+  std::shared_ptr<RenderSystemInterface> currentRenderSystem;
 
-            if (!engine) {
-                engine = std::shared_ptr<Engine>(new Engine());
-                engine->initializeEngine();
-            }
+  /**
+   * This method is private. Use appropriate static methods.
+   *
+   * @return Engine instance.
+   */
+  static std::shared_ptr<Engine> GetInstance() {
+    static std::shared_ptr<Engine> engine;
 
-            return engine;
-        }
+    if (!engine) {
+      engine = std::shared_ptr<Engine>(new Engine());
+      engine->initializeEngine();
+    }
 
-        Engine();
-    public:
-        ~Engine();
+    return engine;
+  }
 
-        /**
-         * Initialize an Engine. Must be called before any usage of Engine.
-         * Main render window parameters passed as arguments
-         *
-         * @throws EngineInitializationException
-         */
-        static void Initialize(std::string title, int width, int height, bool isFullScreen);
+  Engine();
+public:
+  ~Engine();
 
-        /**
-         * Must be called explicitly to shutdown all engine's systems.
-         */
-        static void Shutdown();
+  /**
+   * Initialize an Engine. Must be called before any usage of Engine.
+   * Main render window parameters passed as arguments
+   *
+   * @throws EngineInitializationException
+   */
+  static void Initialize(std::string title, int width, int height, bool isFullScreen);
 
-        /**
-         * Register external plugin. Must be invoked in plugin entry point
-         *
-         * @param plugin Plugin to be registered
-         */
-        static void RegisterPlugin(std::shared_ptr<PluginInterface> plugin);
+  /**
+   * Must be called explicitly to shutdown all engine's systems.
+   */
+  static void Shutdown();
 
-        /**
-         * Unregister external plugin
-         *
-         * @param plugin Plugin to be unregistered. Must be invoked in plugin exit point
-         */
-        static void UnregisterPlugin(std::shared_ptr<PluginInterface> plugin);
+  /**
+   * Register external plugin. Must be invoked in plugin entry point
+   *
+   * @param plugin Plugin to be registered
+   */
+  static void RegisterPlugin(std::shared_ptr<PluginInterface> plugin);
 
-        /**
-         * Register a new render system. Render system will be available by it's name.
-         */
-        static void RegisterRenderSystem(std::shared_ptr<RenderSystemInterface> renderSystem);
+  /**
+   * Unregister external plugin
+   *
+   * @param plugin Plugin to be unregistered. Must be invoked in plugin exit point
+   */
+  static void UnregisterPlugin(std::shared_ptr<PluginInterface> plugin);
 
-        /**
-         * Return a currently active render system
-         */
-        static std::shared_ptr<RenderSystemInterface> GetCurrentRenderSystem();
+  /**
+   * Register a new render system. Render system will be available by it's name.
+   */
+  static void RegisterRenderSystem(std::shared_ptr<RenderSystemInterface> renderSystem);
 
-    private:
-        /**
-         * Initialize engine. Load plugins.
-         *
-         * @return
-         */
-        void initializeEngine();
+  /**
+   * Return a currently active render system
+   */
+  static std::shared_ptr<RenderSystemInterface> GetCurrentRenderSystem();
 
-        /**
-         * Called from Shutdown static method.
-         */
-        void shutdownEngine();
+private:
+  /**
+   * Initialize engine. Load plugins.
+   *
+   * @return
+   */
+  void initializeEngine();
 
-        /**
-         * Set a default render system. Just took first available.
-         */
-        void setDefaultRenderSystem();
+  /**
+   * Called from Shutdown static method.
+   */
+  void shutdownEngine();
 
-        void setTerminateHandler();
-    };
+  /**
+   * Set a default render system. Just took first available.
+   */
+  void setDefaultRenderSystem();
+
+  void setTerminateHandler();
+};
 }
 
 #endif

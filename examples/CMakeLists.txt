@@ -5,5 +5,4 @@ cmake_minimum_required(VERSION 3.12)
 include(SetupExample.cmake)
 
 # Add examples
-add_subdirectory(initialization)
-add_subdirectory(windowCreation)
+add_subdirectory(simple)

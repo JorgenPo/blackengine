@@ -12,26 +12,26 @@
 
 namespace black {
 
-    enum class Platform {
-        WINDOWS,
-        LINUX,
-        MACOSX
-    };
+enum class Platform {
+  WINDOWS,
+  LINUX,
+  MACOSX
+};
 
-    class BLACK_EXPORTED Constants {
-    public:
+class BLACK_EXPORTED Constants {
+public:
 #if defined(BLACK_PLATFORM_WINDOWS)
-    static const Platform RuntimePlatform = Platform::WINDOWS;
+  static const Platform RuntimePlatform = Platform::WINDOWS;
 #elif defined(BLACK_PLATFORM_LINUX)
-    static const Platform RuntimePlatform = Platform::LINUX;
+  static const Platform RuntimePlatform = Platform::LINUX;
 #elif defined(BLACK_PLATFORM_MACOSX)
-    static const Platform RuntimePlatform = Platform::MACOSX;
+  static const Platform RuntimePlatform = Platform::MACOSX;
 #endif
 
-    static constexpr const char *RuntimePlatformString = BLACK_PLATFORM;
+  static constexpr const char *RuntimePlatformString = BLACK_PLATFORM;
 
-    static const bool IsDebug = true;
-    };
+  static const bool IsDebug = true;
+};
 
 }
 
