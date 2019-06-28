@@ -85,7 +85,7 @@ void GLSLShaderProgram::setUniformVariable(const std::string &name, bool value) 
   glUniform1i(glGetUniformLocation(this->program, name.c_str()), value);
 }
 
-void GLSLShaderProgram::setUniformVariable(const std::string &name, double value) {
+void GLSLShaderProgram::setUniformVariable(const std::string &name, double /*value*/) {
   //glUniform1d(glGetUniformLocation(this->program, name.c_str()), value);
 }
 

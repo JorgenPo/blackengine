@@ -16,7 +16,7 @@ namespace black {
 
 class BLACK_EXPORTED RenderWindowInitializationException : public Exception {
 public:
-  RenderWindowInitializationException(const std::string &message) : Exception(message) {}
+  explicit RenderWindowInitializationException(const std::string &message) : Exception(message) {}
 };
 
 /**
@@ -56,31 +56,31 @@ public:
    */
   virtual bool shouldClose() = 0;
 
-  const std::string &getTitle() const {
+  [[nodiscard]] const std::string &getTitle() const {
     return title;
   }
 
-  void setTitle(const std::string &title) {
-    AbstractRenderWindow::title = title;
+  void setTitle(const std::string &newTitle) {
+    AbstractRenderWindow::title = newTitle;
   }
 
-  int getWidth() const {
+  [[nodiscard]] int getWidth() const {
     return width;
   }
 
-  void setWidth(int width) {
-    AbstractRenderWindow::width = width;
+  void setWidth(int newWidth) {
+    AbstractRenderWindow::width = newWidth;
   }
 
-  int getHeight() const {
+  [[nodiscard]] int getHeight() const {
     return height;
   }
 
-  void setHeight(int height) {
-    AbstractRenderWindow::height = height;
+  void setHeight(int newHeight) {
+    AbstractRenderWindow::height = newHeight;
   }
 
-  bool isFullScreen() const {
+  [[nodiscard]] bool isFullScreen() const {
     return fullScreen;
   }
 

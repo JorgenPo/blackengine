@@ -29,7 +29,7 @@ public:
   OpenGLRenderSystem();
   ~OpenGLRenderSystem();
 
-  std::string getName() const override;
+  [[nodiscard]] std::string getName() const override;
 
   void initialize(std::string title, int width, int height, bool isFullScreen) override;
 
@@ -43,9 +43,9 @@ public:
   std::shared_ptr<Mesh> createMesh(std::vector<float> vertices, std::vector<float> textureCoords) override;
 
   std::shared_ptr<Shader> createShader(std::string source, Shader::Type type) override;
-  std::shared_ptr<Texture> createTexture(const std::shared_ptr<Image> &image, bool generateMipMaps = true,
-                                         TextureFiltering filtering = TextureFiltering::NEAREST,
-                                         TextureWrapping wrapping = TextureWrapping::CLAMP_TO_BORDER) override;
+  std::shared_ptr<Texture> createTexture(const std::shared_ptr<Image> &image, bool generateMipMaps,
+                                         TextureFiltering filtering,
+                                         TextureWrapping wrapping) override;
 
   std::shared_ptr<ShaderProgram>
   createShaderProgram(std::shared_ptr<Shader> vertexShader, std::shared_ptr<Shader> fragmentShader) override;

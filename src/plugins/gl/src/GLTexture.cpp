@@ -32,7 +32,7 @@ int getGLFilteringType(TextureFiltering filtering) {
 GLTexture::GLTexture(const std::shared_ptr<Image> &image, bool generateMipMaps,
                      TextureFiltering filtering,
                      TextureWrapping wrapping)
-    : Texture(image, generateMipMaps, filtering, wrapping) {
+    : Texture(image, filtering, wrapping), texture() {
   glGenTextures(1, &this->texture);
 
   this->bind();

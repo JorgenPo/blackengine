@@ -27,7 +27,7 @@ int Screen::GetWidth() {
     return 0;
   }
 
-  return renderSystem->getRenderWindow()->getRenderTargetWidth();
+  return static_cast<int>(renderSystem->getRenderWindow()->getRenderTargetWidth());
 }
 
 int Screen::GetHeight() {
@@ -37,6 +37,6 @@ int Screen::GetHeight() {
     return 0;
   }
 
-  return renderSystem->getRenderWindow()->getRenderTargetHeight();
+  return static_cast<int>(renderSystem->getRenderWindow()->getRenderTargetHeight());
 }
 }

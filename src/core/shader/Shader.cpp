@@ -1,7 +1,9 @@
 #include "Shader.h"
 
+#include <utility>
+
 namespace black {
-Shader::Shader(const std::string &code, Shader::Type type) : source(code), type(type) {
+Shader::Shader(std::string code, Shader::Type type) : source(std::move(code)), type(type), compiled(false) {
 
 }
 
@@ -9,8 +11,8 @@ const std::string &Shader::getSource() const {
   return source;
 }
 
-void Shader::setSource(const std::string &source) {
-  Shader::source = source;
+void Shader::setSource(const std::string &newSource) {
+  Shader::source = newSource;
 }
 
 bool Shader::isCompiled() {
@@ -21,7 +23,7 @@ Shader::Type Shader::getType() const {
   return type;
 }
 
-ShaderCompileException::ShaderCompileException(std::string message) : Exception() {
+ShaderCompileException::ShaderCompileException(const std::string& message) : Exception() {
   this->message << "Shader compiled with errors: \n" << message;
 }
 }

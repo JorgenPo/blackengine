@@ -30,7 +30,7 @@ public:
 
   TransformComponent();
 
-  const glm::mat4 getModelMatrix() const;
+  glm::mat4 getModelMatrix() const;
   const glm::vec3 &getPosition() const;
   const glm::vec3 &getScale() const;
   const glm::vec3 &getRotation() const;

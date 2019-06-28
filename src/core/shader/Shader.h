@@ -12,7 +12,7 @@ namespace black {
 
 class BLACK_EXPORTED ShaderCompileException : public Exception {
 public:
-  explicit ShaderCompileException(std::string message);
+  explicit ShaderCompileException(const std::string& message);
 };
 
 /**
@@ -32,7 +32,7 @@ protected:
   bool compiled;
 
 public:
-  Shader(const std::string &code, Type type);
+  Shader(std::string code, Type type);
 
   /**
    * Compiles a shader.
@@ -43,11 +43,11 @@ public:
 
   bool isCompiled();
 
-  const std::string &getSource() const;
+  [[nodiscard]] const std::string &getSource() const;
 
   void setSource(const std::string &source);
 
-  Type getType() const;
+  [[nodiscard]] Type getType() const;
 
   /**
    * Returns implementation specific pointer

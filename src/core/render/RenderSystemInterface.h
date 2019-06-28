@@ -35,7 +35,7 @@ public:
    *
    * @return Name of the render system.
    */
-  virtual std::string getName() const = 0;
+  [[nodiscard]] virtual std::string getName() const = 0;
 
   /**
    * Initialize a render system.
@@ -81,9 +81,9 @@ public:
   virtual std::shared_ptr<ShaderProgram> createShaderProgram(std::shared_ptr<Shader> vertexShader,
                                                              std::shared_ptr<Shader> fragmentShader) = 0;
 
-  virtual std::shared_ptr<Texture> createTexture(const std::shared_ptr<Image> &image, bool generateMipMaps = true,
-                                                 TextureFiltering filtering = TextureFiltering::NEAREST,
-                                                 TextureWrapping wrapping = TextureWrapping::CLAMP_TO_BORDER) = 0;
+  virtual std::shared_ptr<Texture> createTexture(const std::shared_ptr<Image> &image, bool generateMipMaps,
+                                                 TextureFiltering filtering,
+                                                 TextureWrapping wrapping) = 0;
 };
 }
 

@@ -33,7 +33,7 @@ public:
   explicit AbstractApplication(const std::string &name, int windowWidth, int windowHeight, bool isFullScreen);
   virtual ~AbstractApplication();
 
-  const std::string &getName() const;
+  [[nodiscard]] const std::string &getName() const;
 
   /**
    * Run the application.
@@ -42,15 +42,15 @@ public:
 
   void setName(const std::string &name);
 
-  int getWindowWidth() const;
+  [[nodiscard]] int getWindowWidth() const;
 
   void setWindowWidth(int windowWidth);
 
-  int getWindowHeight() const;
+  [[nodiscard]] int getWindowHeight() const;
 
   void setWindowHeight(int windowHeight);
 
-  bool isFullScreen() const;
+  [[nodiscard]] bool isFullScreen() const;
 
   void setFullScreen(bool isFullScreen);
 protected:

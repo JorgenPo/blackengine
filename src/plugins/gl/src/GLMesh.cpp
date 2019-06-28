@@ -11,7 +11,11 @@ void GLMesh::bind() {
 }
 
 GLMesh::GLMesh(std::vector<float> vertices, std::vector<float> textureCoords)
-    : Mesh(std::move(vertices), std::move(textureCoords)) {
+  : Mesh(std::move(vertices),
+      std::move(textureCoords)),
+      positionVbo(),
+      textureVbo(),
+      vao() {
 
   glGenBuffers(1, &this->positionVbo);
   glGenBuffers(1, &this->textureVbo);

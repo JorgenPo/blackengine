@@ -21,7 +21,7 @@ class Mesh;
  */
 class UnknownFormatException : public Exception {
 public:
-  explicit UnknownFormatException(std::string extension);
+  explicit UnknownFormatException(const std::string& extension);
 };
 
 /**
@@ -46,7 +46,7 @@ public:
    *
    * @throws UnknownFormatException If no appropriate model parser was found for this model type
    */
-  static std::shared_ptr<ModelComponent> CreateFromFile(std::string fileName);
+  static std::shared_ptr<ModelComponent> CreateFromFile(const std::string& fileName);
 
   /**
    * Creates a model from a single mesh using default material.
@@ -62,7 +62,7 @@ public:
    * @param parser Model parser object
    * @param extension Extension of model file that the model parser can parse
    */
-  static void AddModelParser(std::string extension, std::shared_ptr<ModelParser> parser);
+  static void AddModelParser(const std::string& extension, std::shared_ptr<ModelParser> parser);
 };
 
 }

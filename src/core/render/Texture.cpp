@@ -2,11 +2,10 @@
 #include <Engine.h>
 
 namespace black {
-Texture::Texture(std::shared_ptr<Image> image,
-                 bool generateMipMaps,
+Texture::Texture(const std::shared_ptr<Image>& image,
                  TextureFiltering filtering,
                  TextureWrapping wrapping)
-    : filtering(filtering), wrapping(wrapping) {
+    : image(image), filtering(filtering), wrapping(wrapping) {
 }
 
 TextureFiltering Texture::getFiltering() const {

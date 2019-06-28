@@ -32,11 +32,11 @@ protected:
   std::shared_ptr<Shader> vertexShader;
   std::shared_ptr<Shader> fragmentShader;
 
-  bool linked;
+  bool linked{};
 
 public:
   ShaderProgram();
-  ShaderProgram(const std::shared_ptr<Shader> &vertexShader, const std::shared_ptr<Shader> &fragmentShader);
+  ShaderProgram(std::shared_ptr<Shader> vertexShader, std::shared_ptr<Shader> fragmentShader);
 
   /**
    * Links the program with attached shaders
@@ -65,14 +65,14 @@ public:
   virtual void setUniformVariable(const std::string &name, glm::mat4 matrix) = 0;
   virtual void setUniformVariable(const std::string &name, glm::vec3 vector) = 0;
 
-  const std::shared_ptr<Shader> &getVertexShader() const;
-  const std::shared_ptr<Shader> &getFragmentShader() const;
+  [[nodiscard]] const std::shared_ptr<Shader> &getVertexShader() const;
+  [[nodiscard]] const std::shared_ptr<Shader> &getFragmentShader() const;
 
-  void setVertexShader(const std::shared_ptr<Shader> &vertexShader);
-  void setFragmentShader(const std::shared_ptr<Shader> &fragmentShader);
+  void setVertexShader(const std::shared_ptr<Shader> &newVertexShader);
+  void setFragmentShader(const std::shared_ptr<Shader> &newFragmentShader);
   //void setGeometryShader(const std::shared_ptr<Shader> &geometryShader);
 
-  bool isLinked() const;
+  [[nodiscard]] bool isLinked() const;
 };
 
 }

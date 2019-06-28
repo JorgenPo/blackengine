@@ -6,7 +6,10 @@
 
 namespace black {
 TransformComponent::TransformComponent()
-    : position(0.0f, 0.0f, 0.0f), rotation(0.0f, 0.0f, 0.0f), scaling(1.0f, 1.0f, 1.0f) {
+    : position(0.0f, 0.0f, 0.0f),
+    rotation(0.0f, 0.0f, 0.0f),
+    scaling(1.0f, 1.0f, 1.0f),
+    modelMatrix() {
   this->updateModelMatrix();
 }
 
@@ -14,8 +17,8 @@ const glm::vec3 &TransformComponent::getPosition() const {
   return position;
 }
 
-void TransformComponent::setPosition(const glm::vec3 &position) {
-  TransformComponent::position = position;
+void TransformComponent::setPosition(const glm::vec3 &pos) {
+  TransformComponent::position = pos;
   this->updateModelMatrix();
 }
 
@@ -23,8 +26,8 @@ const glm::vec3 &TransformComponent::getRotation() const {
   return rotation;
 }
 
-void TransformComponent::setRotation(const glm::vec3 &rotation) {
-  TransformComponent::rotation = rotation;
+void TransformComponent::setRotation(const glm::vec3 &rot) {
+  TransformComponent::rotation = rot;
   this->updateModelMatrix();
 }
 
@@ -32,27 +35,27 @@ const glm::vec3 &TransformComponent::getScale() const {
   return scaling;
 }
 
-void TransformComponent::setScale(const glm::vec3 &scaling) {
-  TransformComponent::scaling = scaling;
+void TransformComponent::setScale(const glm::vec3 &scal) {
+  TransformComponent::scaling = scal;
   this->updateModelMatrix();
 }
 
-const glm::mat4 TransformComponent::getModelMatrix() const {
+glm::mat4 TransformComponent::getModelMatrix() const {
   return this->modelMatrix;
 }
 
 void TransformComponent::updateModelMatrix() {
   glm::mat4 translation = glm::mat4(1.0f);
-  glm::mat4 rotation = glm::mat4(1.0f);
+  glm::mat4 rot = glm::mat4(1.0f);
   glm::mat4 scale = glm::mat4(1.0f);
 
   translation = glm::translate(translation, this->position);
   scale = glm::scale(scale, this->scaling);
-  rotation = glm::rotate(rotation, glm::radians(this->rotation.x), {1.0f, 0.0f, 0.0f});
-  rotation = glm::rotate(rotation, glm::radians(this->rotation.y), {0.0f, 1.0f, 0.0f});
-  rotation = glm::rotate(rotation, glm::radians(this->rotation.z), {0.0f, 0.0f, 1.0f});
+  rot = glm::rotate(rot, glm::radians(this->rotation.x), {1.0f, 0.0f, 0.0f});
+  rot = glm::rotate(rot, glm::radians(this->rotation.y), {0.0f, 1.0f, 0.0f});
+  rot = glm::rotate(rot, glm::radians(this->rotation.z), {0.0f, 0.0f, 1.0f});
 
-  this->modelMatrix = translation * rotation * scale;
+  this->modelMatrix = translation * rot * scale;
 }
 
 void TransformComponent::rotate(glm::vec3 vector) {

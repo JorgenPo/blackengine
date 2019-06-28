@@ -33,9 +33,10 @@ class BLACK_EXPORTED Texture {
 protected:
   TextureFiltering filtering;
   TextureWrapping wrapping;
+  std::weak_ptr<Image> image;
 
 public:
-  explicit Texture(std::shared_ptr<Image> image, bool generateMipMaps,
+  explicit Texture(const std::shared_ptr<Image>& image,
                    TextureFiltering filtering,
                    TextureWrapping wrapping);
 
@@ -45,8 +46,8 @@ public:
   virtual void unbind() = 0;
   //virtual void setBorderColor(Color color) = 0;
 
-  TextureFiltering getFiltering() const;
-  TextureWrapping getWrapping() const;
+  [[nodiscard]] TextureFiltering getFiltering() const;
+  [[nodiscard]] TextureWrapping getWrapping() const;
 };
 }
 

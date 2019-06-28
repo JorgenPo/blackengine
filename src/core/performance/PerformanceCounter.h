@@ -31,21 +31,21 @@ public:
    */
   void update();
 
-  float getAverageMpf() const;
-  float getMinMpf() const;
-  float getMaxMpf() const;
+  [[nodiscard]] float getAverageMpf() const;
+  [[nodiscard]] float getMinMpf() const;
+  [[nodiscard]] float getMaxMpf() const;
 
-  float getAverageFps() const;
-  float getMinFps() const;
-  float getMaxFps() const;
+  [[nodiscard]] float getAverageFps() const;
+  [[nodiscard]] float getMinFps() const;
+  [[nodiscard]] float getMaxFps() const;
 
   /**
    * Return a time since first update
    * @return An uptime
    */
-  long long int getUptime() const;
+  [[nodiscard]] long long int getUptime() const;
 
-  float getTimeSinceLastUpdate() const;
+  [[nodiscard]] float getTimeSinceLastUpdate() const;
 };
 }
 

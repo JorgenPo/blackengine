@@ -26,17 +26,17 @@ public:
   Mesh(std::vector<float> vertices, std::vector<float> textureCoords);
 
   // Getters setters
-  const std::vector<float> &getVertices() const;
+  [[nodiscard]] const std::vector<float> &getVertices() const;
 
-  const std::vector<float> &getTextureCoords() const;
+  [[nodiscard]] const std::vector<float> &getTextureCoords() const;
 
-  int getPolygonSize() const;
+  [[nodiscard]] int getPolygonSize() const;
   void setPolygonSize(int polygonSize);
 
   /**
    * Can be overwritten to return render system specific draw mode value
    */
-  virtual int getDrawMode() const;
+  [[nodiscard]] virtual int getDrawMode() const;
   void setDrawMode(DrawMode drawMode);
 
   size_t getVerticesCount();

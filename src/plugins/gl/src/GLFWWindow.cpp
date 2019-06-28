@@ -32,15 +32,15 @@ void GLFWWindow::setRenderTargetCurrent() {
 }
 
 float GLFWWindow::getRenderTargetWidth() {
-  return width;
+  return static_cast<float>(width);
 }
 
 float GLFWWindow::getRenderTargetHeight() {
-  return height;
+  return static_cast<float>(height);
 }
 
 float GLFWWindow::getRenderTargetAspectRatio() {
-  return width / static_cast<float>(height);
+  return static_cast<float>(width) / static_cast<float>(height);
 }
 
 void GLFWWindow::show() {

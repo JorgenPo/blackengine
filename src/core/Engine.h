@@ -76,7 +76,7 @@ public:
    *
    * @param plugin Plugin to be unregistered. Must be invoked in plugin exit point
    */
-  static void UnregisterPlugin(std::shared_ptr<PluginInterface> plugin);
+  static void UnregisterPlugin(const std::shared_ptr<PluginInterface>& plugin);
 
   /**
    * Register a new render system. Render system will be available by it's name.
@@ -106,7 +106,7 @@ private:
    */
   void setDefaultRenderSystem();
 
-  void setTerminateHandler();
+  static void SetTerminationHandler();
 };
 }
 

@@ -38,7 +38,7 @@ PluginManager::PluginManager() {
   this->addPluginDirs({"", "plugins/"});
 
   /* Linux */
-  if (Constants::RuntimePlatform == Platform::LINUX) {
+  if constexpr (Constants::RuntimePlatform == Platform::LINUX) {
     this->addPluginDir("/usr/lib32/blackengine/plugins/");
     this->addPluginDir("/usr/lib/blackengine/plugins/");
   }
@@ -46,7 +46,7 @@ PluginManager::PluginManager() {
   this->logger = Logger::Get("PluginManager");
 }
 
-void PluginManager::loadPlugin(std::string pluginName) {
+void PluginManager::loadPlugin(const std::string& pluginName) {
 
   /* Check if plugin was loaded already */
   auto plugin = this->loadedPluginsLibraries.find(pluginName);
@@ -60,7 +60,7 @@ void PluginManager::loadPlugin(std::string pluginName) {
     auto entryPoint = library->getFunction<PluginEntryPoint>(PluginManager::PLUGIN_ENTRY_POINT);
 
     // Check for exit point also
-    auto exitPoint = library->getFunction<PluginExitPoint>(PluginManager::PLUGIN_EXIT_POINT);
+    library->getFunction<PluginExitPoint>(PluginManager::PLUGIN_EXIT_POINT);
 
     // Calls the plugin entry point
     entryPoint();
@@ -80,13 +80,13 @@ void PluginManager::addPluginDir(const std::string &pluginDir) {
   this->pluginDirs.emplace_back(pluginDir);
 }
 
-void PluginManager::addPluginDirs(std::list<std::string> pluginDirs) {
+void PluginManager::addPluginDirs(const std::list<std::string>& dirs) {
   for (const auto &dir : pluginDirs) {
     this->addPluginDir(dir);
   }
 }
 
-std::shared_ptr<AbstractSharedLibrary> PluginManager::searchForPluginLibrary(std::string pluginName) {
+std::shared_ptr<AbstractSharedLibrary> PluginManager::searchForPluginLibrary(const std::string& pluginName) {
   // Search for plugin in all dirs
   for (auto &pluginDir : this->pluginDirs) {
     try {
@@ -109,10 +109,9 @@ std::shared_ptr<AbstractSharedLibrary> PluginManager::searchForPluginLibrary(std
   throw PluginNotFoundException(pluginName, this->pluginDirs);
 }
 
-PluginManager::~PluginManager() {
-}
+PluginManager::~PluginManager() = default;
 
-void PluginManager::unloadPlugin(std::shared_ptr<AbstractSharedLibrary> plugin) {
+void PluginManager::unloadPlugin(const std::shared_ptr<AbstractSharedLibrary>& plugin) {
   try {
     auto exitPoint = plugin->getFunction<PluginExitPoint>(PLUGIN_EXIT_POINT);
     exitPoint();
@@ -138,12 +137,12 @@ void PluginManager::shutdownPlugins() {
   }
 }
 
-void PluginManager::unregisterPlugin(std::shared_ptr<PluginInterface> plugin) {
+void PluginManager::unregisterPlugin(const std::shared_ptr<PluginInterface>& plugin) {
   plugin->uninstall();
   this->registeredPlugins.erase(plugin->getName());
 }
 
-void PluginManager::registerPlugin(std::shared_ptr<PluginInterface> plugin) {
+void PluginManager::registerPlugin(const std::shared_ptr<PluginInterface>& plugin) {
   this->registeredPlugins[plugin->getName()] = plugin;
   plugin->install();
 }

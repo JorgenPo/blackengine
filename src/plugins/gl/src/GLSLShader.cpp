@@ -9,7 +9,7 @@ namespace black {
 size_t GLSLShader::ERROR_BUFFER_LENGTH = 2048;
 
 GLSLShader::GLSLShader(const std::string &code, Shader::Type type) : Shader(code, type) {
-  this->shader = glCreateShader(toGLShaderType(type));
+  this->shader = glCreateShader(ToGLShaderType(type));
 }
 
 void GLSLShader::compile() {
@@ -28,7 +28,7 @@ void GLSLShader::compile() {
   this->compiled = true;
 }
 
-GLenum GLSLShader::toGLShaderType(Shader::Type type) {
+GLenum GLSLShader::ToGLShaderType(Shader::Type type) {
   switch (type) {
   case Shader::Type::VERTEX:return GL_VERTEX_SHADER;
   case Shader::Type::FRAGMENT:return GL_FRAGMENT_SHADER;

@@ -16,6 +16,7 @@
 
 #include <memory>
 #include <fstream>
+#include <utility>
 
 namespace black {
 
@@ -42,7 +43,7 @@ std::shared_ptr<ModelComponent> ModelManager::CreateSquare(float sideSize) {
 }
 
 std::shared_ptr<ModelComponent> ModelManager::CreateFromMesh(std::shared_ptr<Mesh> mesh) {
-  auto modelPart = ModelPart("Default", mesh, std::make_shared<Material>());
+  auto modelPart = ModelPart("Default", std::move(mesh), std::make_shared<Material>());
 
   std::vector<ModelPart> parts;
   parts.emplace_back(modelPart);
@@ -87,7 +88,7 @@ std::shared_ptr<ModelComponent> ModelManager::CreateRectangle(float a, float b) 
   return ModelManager::CreateFromMesh(mesh);
 }
 
-std::shared_ptr<ModelComponent> ModelManager::CreateFromFile(std::string fileName) {
+std::shared_ptr<ModelComponent> ModelManager::CreateFromFile(const std::string& fileName) {
   auto extension = Paths::GetFileExtension(fileName);
   auto logger = Logger::Get("ModelManager");
 
@@ -115,11 +116,11 @@ std::shared_ptr<ModelComponent> ModelManager::CreateFromFile(std::string fileNam
   return model;
 }
 
-void ModelManager::AddModelParser(std::string extension, std::shared_ptr<ModelParser> parser) {
+void ModelManager::AddModelParser(const std::string& extension, std::shared_ptr<ModelParser> parser) {
   parsers[extension] = std::move(parser);
 }
 
-UnknownFormatException::UnknownFormatException(std::string extension) {
+UnknownFormatException::UnknownFormatException(const std::string& extension) {
   this->message << "No parser for '" << extension << "' model found!" << std::endl;
 }
 }

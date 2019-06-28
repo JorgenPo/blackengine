@@ -26,7 +26,7 @@ public:
   static const std::array<float, 4> WHITE;
   static const std::array<float, 4> BLACK;
 
-  std::array<float, 4> getArray() const;
+  [[nodiscard]] std::array<float, 4> getArray() const;
 };
 }
 #endif //BLACKENGINE_COLOR_H

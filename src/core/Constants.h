@@ -30,7 +30,7 @@ public:
 
   static constexpr const char *RuntimePlatformString = BLACK_PLATFORM;
 
-  static const bool IsDebug = true;
+  static constexpr bool IsDebug = true;
 };
 
 }

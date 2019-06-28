@@ -1,11 +1,13 @@
 #include "ShaderProgram.h"
 
+#include <utility>
+
 #include "Shader.h"
 
 namespace black {
 
-ShaderProgram::ShaderProgram(const std::shared_ptr<Shader> &vertexShader, const std::shared_ptr<Shader> &fragmentShader)
-    : vertexShader(vertexShader), fragmentShader(fragmentShader) {
+ShaderProgram::ShaderProgram(std::shared_ptr<Shader> vertexShader, std::shared_ptr<Shader> fragmentShader)
+    : vertexShader(std::move(vertexShader)), fragmentShader(std::move(fragmentShader)) {
 }
 
 const std::shared_ptr<Shader> &ShaderProgram::getVertexShader() const {
@@ -16,27 +18,25 @@ const std::shared_ptr<Shader> &ShaderProgram::getFragmentShader() const {
   return fragmentShader;
 }
 
-void ShaderProgram::setVertexShader(const std::shared_ptr<Shader> &vertexShader) {
-  if (vertexShader->getType() != Shader::Type::VERTEX) {
+void ShaderProgram::setVertexShader(const std::shared_ptr<Shader> &newVertexShader) {
+  if (newVertexShader->getType() != Shader::Type::VERTEX) {
     throw ShaderProgramInvalidShaderTypeException("Trying to attach invalid shader as vertex shader");
   }
-  ShaderProgram::vertexShader = vertexShader;
+  ShaderProgram::vertexShader = newVertexShader;
 }
 
-void ShaderProgram::setFragmentShader(const std::shared_ptr<Shader> &fragmentShader) {
-  if (fragmentShader->getType() != Shader::Type::FRAGMENT) {
+void ShaderProgram::setFragmentShader(const std::shared_ptr<Shader> &newFragmentShader) {
+  if (newFragmentShader->getType() != Shader::Type::FRAGMENT) {
     throw ShaderProgramInvalidShaderTypeException("Trying to attach invalid shader as fragment shader");
   }
-  ShaderProgram::fragmentShader = fragmentShader;
+  ShaderProgram::fragmentShader = newFragmentShader;
 }
 
 bool ShaderProgram::isLinked() const {
   return linked;
 }
 
-ShaderProgram::ShaderProgram() {
-
-}
+ShaderProgram::ShaderProgram() = default;
 
 ShaderProgramLinkException::ShaderProgramLinkException(const std::string &message)
     : Exception(message) {}

@@ -15,7 +15,10 @@ Camera::Camera(
     const glm::vec3 &position,
     const glm::vec3 &lookAt,
     const glm::vec3 &upVector)
-    : position(position), lookAt(lookAt), up(upVector) {
+    : position(position),
+    lookAt(lookAt),
+    up(upVector),
+    projectionType(ProjectionType::PERSPECTIVE) {
   this->setProjection(projection);
   this->updateMatrices();
 }
@@ -44,18 +47,18 @@ void Camera::updateMatrices() {
   this->viewMatrix = glm::lookAt(this->position, this->lookAt, this->up);
 }
 
-void Camera::setPosition(const glm::vec3 &position) {
-  this->position = position;
+void Camera::setPosition(const glm::vec3 &newPosition) {
+  this->position = newPosition;
   this->updateMatrices();
 }
 
-void Camera::setLookAt(const glm::vec3 &lookAt) {
-  this->lookAt = lookAt;
+void Camera::setLookAt(const glm::vec3 &newLookAt) {
+  this->lookAt = newLookAt;
   this->updateMatrices();
 }
 
-void Camera::setUpVector(const glm::vec3 &up) {
-  this->up = up;
+void Camera::setUpVector(const glm::vec3 &newUp) {
+  this->up = newUp;
   this->updateMatrices();
 }
 

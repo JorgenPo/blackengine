@@ -23,7 +23,7 @@ void Engine::Initialize(std::string title, int width, int height, bool isFullScr
   // Init Logger
   Logger::Initialize();
 
-  if (Constants::IsDebug) {
+  if constexpr (Constants::IsDebug) {
     Logger::SetLogLevel(LogLevel::TRACE);
   }
 
@@ -42,7 +42,7 @@ void Engine::Initialize(std::string title, int width, int height, bool isFullScr
   engine->currentRenderSystem->initialize(std::move(title), width, height, isFullScreen);
 }
 
-void Engine::UnregisterPlugin(std::shared_ptr<PluginInterface> plugin) {
+void Engine::UnregisterPlugin(const std::shared_ptr<PluginInterface>& plugin) {
   plugin->uninstall();
 }
 
@@ -55,11 +55,10 @@ void Engine::RegisterRenderSystem(std::shared_ptr<RenderSystemInterface> renderS
   Engine::GetInstance()->renderSystems["Name"] = std::move(renderSystem);
 }
 
-Engine::~Engine() {
-}
+Engine::~Engine() = default;
 
 void Engine::initializeEngine() {
-  setTerminateHandler();
+  SetTerminationHandler();
 
   logger->trace("Loading core plugins");
 
@@ -105,7 +104,7 @@ void Engine::shutdownEngine() {
   pluginManager->unloadPlugins();
 }
 
-void Engine::setTerminateHandler() {
+void Engine::SetTerminationHandler() {
   std::set_terminate([]() {
     std::string message("Undefined exception");
 

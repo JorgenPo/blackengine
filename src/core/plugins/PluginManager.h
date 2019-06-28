@@ -83,7 +83,7 @@ public:
    *
    * @param pluginName Plugin name.
    */
-  void loadPlugin(std::string pluginName);
+  void loadPlugin(const std::string& pluginName);
 
   /**
    * Add directory to search for plugins while loading
@@ -96,19 +96,19 @@ public:
    * Add directories to search for plugins while loading
    * @param pluginDirs
    */
-  void addPluginDirs(std::list<std::string> pluginDirs);
+  void addPluginDirs(const std::list<std::string>& pluginDirs);
 
   /**
    * Add plugin object as registered plugin.
    * Calls an install method of a plugin.
    */
-  void registerPlugin(std::shared_ptr<PluginInterface> plugin);
+  void registerPlugin(const std::shared_ptr<PluginInterface>& plugin);
 
   /**
    * Remove plugin from registered plugins list.
    * Calls an uninstall method of a plugin.
    */
-  void unregisterPlugin(std::shared_ptr<PluginInterface> plugin);
+  void unregisterPlugin(const std::shared_ptr<PluginInterface>& plugin);
 
   /**
    * Calls initialize of all plugins loaded at a time of call
@@ -135,14 +135,14 @@ private:
    * search dirs
    * @param pluginName Plugin name without extension
    */
-  std::shared_ptr<AbstractSharedLibrary> searchForPluginLibrary(std::string pluginName);
+  std::shared_ptr<AbstractSharedLibrary> searchForPluginLibrary(const std::string& pluginName);
 
   /**
    * Unloads a plugin. Calls PLUGIN_EXIT_POINT function in dll
    *
    * @param plugin Plugin to unload
    */
-  void unloadPlugin(std::shared_ptr<AbstractSharedLibrary> plugin);
+  void unloadPlugin(const std::shared_ptr<AbstractSharedLibrary>& plugin);
 };
 
 }

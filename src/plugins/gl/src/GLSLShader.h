@@ -55,7 +55,7 @@ public:
   void *getImplementation() override;
 
 private:
-  GLenum toGLShaderType(Type type);
+  static GLenum ToGLShaderType(Type type);
   bool isCompiledSuccessfully();
   std::string getCompilationError();
 };

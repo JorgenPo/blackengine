@@ -44,12 +44,12 @@ public:
   /**
    * Add a new logger
    */
-  static void AddLogger(LogTarget target, std::string name);
+  static void AddLogger(LogTarget target, std::string_view name);
 
   /**
    * Remove logger
    */
-  static void RemoveLogger(std::string name);
+  static void RemoveLogger(std::string_view name);
 
   /**
    * Set a minimum level of all loggers
@@ -65,7 +65,7 @@ public:
    * @param name Logger name
    * @return
    */
-  static std::shared_ptr<Logger> Get(const std::string &name);
+  static std::shared_ptr<Logger> Get(std::string_view name);
 
   /**
    * Return a default logger
@@ -74,9 +74,9 @@ public:
   static std::shared_ptr<Logger> Get();
 
 private:
-  static void AddStdOutLogger(std::string name);
-  static void AddStdErrLogger(std::string name);
-  static void InitializeFileLogger(std::string name);
+  static void AddStdOutLogger(std::string_view name);
+  static void AddStdErrLogger(std::string_view name);
+  static void InitializeFileLogger(std::string_view name);
 
 public:
   explicit Logger(std::shared_ptr<spdlog::logger> logger);

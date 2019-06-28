@@ -15,7 +15,7 @@ class ModelComponent;
 
 class ParseException : public Exception {
 public:
-  explicit ParseException(std::string file, const std::string &message)
+  explicit ParseException(const std::string& file, const std::string &message)
       : Exception(message) {
     this->message << "Failed to parse " << file << ": " << message << std::endl;
   }

@@ -31,10 +31,10 @@ public:
   void load(std::string fileName, bool flipVertically = true);
 
   bool isLoaded();
-  int getWidth() const;
-  int getHeight() const;
-  int getNumColorChannels() const;
-  unsigned char *getData() const;
+  [[nodiscard]] int getWidth() const;
+  [[nodiscard]] int getHeight() const;
+  [[nodiscard]] int getNumColorChannels() const;
+  [[nodiscard]] unsigned char *getData() const;
 };
 }
 

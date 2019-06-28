@@ -24,7 +24,7 @@ public:
 
   void bind() override;
 
-  int getDrawMode() const override;
+  [[nodiscard]] int getDrawMode() const override;
 
 private:
   void createMesh();
