@@ -13,7 +13,7 @@ namespace black {
 /**
  * Helper methods for working with paths and file names
  */
-class BLACK_EXPORTED Paths {
+class BLACK_EXPORTED FileSystem {
 public:
   /**
    * Return a file extension without a dot.
@@ -32,6 +32,18 @@ public:
    * @return Is the file exist
    */
   static bool IsFileExist(std::string path);
+
+  /**
+   * Write string data to a file. If create flag is true
+   * then file will be created if not exist
+   *
+   * @param fileName
+   * @param content
+   * @param create
+   *
+   * @return
+   */
+  static void SaveToFile(std::string_view fileName, const std::string &content, bool create);
 };
 
 }

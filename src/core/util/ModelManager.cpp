@@ -3,7 +3,7 @@
 //
 
 #include "ModelManager.h"
-#include "Paths.h"
+#include "FileSystem.h"
 #include "ModelParser.h"
 
 #include <Engine.h>
@@ -89,14 +89,14 @@ std::shared_ptr<ModelComponent> ModelManager::CreateRectangle(float a, float b) 
 }
 
 std::shared_ptr<ModelComponent> ModelManager::CreateFromFile(const std::string& fileName) {
-  auto extension = Paths::GetFileExtension(fileName);
+  auto extension = FileSystem::GetFileExtension(fileName);
   auto logger = Logger::Get("ModelManager");
 
   std::shared_ptr<ModelComponent> model;
   try {
     auto parser = parsers.at(extension);
 
-    if (!Paths::IsFileExist(fileName)) {
+    if (!FileSystem::IsFileExist(fileName)) {
       throw FileNotFoundException(fileName);
     }
 

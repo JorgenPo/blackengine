@@ -8,6 +8,8 @@
 #include "GLMesh.h"
 #include "GLTexture.h"
 #include "GLRenderer.h"
+#include "GLSLShader.h"
+#include "GLSLShaderProgram.h"
 
 #include <log/Logger.h>
 
@@ -72,12 +74,12 @@ std::shared_ptr<Mesh> OpenGLRenderSystem::createMesh(
 }
 
 std::shared_ptr<Shader> OpenGLRenderSystem::createShader(std::string source, Shader::Type type) {
-  return std::shared_ptr<Shader>();
+  return std::make_shared<GLSLShader>(std::move(source), type);
 }
 
 std::shared_ptr<ShaderProgram> OpenGLRenderSystem::createShaderProgram(std::shared_ptr<Shader> vertexShader,
                                                                        std::shared_ptr<Shader> fragmentShader) {
-  return std::shared_ptr<ShaderProgram>();
+  return std::make_shared<GLSLShaderProgram>(std::move(vertexShader), std::move(fragmentShader));
 }
 
 std::string OpenGLRenderSystem::getErrorString(GLenum error) {

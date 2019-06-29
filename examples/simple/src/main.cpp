@@ -23,7 +23,7 @@ class BlackEngineApplication : public GameApplication {
 
 public:
   BlackEngineApplication() : GameApplication(std::string("BlackEngineApplication") + Constants::RuntimePlatformString,
-                                             800, 600, false), cameraRadius(10.0f), cameraSpeed(0.1f) {
+      800, 600, false), cameraRadius(10.0f), cameraSpeed(0.1f) {
   }
 
 private:
@@ -52,15 +52,15 @@ private:
   void initializeResources() override {
     auto modelComponent = ModelManager::CreateFromFile("models/cottage_obj.obj");
 
-    auto frogImage = std::make_shared<Image>("models/wall.jpg", true);
+    auto frogImage = std::make_shared<Image>("models/cottage_diffuse.jpg", true);
     auto frogTexture = Engine::GetCurrentRenderSystem()->createTexture(
-        frogImage, true, TextureFiltering::LINEAR, TextureWrapping::REPEAT);
+        frogImage, true, TextureFiltering::NEAREST, TextureWrapping::CLAMP_TO_EDGE);
 
-    auto material = std::make_shared<Material>(std::move(frogTexture));
-
-    for (auto &&part : modelComponent->getParts()) {
-      part.material = material;
-    }
+//    auto material = std::make_shared<Material>(std::move(frogTexture));
+//
+//    for (auto &&part : modelComponent->getParts()) {
+//      part.material = material;
+//    }
 
     this->gameObject = std::make_shared<GameEntity>("Frog");
     this->gameObject->add(modelComponent);

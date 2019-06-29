@@ -6,12 +6,15 @@
 
 #include <shader/Shader.h>
 #include <glm/gtc/type_ptr.hpp>
+#include <utility>
 
 namespace black {
 
 size_t GLSLShaderProgram::ERROR_BUFFER_LENGTH = 2048;
 
-GLSLShaderProgram::GLSLShaderProgram() {
+GLSLShaderProgram::GLSLShaderProgram(std::shared_ptr<Shader> vertexShader, std::shared_ptr<Shader> fragmentShader)
+    : ShaderProgram(std::move(vertexShader), std::move(fragmentShader)) {
+
   this->program = glCreateProgram();
 }
 
@@ -109,4 +112,5 @@ void GLSLShaderProgram::setUniformVariable(const std::string &name, glm::mat4 ma
 void GLSLShaderProgram::setUniformVariable(const std::string &name, glm::vec3 vector) {
   glUniform3f(glGetUniformLocation(this->program, name.c_str()), vector.r, vector.g, vector.b);
 }
+
 }

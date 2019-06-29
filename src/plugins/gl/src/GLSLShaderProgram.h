@@ -9,6 +9,9 @@
 #include <shader/ShaderProgram.h>
 
 namespace black {
+
+class Shader;
+
 /**
  * GLSL Shader program
  */
@@ -17,7 +20,7 @@ class GLSLShaderProgram : public ShaderProgram {
 
   GLuint program;
 public:
-  GLSLShaderProgram();
+  GLSLShaderProgram(std::shared_ptr<Shader> vertexShader, std::shared_ptr<Shader> fragmentShader);
 
   virtual ~GLSLShaderProgram();
 

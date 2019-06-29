@@ -14,7 +14,7 @@
 #include <memory>
 
 namespace black {
-class GLSLShaderProgram;
+class ShaderProgram;
 class Logger;
 
 /**
@@ -22,7 +22,7 @@ class Logger;
  */
 class GLRenderer : public RendererInterface {
   std::shared_ptr<RenderTargetInterface> currentTarget;
-  std::shared_ptr<GLSLShaderProgram> diffuseShader;
+  std::shared_ptr<ShaderProgram> diffuseShader;
   std::shared_ptr<Logger> logger;
 
   glm::mat4 model;

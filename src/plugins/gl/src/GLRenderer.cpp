@@ -15,7 +15,10 @@
 #include <render/Material.h>
 #include <components/ModelComponent.h>
 #include <components/TransformComponent.h>
+#include <util/FileSystem.h>
+
 #include <log/Logger.h>
+#include <util/ShaderManager.h>
 
 namespace black {
 
@@ -73,7 +76,7 @@ GLRenderer::GLRenderer()
     createShaders();
   } catch (const Exception &e) {
     logger->critical("Failed to create shader programs: " + e.getMessage());
-    throw RendererInitializationException("Failed to compile shaders: " + e.getMessage());
+    throw RendererInitializationException("Failed to create shader program: " + e.getMessage());
   }
 
   glEnable(GL_CULL_FACE);
@@ -81,16 +84,8 @@ GLRenderer::GLRenderer()
 }
 
 void GLRenderer::createShaders() {
-  auto vertexShader = std::make_shared<GLSLShader>(GLSLShader::SimpleVertex, Shader::Type::VERTEX);
-  auto fragmentShader = std::make_shared<GLSLShader>(GLSLShader::SimpleFragment, Shader::Type::FRAGMENT);
-
-  vertexShader->compile();
-  fragmentShader->compile();
-
-  this->diffuseShader = std::make_shared<GLSLShaderProgram>();
-  this->diffuseShader->setFragmentShader(fragmentShader);
-  this->diffuseShader->setVertexShader(vertexShader);
-  this->diffuseShader->link();
+  this->diffuseShader = util::ShaderManager::CreateShaderProgramFromFile(
+      "shaders/simple_vertex.glsl", "shaders/simple_fragment.glsl");
 
   glEnable(GL_DEPTH_TEST);
 }
