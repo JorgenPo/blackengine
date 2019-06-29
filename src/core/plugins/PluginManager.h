@@ -8,7 +8,7 @@
 #include <CommonHeaders.h>
 #include <exceptions/Exception.h>
 
-#include <list>
+#include <vector>
 #include <map>
 
 namespace black {
@@ -22,7 +22,7 @@ class AbstractSharedLibrary;
  */
 class BLACK_EXPORTED PluginNotFoundException : public Exception {
   std::string pluginName;
-  std::list<std::string> pluginDirs;
+  std::vector<std::string> pluginDirs;
 
 public:
   /**
@@ -31,7 +31,7 @@ public:
    * @param pluginName Name of a plugin
    * @param pluginDirs Directories in which plugins are searched
    */
-  PluginNotFoundException(const std::string &pluginName, const std::list<std::string> &pluginDirs);
+  PluginNotFoundException(const std::string &pluginName, const std::vector<std::string> &pluginDirs);
 };
 
 class BLACK_EXPORTED PluginFunctionNotFound : public Exception {
@@ -56,7 +56,7 @@ class BLACK_EXPORTED PluginManager {
   PluginsLibriesMap loadedPluginsLibraries;
   PluginsMap registeredPlugins;
 
-  std::list<std::string> pluginDirs;
+  std::vector<std::string> pluginDirs;
 
   typedef void (*PluginEntryPoint)();
   typedef void (*PluginExitPoint)();
@@ -96,7 +96,7 @@ public:
    * Add directories to search for plugins while loading
    * @param pluginDirs
    */
-  void addPluginDirs(const std::list<std::string>& pluginDirs);
+  void addPluginDirs(const std::vector<std::string>& pluginDirs);
 
   /**
    * Add plugin object as registered plugin.

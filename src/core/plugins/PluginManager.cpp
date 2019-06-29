@@ -21,7 +21,7 @@ PluginFunctionNotFound::PluginFunctionNotFound(const std::string &pluginName, co
 }
 
 PluginNotFoundException::PluginNotFoundException(
-    const std::string &pluginName, const std::list<std::string> &pluginDirs)
+    const std::string &pluginName, const std::vector<std::string> &pluginDirs)
     : pluginName(pluginName), pluginDirs(pluginDirs) {
 
   this->message << "Plugin with name '" << pluginName << "' not found. Searching dirs are: [";
@@ -80,10 +80,8 @@ void PluginManager::addPluginDir(const std::string &pluginDir) {
   this->pluginDirs.emplace_back(pluginDir);
 }
 
-void PluginManager::addPluginDirs(const std::list<std::string>& dirs) {
-  for (const auto &dir : pluginDirs) {
-    this->addPluginDir(dir);
-  }
+void PluginManager::addPluginDirs(const std::vector<std::string>& dirs) {
+  std::for_each(dirs.begin(), dirs.end(), [&](const auto &dir){ this->addPluginDir(dir); });
 }
 
 std::shared_ptr<AbstractSharedLibrary> PluginManager::searchForPluginLibrary(const std::string& pluginName) {

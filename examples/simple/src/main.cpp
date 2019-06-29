@@ -53,7 +53,9 @@ private:
     auto modelComponent = ModelManager::CreateFromFile("models/cottage_obj.obj");
 
     auto frogImage = std::make_shared<Image>("models/wall.jpg", true);
-    auto frogTexture = Engine::GetCurrentRenderSystem()->createTexture(frogImage);
+    auto frogTexture = Engine::GetCurrentRenderSystem()->createTexture(
+        frogImage, true, TextureFiltering::LINEAR, TextureWrapping::REPEAT);
+
     auto material = std::make_shared<Material>(std::move(frogTexture));
 
     for (auto &&part : modelComponent->getParts()) {
