@@ -80,7 +80,7 @@ GLRenderer::GLRenderer()
   }
 
   glEnable(GL_CULL_FACE);
-  glCullFace(GL_CW);
+  glCullFace(GL_FRONT);
 }
 
 void GLRenderer::createShaders() {
