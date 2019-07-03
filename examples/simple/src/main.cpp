@@ -56,11 +56,11 @@ private:
     auto frogTexture = Engine::GetCurrentRenderSystem()->createTexture(
         frogImage, true, TextureFiltering::NEAREST, TextureWrapping::CLAMP_TO_EDGE);
 
-//    auto material = std::make_shared<Material>(std::move(frogTexture));
-//
-//    for (auto &&part : modelComponent->getParts()) {
-//      part.material = material;
-//    }
+    auto material = std::make_shared<Material>(std::move(frogTexture));
+
+    for (auto &&part : modelComponent->getParts()) {
+      part.material = material;
+    }
 
     this->gameObject = std::make_shared<GameEntity>("Frog");
     this->gameObject->add(modelComponent);

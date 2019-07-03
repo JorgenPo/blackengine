@@ -13,9 +13,10 @@ int Mesh::getPolygonSize() const {
   return polygonSize;
 }
 
-Mesh::Mesh(std::vector<float> vertices, std::vector<float> textureCoords)
+Mesh::Mesh(std::vector<float> vertices, std::vector<float> textureCoords, std::vector<float> normals)
     : vertices(std::move(vertices)), textureCoords(std::move(textureCoords)),
-      drawMode(DrawMode::TRIANGLES), polygonSize(3) {
+      drawMode(DrawMode::TRIANGLES), polygonSize(3),
+      normals(std::move(normals)) {
 
 }
 
@@ -38,4 +39,9 @@ size_t Mesh::getVerticesCount() {
 const std::vector<float> &Mesh::getTextureCoords() const {
   return textureCoords;
 }
+
+const std::vector<float> &Mesh::getNormals() const {
+  return normals;
+}
+
 }

@@ -45,6 +45,8 @@ public:
 
   void setUniformVariable(const std::string &name, glm::vec3 vector) override;
 
+  void setUniformVariable(const std::string &name, glm::vec4 vector) override;
+
 private:
   bool isLinkedSuccessfully();
   std::string getLinkError();

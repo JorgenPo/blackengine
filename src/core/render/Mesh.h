@@ -18,17 +18,18 @@ class BLACK_EXPORTED Mesh {
 protected:
   std::vector<float> vertices;
   std::vector<float> textureCoords;
+  std::vector<float> normals;
 
   DrawMode drawMode;
   int polygonSize;
 
 public:
-  Mesh(std::vector<float> vertices, std::vector<float> textureCoords);
+  Mesh(std::vector<float> vertices, std::vector<float> textureCoords, std::vector<float> normals);
 
   // Getters setters
   [[nodiscard]] const std::vector<float> &getVertices() const;
-
   [[nodiscard]] const std::vector<float> &getTextureCoords() const;
+  [[nodiscard]] const std::vector<float> &getNormals() const;
 
   [[nodiscard]] int getPolygonSize() const;
   void setPolygonSize(int polygonSize);

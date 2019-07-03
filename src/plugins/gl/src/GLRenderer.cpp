@@ -39,9 +39,14 @@ void GLRenderer::render(std::shared_ptr<GameEntity> object, std::shared_ptr<Came
   // Make the diffuse shader current
   this->diffuseShader->use();
 
+  glm::vec4 lightPosition = camera->getViewMatrix() * object->transform->getModelMatrix() *
+      glm::vec4{10.0f, 20.0f, 1.0f, 1.0f};
+
   this->diffuseShader->setUniformVariable("model", object->transform->getModelMatrix());
   this->diffuseShader->setUniformVariable("view", camera->getViewMatrix());
   this->diffuseShader->setUniformVariable("projection", camera->getProjectionMatrix());
+  this->diffuseShader->setUniformVariable("lightPosition", glm::vec3(lightPosition));
+  this->diffuseShader->setUniformVariable("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
 
   auto modelComponent = object->get<ModelComponent>();
   if (modelComponent == nullptr) {
@@ -80,12 +85,13 @@ GLRenderer::GLRenderer()
   }
 
   glEnable(GL_CULL_FACE);
-  glCullFace(GL_FRONT);
+  glCullFace(GL_BACK);
 }
 
 void GLRenderer::createShaders() {
   this->diffuseShader = util::ShaderManager::CreateShaderProgramFromFile(
       "shaders/simple_vertex.glsl", "shaders/simple_fragment.glsl");
+  this->diffuseShader->use();
 
   glEnable(GL_DEPTH_TEST);
 }

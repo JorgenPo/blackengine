@@ -69,8 +69,8 @@ std::shared_ptr<AbstractRenderWindow> OpenGLRenderSystem::getRenderWindow() {
 }
 
 std::shared_ptr<Mesh> OpenGLRenderSystem::createMesh(
-    std::vector<float> vertices, std::vector<float> textureCoords) {
-  return std::make_shared<GLMesh>(vertices, textureCoords);
+    std::vector<float> vertices, std::vector<float> textureCoords, std::vector<float> normals) {
+  return std::make_shared<GLMesh>(std::move(vertices), std::move(textureCoords), std::move(normals));
 }
 
 std::shared_ptr<Shader> OpenGLRenderSystem::createShader(std::string source, Shader::Type type) {
@@ -84,7 +84,22 @@ std::shared_ptr<ShaderProgram> OpenGLRenderSystem::createShaderProgram(std::shar
 
 std::string OpenGLRenderSystem::getErrorString(GLenum error) {
   // TODO: make switch
-  return std::string(std::to_string(error));
+  switch(error) {
+  case GL_INVALID_ENUM:
+    return "GL_INVALID_ENUM";
+  case GL_NO_ERROR:
+    return "GL_NO_ERROR";
+  case GL_INVALID_VALUE:
+    return "GL_INVALID_VALUE";
+  case GL_INVALID_OPERATION:
+    return "GL_INVALID_OPERATION";
+  case GL_INVALID_FRAMEBUFFER_OPERATION:
+    return "GL_INVALID_FRAMEBUFFER_OPERATION";
+  case GL_OUT_OF_MEMORY:
+    return "GL_OUT_OF_MEMORY";
+  default:
+    return fmt::format("Unknown error{:x}", error);
+  }
 }
 
 std::shared_ptr<Texture>

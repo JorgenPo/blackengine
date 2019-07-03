@@ -10,15 +10,16 @@ void GLMesh::bind() {
   glBindVertexArray(this->vao);
 }
 
-GLMesh::GLMesh(std::vector<float> vertices, std::vector<float> textureCoords)
-  : Mesh(std::move(vertices),
-      std::move(textureCoords)),
+GLMesh::GLMesh(std::vector<float> vertices, std::vector<float> textureCoords, std::vector<float> normals)
+  : Mesh(std::move(vertices), std::move(textureCoords), std::move(normals)),
       positionVbo(),
       textureVbo(),
       vao() {
 
   glGenBuffers(1, &this->positionVbo);
   glGenBuffers(1, &this->textureVbo);
+  glGenBuffers(1, &this->normalVbo);
+
   glGenVertexArrays(1, &this->vao);
 
   createMesh();
@@ -40,6 +41,13 @@ void GLMesh::createMesh() {
 
   glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), nullptr);
   glEnableVertexAttribArray(1);
+
+  // Normals coords
+  glBindBuffer(GL_ARRAY_BUFFER, this->normalVbo);
+  glBufferData(GL_ARRAY_BUFFER, this->normals.size() * sizeof(float), this->normals.data(), GL_STATIC_DRAW);
+
+  glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+  glEnableVertexAttribArray(2);
 }
 
 int GLMesh::getDrawMode() const {

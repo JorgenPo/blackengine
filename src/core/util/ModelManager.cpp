@@ -37,7 +37,7 @@ std::shared_ptr<ModelComponent> ModelManager::CreateSquare(float sideSize) {
        halfSide, -halfSide, 0.0f,
        -halfSide, halfSide, 0.0f,
        -halfSide, -halfSide, 0.0f,
-       halfSide, -halfSide, 0.0f,});
+       halfSide, -halfSide, 0.0f,}, {});
 
   return ModelManager::CreateFromMesh(mesh);
 }
@@ -60,7 +60,7 @@ std::shared_ptr<ModelComponent> ModelManager::CreateEquilateralTriangle(float si
                                                                halfSide, -halfSide, 0.0f,}, {
                                                                0.0f, halfSide, 0.0f,
                                                                -halfSide, -halfSide, 0.0f,
-                                                               halfSide, -halfSide, 0.0f,});
+                                                               halfSide, -halfSide, 0.0f,}, {});
 
   return ModelManager::CreateFromMesh(mesh);
 }
@@ -83,7 +83,7 @@ std::shared_ptr<ModelComponent> ModelManager::CreateRectangle(float a, float b) 
                                                                -halfA, halfB, 0.0f,
                                                                -halfA, -halfB, 0.0f,
                                                                halfA, -halfB, 0.0f,
-                                                           });
+                                                           }, {});
 
   return ModelManager::CreateFromMesh(mesh);
 }

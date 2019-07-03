@@ -75,7 +75,8 @@ public:
    *
    * @return Pointer to the created mesh
    */
-  virtual std::shared_ptr<Mesh> createMesh(std::vector<float> vertices, std::vector<float> textureCoords) = 0;
+  virtual std::shared_ptr<Mesh> createMesh(
+      std::vector<float> vertices, std::vector<float> textureCoords, std::vector<float> normals) = 0;
 
   virtual std::shared_ptr<Shader> createShader(std::string source, Shader::Type type) = 0;
   virtual std::shared_ptr<ShaderProgram> createShaderProgram(std::shared_ptr<Shader> vertexShader,

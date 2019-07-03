@@ -64,6 +64,7 @@ public:
   virtual void setUniformVariable(const std::string &name, std::array<float, 2> value) = 0;
   virtual void setUniformVariable(const std::string &name, glm::mat4 matrix) = 0;
   virtual void setUniformVariable(const std::string &name, glm::vec3 vector) = 0;
+  virtual void setUniformVariable(const std::string &name, glm::vec4 vector) = 0;
 
   [[nodiscard]] const std::shared_ptr<Shader> &getVertexShader() const;
   [[nodiscard]] const std::shared_ptr<Shader> &getFragmentShader() const;

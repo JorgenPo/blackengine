@@ -113,4 +113,8 @@ void GLSLShaderProgram::setUniformVariable(const std::string &name, glm::vec3 ve
   glUniform3f(glGetUniformLocation(this->program, name.c_str()), vector.r, vector.g, vector.b);
 }
 
+void GLSLShaderProgram::setUniformVariable(const std::string &name, glm::vec4 vector) {
+  glUniform4f(glGetUniformLocation(this->program, name.c_str()), vector.r, vector.g, vector.b, vector.a);
+}
+
 }

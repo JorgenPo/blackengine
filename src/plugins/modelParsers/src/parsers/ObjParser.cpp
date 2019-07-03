@@ -22,6 +22,7 @@ void ObjParser::parse(std::string file) {
   tinyobj::attrib_t attributes;
   std::vector<tinyobj::shape_t> shapes;
   std::vector<tinyobj::material_t> materials;
+
   std::string error;
 
   bool isParsed = false;
@@ -44,8 +45,11 @@ void ObjParser::parse(std::string file) {
   for (auto &shape : shapes) {
     auto vertices = std::vector<float>();
     auto textureCoords = std::vector<float>();
+    auto normals = std::vector<float>();
+
     vertices.reserve(shape.mesh.indices.size());
     textureCoords.reserve(shape.mesh.indices.size());
+    normals.reserve(shape.mesh.indices.size());
 
     size_t indexOffset = 0;
 
@@ -60,13 +64,17 @@ void ObjParser::parse(std::string file) {
         vertices.push_back(attributes.vertices[3 * idx.vertex_index + 2]);   // vz
         textureCoords.push_back(attributes.texcoords[2 * idx.texcoord_index + 0]);   // tx
         textureCoords.push_back(attributes.texcoords[2 * idx.texcoord_index + 1]);   // ty
-
+        normals.push_back(attributes.normals[3 * idx.normal_index + 0]);   // vx
+        normals.push_back(attributes.normals[3 * idx.normal_index + 1]);   // vy
+        normals.push_back(attributes.normals[3 * idx.normal_index + 2]);   // vz
       }
       indexOffset += faceSize;
     }
 
-    auto mesh = Engine::GetCurrentRenderSystem()->createMesh(vertices, textureCoords);
-    modelParts.emplace_back(shape.name, mesh, defaultMaterial);
+    auto mesh = Engine::GetCurrentRenderSystem()->createMesh(
+        std::move(vertices), std::move(textureCoords), std::move(normals));
+
+    modelParts.emplace_back(shape.name, std::move(mesh), defaultMaterial);
   }
 
   this->model = std::make_shared<ModelComponent>(modelParts);
