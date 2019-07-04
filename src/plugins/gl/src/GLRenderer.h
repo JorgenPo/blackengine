@@ -12,10 +12,12 @@
 
 #include <glm/glm.hpp>
 #include <memory>
+#include <vector>
 
 namespace black {
 class ShaderProgram;
 class Logger;
+class ModelPart;
 
 /**
  * OpenGL v4.0 Renderer
@@ -32,11 +34,15 @@ public:
 
   void setCurrentRenderTarget(std::shared_ptr<RenderTargetInterface> target) override;
 
-  void render(std::shared_ptr<GameEntity> object, std::shared_ptr<Camera> camera) override;
+  void render(
+      const std::vector<std::shared_ptr<GameEntity>> &objects,
+      const std::shared_ptr<Camera> &camera) override;
 
   void setViewPort(int x, int y, int width, int height) override;
 
 private:
+  void renderObject(const std::shared_ptr<GameEntity> &object) const;
+  void renderPart(const ModelPart &part) const;
   void createShaders();
 };
 

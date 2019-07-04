@@ -8,6 +8,8 @@
 #include <CommonHeaders.h>
 #include <exceptions/Exception.h>
 
+#include <vector>
+
 namespace black {
 class GameEntity;
 class Camera;
@@ -25,7 +27,9 @@ public:
   /**
    * Renders a next frame
    */
-  virtual void render(std::shared_ptr<GameEntity> object, std::shared_ptr<Camera> camera) = 0;
+  virtual void render(
+      const std::vector<std::shared_ptr<GameEntity>> &objects,
+      const std::shared_ptr<Camera> &camera) = 0;
 
   /**
    * Set renderer viewport so all rendering will be in this bounds.

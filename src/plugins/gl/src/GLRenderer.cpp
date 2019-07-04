@@ -26,7 +26,7 @@ void GLRenderer::setCurrentRenderTarget(std::shared_ptr<RenderTargetInterface> t
   this->currentTarget = target;
 }
 
-void GLRenderer::render(std::shared_ptr<GameEntity> object, std::shared_ptr<Camera> camera) {
+void GLRenderer::render(const std::vector<std::shared_ptr<GameEntity>> &objects, const std::shared_ptr<Camera> &camera) {
   glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -39,32 +39,17 @@ void GLRenderer::render(std::shared_ptr<GameEntity> object, std::shared_ptr<Came
   // Make the diffuse shader current
   this->diffuseShader->use();
 
-  glm::vec4 lightPosition = camera->getViewMatrix() * object->transform->getModelMatrix() *
-      glm::vec4{10.0f, 20.0f, 1.0f, 1.0f};
+  glm::vec4 lightPosition = glm::vec4{10.0f, 200.0f, 1.0f, 1.0f};
+  //lightPosition = glm::vec4(camera->getPosition(), 1.0f);
 
-  this->diffuseShader->setUniformVariable("model", object->transform->getModelMatrix());
   this->diffuseShader->setUniformVariable("view", camera->getViewMatrix());
   this->diffuseShader->setUniformVariable("projection", camera->getProjectionMatrix());
   this->diffuseShader->setUniformVariable("lightPosition", glm::vec3(lightPosition));
   this->diffuseShader->setUniformVariable("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
+  this->diffuseShader->setUniformVariable("lightStrength", 0.2f);
 
-  auto modelComponent = object->get<ModelComponent>();
-  if (modelComponent == nullptr) {
-    return;
-  }
-
-  for (const auto &part : modelComponent->getParts()) {
-    part.mesh->bind();
-
-    if (part.material->texture != nullptr) {
-      part.material->texture->bind();
-    }
-
-    glDrawArrays(static_cast<GLenum>(part.mesh->getDrawMode()), 0, static_cast<GLsizei>(part.mesh->getVerticesCount()));
-
-    if (part.material->texture != nullptr) {
-      part.material->texture->unbind();
-    }
+  for (auto && object : objects) {
+    renderObject(object);
   }
 }
 
@@ -95,4 +80,35 @@ void GLRenderer::createShaders() {
 
   glEnable(GL_DEPTH_TEST);
 }
+
+void GLRenderer::renderObject(const std::shared_ptr<GameEntity> &object) const {
+  this->diffuseShader->setUniformVariable("model", object->transform->getModelMatrix());
+
+  auto modelComponent = object->get<ModelComponent>();
+  if (modelComponent == nullptr) {
+    return;
+  }
+
+  for (const auto &part : modelComponent->getParts()) {
+    renderPart(part);
+  }
+}
+
+void GLRenderer::renderPart(const ModelPart &part) const {
+  part.mesh->bind();
+
+  if (part.material->texture != nullptr) {
+    part.material->texture->bind();
+  }
+
+  auto color = part.material->color;
+  this->diffuseShader->setUniformVariable("material.color", glm::vec4(color.r, color.g, color.b, color.a));
+
+  glDrawArrays(static_cast<GLenum>(part.mesh->getDrawMode()), 0, static_cast<GLsizei>(part.mesh->getVerticesCount()));
+
+  if (part.material->texture != nullptr) {
+    part.material->texture->unbind();
+  }
+}
+
 }
