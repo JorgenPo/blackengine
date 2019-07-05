@@ -9,11 +9,7 @@ namespace black {
 
 Image::Image(std::string fileName, bool flipVertically)
   : width(), height(), numColorChannels(), data(nullptr) {
-  try {
-    this->load(std::move(fileName), flipVertically);
-  } catch (const FileNotFoundException &e) {
-    // Do nothing
-  }
+  this->load(std::move(fileName), flipVertically);
 }
 
 Image::~Image() {

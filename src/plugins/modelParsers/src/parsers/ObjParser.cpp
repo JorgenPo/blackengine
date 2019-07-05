@@ -8,8 +8,10 @@
 #include <tinyobj/tiny_obj_loader.h>
 
 #include <Engine.h>
+#include <Image.h>
 #include <render/Material.h>
 #include <render/RenderSystemInterface.h>
+
 #include <log/Logger.h>
 #include <components/ModelComponent.h>
 
@@ -37,12 +39,14 @@ void ObjParser::parse(std::string file) {
     throw ParseException(file, error);
   }
 
+  auto rs = Engine::GetCurrentRenderSystem();
   auto defaultMaterial = std::make_shared<Material>();
-
   auto modelParts = std::vector<ModelPart>();
 
   // Iterate over shapes (model parts)
-  for (auto &shape : shapes) {
+  for (int i = 0; i < shapes.size(); i++) {
+    const auto &shape = shapes[i];
+
     auto vertices = std::vector<float>();
     auto textureCoords = std::vector<float>();
     auto normals = std::vector<float>();
@@ -71,10 +75,36 @@ void ObjParser::parse(std::string file) {
       indexOffset += faceSize;
     }
 
-    auto mesh = Engine::GetCurrentRenderSystem()->createMesh(
+    auto material = defaultMaterial;
+    try {
+      // Get first face material as entire object material
+      // This is correct for most cases
+      auto mat = materials.at(shape.mesh.material_ids[0]);
+
+      if (mat.diffuse_texname.empty()) {
+        material = std::make_shared<Material>(
+            Color(mat.diffuse[0], mat.diffuse[1], mat.diffuse[2], 1.0f));
+      } else {
+        auto image = std::make_shared<Image>(mat.diffuse_texname, true);
+        auto texture = rs->createTexture(
+            image,
+            true,
+            TextureFiltering::NEAREST,
+            TextureWrapping::CLAMP_TO_EDGE);
+
+        material = std::make_shared<Material>(std::move(texture));
+      }
+    } catch (const std::out_of_range &e) {
+      // default material
+    } catch (const FileNotFoundException &e) {
+      logger->warning("Failed to load model material: {0}", e.getMessage());
+      // default material
+    }
+
+    auto mesh = rs->createMesh(
         std::move(vertices), std::move(textureCoords), std::move(normals));
 
-    modelParts.emplace_back(shape.name, std::move(mesh), defaultMaterial);
+    modelParts.emplace_back(shape.name, std::move(mesh), std::move(material));
   }
 
   this->model = std::make_shared<ModelComponent>(modelParts);

@@ -39,14 +39,14 @@ void GLRenderer::render(const std::vector<std::shared_ptr<GameEntity>> &objects,
   // Make the diffuse shader current
   this->diffuseShader->use();
 
-  glm::vec4 lightPosition = glm::vec4{10.0f, 200.0f, 1.0f, 1.0f};
+  glm::vec4 lightPosition = glm::vec4{70.0f, 200.0f, 1.0f, 1.0f};
   //lightPosition = glm::vec4(camera->getPosition(), 1.0f);
 
   this->diffuseShader->setUniformVariable("view", camera->getViewMatrix());
   this->diffuseShader->setUniformVariable("projection", camera->getProjectionMatrix());
   this->diffuseShader->setUniformVariable("lightPosition", glm::vec3(lightPosition));
   this->diffuseShader->setUniformVariable("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
-  this->diffuseShader->setUniformVariable("lightStrength", 0.2f);
+  this->diffuseShader->setUniformVariable("lightStrength", 0.5f);
 
   for (auto && object : objects) {
     renderObject(object);

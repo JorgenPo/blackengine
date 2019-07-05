@@ -6,6 +6,7 @@
 #define BLACKENGINE_MATERIAL_H
 
 #include <CommonHeaders.h>
+#include <Color.h>
 
 #include <memory>
 
@@ -17,8 +18,10 @@ class Texture;
  */
 struct BLACK_EXPORTED Material {
   std::shared_ptr<Texture> texture;
+  Color color;
 
   explicit Material(std::shared_ptr<Texture> texture);
+  explicit Material(Color color);
   Material();
 };
 
