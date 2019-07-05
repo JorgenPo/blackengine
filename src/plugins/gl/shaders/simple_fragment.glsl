@@ -33,7 +33,7 @@ void main()
     diff = max(diff, 0.0) * light.strength;
 
     vec3 ambientColor = ambientLight.color * ambientLight.strength;
-    vec3 diffuseColor = light.color * diff * 10;
+    vec3 diffuseColor = light.color * diff;
     vec4 objectColor = vec4(material.color, 1.0f) + texture(diffuse, TexCoord);
 
     FragColor = vec4(ambientColor, 1.0f) * objectColor + vec4(diffuseColor, 1.0f) * objectColor;

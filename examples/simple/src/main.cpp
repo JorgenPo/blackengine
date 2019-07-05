@@ -60,7 +60,9 @@ private:
     cube->transform->setPosition({3.0f, 0.5f, 3.0f});
 
     auto light = std::make_shared<GameEntity>("Sun");
-    light->add(std::make_shared<LightComponent>(LightType::DIRECTIONAL, 1.0f, Color::GREEN));
+    light->transform->setPosition({100.0f, 200.0f, 0.0f});
+    light->add(std::make_shared<LightComponent>(LightType::DIRECTIONAL));
+    light->get<LightComponent>()->setColor(Color::YELLOW);
 
     this->scene.emplace_back(light);
     this->scene.emplace_back(cottage);

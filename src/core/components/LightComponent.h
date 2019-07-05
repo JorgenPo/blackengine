@@ -31,7 +31,7 @@ protected:
 public:
   static constexpr const char *GetName() { return "LightComponent"; };
 
-  LightComponent(LightType type, float strength, const Color &color,
+  explicit LightComponent(LightType type, float strength = 1.0f, const Color &color = Color::WHITE,
                  const glm::vec3 &direction = glm::vec3{0.0f, 0.0f, 0.0f});
 
   [[nodiscard]] LightType getType() const;
