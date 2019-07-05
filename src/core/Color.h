@@ -16,17 +16,20 @@ public:
   float b;
   float a;
 
-  explicit Color(std::array<float, 4> color) : r(color[0]), g(color[1]), b(color[2]), a(color[3]) {}
-  Color(float r, float g, float b, float a) : r(r), g(g), b(b), a(a) {}
+  explicit Color(std::array<float, 4> color);
+  explicit Color(std::array<float, 3> color);
+  Color(float r, float g, float b, float a = 1.0f);
 
-  static const std::array<float, 4> RED;
-  static const std::array<float, 4> GREEN;
-  static const std::array<float, 4> BLUE;
-  static const std::array<float, 4> YELLOW;
-  static const std::array<float, 4> WHITE;
-  static const std::array<float, 4> BLACK;
 
-  [[nodiscard]] std::array<float, 4> getArray() const;
+  static const Color RED;
+  static const Color GREEN;
+  static const Color BLUE;
+  static const Color YELLOW;
+  static const Color WHITE;
+  static const Color BLACK;
+
+  [[nodiscard]] std::array<float, 3> getRgb() const;
+  [[nodiscard]] std::array<float, 4> getRgba() const;
 };
 }
 #endif //BLACKENGINE_COLOR_H

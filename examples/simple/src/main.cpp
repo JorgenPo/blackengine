@@ -1,14 +1,5 @@
 #include <application/GameApplication.h>
 
-#include <Engine.h>
-#include <GameEntity.h>
-#include <Camera.h>
-
-#include <components/TransformComponent.h>
-
-#include <util/ModelManager.h>
-#include <util/Input.h>
-
 #include <iostream>
 #include <memory>
 
@@ -68,6 +59,10 @@ private:
     cube->transform->rotateX(35.0f);
     cube->transform->setPosition({3.0f, 0.5f, 3.0f});
 
+    auto light = std::make_shared<GameEntity>("Sun");
+    light->add(std::make_shared<LightComponent>(LightType::DIRECTIONAL, 1.0f, Color::GREEN));
+
+    this->scene.emplace_back(light);
     this->scene.emplace_back(cottage);
     this->scene.emplace_back(cube);
 

@@ -15,6 +15,7 @@
 #include <render/Material.h>
 #include <components/ModelComponent.h>
 #include <components/TransformComponent.h>
+#include <components/LightComponent.h>
 #include <util/FileSystem.h>
 
 #include <log/Logger.h>
@@ -44,9 +45,8 @@ void GLRenderer::render(const std::vector<std::shared_ptr<GameEntity>> &objects,
 
   this->diffuseShader->setUniformVariable("view", camera->getViewMatrix());
   this->diffuseShader->setUniformVariable("projection", camera->getProjectionMatrix());
-  this->diffuseShader->setUniformVariable("lightPosition", glm::vec3(lightPosition));
-  this->diffuseShader->setUniformVariable("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
-  this->diffuseShader->setUniformVariable("lightStrength", 0.5f);
+  this->diffuseShader->setUniformVariable("ambientLight.strength", 0.3f);
+  this->diffuseShader->setUniformVariable("ambientLight.color", glm::vec3(1.0f, 1.0f, 1.0f));
 
   for (auto && object : objects) {
     renderObject(object);
@@ -84,6 +84,12 @@ void GLRenderer::createShaders() {
 void GLRenderer::renderObject(const std::shared_ptr<GameEntity> &object) const {
   this->diffuseShader->setUniformVariable("model", object->transform->getModelMatrix());
 
+  if (auto light = object->get<LightComponent>(); light != nullptr) {
+      this->diffuseShader->setUniformVariable("light.position", glm::vec3(object->transform->getPosition()));
+      this->diffuseShader->setUniformVariable("light.color", light->getColor().getRgb());
+      this->diffuseShader->setUniformVariable("light.strength", light->getStrength());
+  }
+
   auto modelComponent = object->get<ModelComponent>();
   if (modelComponent == nullptr) {
     return;
@@ -102,7 +108,7 @@ void GLRenderer::renderPart(const ModelPart &part) const {
   }
 
   auto color = part.material->color;
-  this->diffuseShader->setUniformVariable("material.color", glm::vec4(color.r, color.g, color.b, color.a));
+  this->diffuseShader->setUniformVariable("material.color", color.getRgb());
 
   glDrawArrays(static_cast<GLenum>(part.mesh->getDrawMode()), 0, static_cast<GLsizei>(part.mesh->getVerticesCount()));
 

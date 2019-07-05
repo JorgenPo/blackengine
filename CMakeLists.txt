@@ -30,7 +30,7 @@ list(FILTER SOURCES EXCLUDE REGEX "(.*)windows(.*)")
 list(FILTER SOURCES EXCLUDE REGEX "(.*)linux(.*)")
 list(FILTER SOURCES EXCLUDE REGEX "(.*)macos(.*)")
 
-set(SOURCES ${SOURCES} ${PLATFORM_SOURCES} ${LINKLIBS_SOURCES} src/core/util/ShaderManager.cpp src/core/util/ShaderManager.h)
+set(SOURCES ${SOURCES} ${PLATFORM_SOURCES} ${LINKLIBS_SOURCES} src/core/util/ShaderManager.cpp src/core/util/ShaderManager.h src/core/components/LightComponent.cpp src/core/components/LightComponent.h)
 
 message(INFO " Linking with libs: ${LINKLIBS_LIBRARIES}")
 add_library(${PROJECT_NAME} SHARED ${SOURCES})

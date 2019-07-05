@@ -9,7 +9,10 @@
 
 #include <CommonHeaders.h>
 
+#include <Engine.h>
 #include <Image.h>
+#include <GameEntity.h>
+#include <Camera.h>
 
 #include <render/AbstractRenderWindow.h>
 #include <render/RenderSystemInterface.h>
@@ -18,8 +21,12 @@
 
 #include <components/ModelComponent.h>
 #include <components/TransformComponent.h>
+#include <components/LightComponent.h>
 
 #include <performance/PerformanceCounter.h>
+
+#include <util/ModelManager.h>
+#include <util/Input.h>
 
 namespace black {
 
