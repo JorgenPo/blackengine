@@ -43,7 +43,7 @@ std::shared_ptr<ModelComponent> ModelManager::CreateSquare(float sideSize) {
 }
 
 std::shared_ptr<ModelComponent> ModelManager::CreateFromMesh(std::shared_ptr<Mesh> mesh) {
-  auto modelPart = ModelPart("Default", std::move(mesh), std::make_shared<Material>());
+  auto modelPart = ModelPart("Default", std::move(mesh), Material{});
 
   std::vector<ModelPart> parts;
   parts.emplace_back(modelPart);

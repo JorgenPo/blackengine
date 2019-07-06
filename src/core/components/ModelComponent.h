@@ -9,13 +9,13 @@
 
 #include <CommonHeaders.h>
 #include <exceptions/Exception.h>
+#include <render/Material.h>
 
 #include <vector>
 
 namespace black {
 
 class Mesh;
-class Material;
 
 class BLACK_EXPORTED ModelPartNotFoundException : public Exception {
 public:
@@ -28,10 +28,9 @@ public:
 struct BLACK_EXPORTED ModelPart {
   std::string name;
   std::shared_ptr<Mesh> mesh;
-  std::shared_ptr<Material> material;
+  Material material;
 
-  ModelPart(std::string name, std::shared_ptr<Mesh> mesh,
-            const std::shared_ptr<Material> &material);
+  ModelPart(std::string name, std::shared_ptr<Mesh> mesh, const Material &material);
 
 };
 

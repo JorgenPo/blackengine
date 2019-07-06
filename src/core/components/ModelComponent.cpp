@@ -36,7 +36,7 @@ ModelPart &ModelComponent::getPart(const std::string& name) {
   return *foundPart;
 }
 
-ModelPart::ModelPart(std::string name, std::shared_ptr<Mesh> mesh, const std::shared_ptr<Material> &material)
+ModelPart::ModelPart(std::string name, std::shared_ptr<Mesh> mesh, const Material &material)
                      : name(std::move(name)),
                      mesh(std::move(mesh)),
                      material(material) {}

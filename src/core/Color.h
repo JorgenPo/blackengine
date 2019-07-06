@@ -27,6 +27,7 @@ public:
   static const Color YELLOW;
   static const Color WHITE;
   static const Color BLACK;
+  static const Color GRAY;
 
   [[nodiscard]] std::array<float, 3> getRgb() const;
   [[nodiscard]] std::array<float, 4> getRgba() const;

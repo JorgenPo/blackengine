@@ -18,11 +18,8 @@ class Texture;
  */
 struct BLACK_EXPORTED Material {
   std::shared_ptr<Texture> texture;
-  Color color;
-
-  explicit Material(std::shared_ptr<Texture> texture);
-  explicit Material(Color color);
-  Material();
+  Color color = Color::BLACK;
+  float spectacularFactor = 1.0f;
 };
 
 }

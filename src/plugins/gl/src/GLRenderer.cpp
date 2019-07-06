@@ -45,8 +45,9 @@ void GLRenderer::render(const std::vector<std::shared_ptr<GameEntity>> &objects,
 
   this->diffuseShader->setUniformVariable("view", camera->getViewMatrix());
   this->diffuseShader->setUniformVariable("projection", camera->getProjectionMatrix());
-  this->diffuseShader->setUniformVariable("ambientLight.strength", 0.3f);
+  this->diffuseShader->setUniformVariable("ambientLight.intensity", 0.2f);
   this->diffuseShader->setUniformVariable("ambientLight.color", glm::vec3(1.0f, 1.0f, 1.0f));
+  this->diffuseShader->setUniformVariable("cameraPosition", camera->getPosition());
 
   for (auto && object : objects) {
     renderObject(object);
@@ -87,7 +88,8 @@ void GLRenderer::renderObject(const std::shared_ptr<GameEntity> &object) const {
   if (auto light = object->get<LightComponent>(); light != nullptr) {
       this->diffuseShader->setUniformVariable("light.position", glm::vec3(object->transform->getPosition()));
       this->diffuseShader->setUniformVariable("light.color", light->getColor().getRgb());
-      this->diffuseShader->setUniformVariable("light.strength", light->getStrength());
+      this->diffuseShader->setUniformVariable("light.diffuseIntensity", light->getIntensity());
+      this->diffuseShader->setUniformVariable("light.spectacularIntensity", light->getSpectacularIntensity());
   }
 
   auto modelComponent = object->get<ModelComponent>();
@@ -103,17 +105,18 @@ void GLRenderer::renderObject(const std::shared_ptr<GameEntity> &object) const {
 void GLRenderer::renderPart(const ModelPart &part) const {
   part.mesh->bind();
 
-  if (part.material->texture != nullptr) {
-    part.material->texture->bind();
+  if (part.material.texture != nullptr) {
+    part.material.texture->bind();
   }
 
-  auto color = part.material->color;
+  auto color = part.material.color;
   this->diffuseShader->setUniformVariable("material.color", color.getRgb());
+  this->diffuseShader->setUniformVariable("material.spectacularFactor", part.material.spectacularFactor);
 
   glDrawArrays(static_cast<GLenum>(part.mesh->getDrawMode()), 0, static_cast<GLsizei>(part.mesh->getVerticesCount()));
 
-  if (part.material->texture != nullptr) {
-    part.material->texture->unbind();
+  if (part.material.texture != nullptr) {
+    part.material.texture->unbind();
   }
 }
 

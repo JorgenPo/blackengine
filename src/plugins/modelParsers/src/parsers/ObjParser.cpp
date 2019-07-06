@@ -40,13 +40,11 @@ void ObjParser::parse(std::string file) {
   }
 
   auto rs = Engine::GetCurrentRenderSystem();
-  auto defaultMaterial = std::make_shared<Material>();
+  auto defaultMaterial = Material{nullptr, Color::GRAY, 1.0f};
   auto modelParts = std::vector<ModelPart>();
 
   // Iterate over shapes (model parts)
-  for (int i = 0; i < shapes.size(); i++) {
-    const auto &shape = shapes[i];
-
+  for (const auto & shape : shapes) {
     auto vertices = std::vector<float>();
     auto textureCoords = std::vector<float>();
     auto normals = std::vector<float>();
@@ -82,8 +80,8 @@ void ObjParser::parse(std::string file) {
       auto mat = materials.at(shape.mesh.material_ids[0]);
 
       if (mat.diffuse_texname.empty()) {
-        material = std::make_shared<Material>(
-            Color(mat.diffuse[0], mat.diffuse[1], mat.diffuse[2], 1.0f));
+        material = Material{};
+        material.color = Color(mat.diffuse[0], mat.diffuse[1], mat.diffuse[2], 1.0f);
       } else {
         auto image = std::make_shared<Image>(mat.diffuse_texname, true);
         auto texture = rs->createTexture(
@@ -92,8 +90,12 @@ void ObjParser::parse(std::string file) {
             TextureFiltering::NEAREST,
             TextureWrapping::CLAMP_TO_EDGE);
 
-        material = std::make_shared<Material>(std::move(texture));
+        material = Material{};
+        material.texture = std::move(texture);
       }
+
+      // TODO: use not only red channel spectacular, improve material system (shaders)
+      material.spectacularFactor = mat.specular[0];
     } catch (const std::out_of_range &e) {
       // default material
     } catch (const FileNotFoundException &e) {

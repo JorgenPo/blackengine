@@ -52,6 +52,7 @@ private:
     auto cottage = std::make_shared<GameEntity>("Cottage");
     cottage->add(cottageModel);
     cottage->transform->scale(0.1f);
+    //cottage->transform->scaleZ(2.0f);
 
     auto cube = std::make_shared<GameEntity>("Cube");
     cube->add(cubeModel);
@@ -59,14 +60,20 @@ private:
     cube->transform->rotateX(35.0f);
     cube->transform->setPosition({3.0f, 0.5f, 3.0f});
 
+    auto car = std::make_shared<GameEntity>("Car");
+    car->add(ModelManager::CreateFromFile("models/Shelby.obj"));
+    car->transform->setPosition({0.0f, 0.0f, 2.0f});
+    car->transform->scale(0.3f);
+
     auto light = std::make_shared<GameEntity>("Sun");
-    light->transform->setPosition({100.0f, 200.0f, 0.0f});
+    light->transform->setPosition({10.0f, 200.0f, 0.0f});
     light->add(std::make_shared<LightComponent>(LightType::DIRECTIONAL));
-    light->get<LightComponent>()->setColor(Color::YELLOW);
+    light->get<LightComponent>()->setColor(Color{1.0f, 0.8f, 0.8f});
 
     this->scene.emplace_back(light);
     this->scene.emplace_back(cottage);
     this->scene.emplace_back(cube);
+    this->scene.emplace_back(car);
 
     this->camera = std::make_shared<Camera>(ProjectionType::PERSPECTIVE);
   }

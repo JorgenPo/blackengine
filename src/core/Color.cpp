@@ -19,6 +19,7 @@ const Color   Color::BLUE = {0.0f, 0.0f, 1.0f, 1.0f};
 const Color   Color::YELLOW = {1.0f, 0.8f, 0.1f, 1.0f};
 const Color   Color::WHITE = {1.0f, 1.0f, 1.0f, 1.0f};
 const Color   Color::BLACK = {0.0f, 0.0f, 0.0f, 1.0f};
+const Color   Color::GRAY = {0.6f, 0.6f, 0.6f, 1.0f};
 
 std::array<float, 3> Color::getRgb() const {
   return {r, g, b};

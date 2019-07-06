@@ -8,11 +8,11 @@ namespace black {
 
 LightComponent::LightComponent(
         LightType type,
-        float strength,
+        float intensity,
         const Color &color,
         const glm::vec3 &direction)
 
-  : type(type), strength(strength), color(color), direction(direction)
+  : type(type), intensity(intensity), color(color), direction(direction), spectacularIntensity(1.0f)
 {
 
 }
@@ -21,8 +21,8 @@ LightType LightComponent::getType() const {
     return type;
 }
 
-float LightComponent::getStrength() const {
-  return strength;
+float LightComponent::getIntensity() const {
+  return intensity;
 }
 
 const glm::vec3 &LightComponent::getDirection() const {
@@ -37,8 +37,8 @@ void LightComponent::setType(LightType newType) {
   type = newType;
 }
 
-void LightComponent::setStrength(float newStrength) {
-  strength = newStrength;
+void LightComponent::setIntensity(float newStrength) {
+  intensity = newStrength;
 }
 
 void LightComponent::setDirection(const glm::vec3 &newDirection) {
@@ -47,6 +47,14 @@ void LightComponent::setDirection(const glm::vec3 &newDirection) {
 
 void LightComponent::setColor(const Color &newColor) {
   color = newColor;
+}
+
+float LightComponent::getSpectacularIntensity() const {
+  return spectacularIntensity;
+}
+
+void LightComponent::setSpectacularIntensity(float newIntensity) {
+  spectacularIntensity = newIntensity;
 }
 
 
