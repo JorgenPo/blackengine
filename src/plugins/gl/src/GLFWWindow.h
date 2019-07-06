@@ -15,6 +15,7 @@ class GLFWWindow : public AbstractRenderWindow, public SystemInterface {
   std::unique_ptr<GLFWwindow, void (*)(GLFWwindow *)> window;
 
   bool isWindowShown;
+  double mouseX, mouseY;
 
 public:
 
@@ -40,9 +41,14 @@ public:
   bool shouldClose() override;
   void pollEvents() override;
 
+  void close() override;
+
   // SystemInterface
   bool isKeyPressed(Key key) override;
   bool isKeyPressed(int key) override;
+
+  void setCursorMode(CursorMode mode) override;
+  void setMouseAccelerated(bool accelerated) override;
 };
 }
 

@@ -4,12 +4,14 @@
 #ifndef BLACKENGINE_SYSTEMINTERFACE_H
 #define BLACKENGINE_SYSTEMINTERFACE_H
 
+#include <functional>
+
 namespace black {
 
 /**
  * Keyboard keys. The US keyboard layout is used
  */
-enum class Key {
+enum Key {
   KEY_UNKNOWN = -1,
   KEY_SPACE = 32,
   KEY_APOSTROPHE = 39, /* ' */
@@ -134,6 +136,12 @@ enum class Key {
   KEY_LAST
 };
 
+enum class CursorMode {
+  VISIBLE,
+  HIDDEN,
+  CAPTURED
+};
+
 /**
 * Interface of the system. Handle the operating system events.
 */
@@ -141,6 +149,8 @@ class SystemInterface {
 public:
   virtual bool isKeyPressed(Key key) = 0;
   virtual bool isKeyPressed(int key) = 0;
+  virtual void setCursorMode(CursorMode mode) = 0;
+  virtual void setMouseAccelerated(bool accelerated) = 0;
 };
 }
 #endif //BLACKENGINE_SYSTEMINTERFACE_H

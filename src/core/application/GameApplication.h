@@ -56,6 +56,7 @@ private:
 
 protected:
   void init() override;
+  void stop();
 };
 }
 

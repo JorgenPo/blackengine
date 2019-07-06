@@ -3,11 +3,13 @@
 //
 
 #include "GLFWWindow.h"
+#include <util/Input.h>
 
 namespace black {
 
 GLFWWindow::GLFWWindow(const std::string &title, int width, int height, bool isFullScreen)
-    : AbstractRenderWindow(title, width, height, isFullScreen), window(nullptr, nullptr), isWindowShown(false) {
+    : AbstractRenderWindow(title, width, height, isFullScreen), window(nullptr, nullptr), isWindowShown(false),
+    mouseX(0), mouseY(0) {
 
   // Init GLFW window
   auto glfwWindow = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
@@ -18,8 +20,12 @@ GLFWWindow::GLFWWindow(const std::string &title, int width, int height, bool isF
 
   this->window = std::unique_ptr<GLFWwindow, void (*)(GLFWwindow *)>(glfwWindow, glfwDestroyWindow);
 
-  glfwSetFramebufferSizeCallback(this->window.get(), [](GLFWwindow *window, int width, int height) {
+  glfwSetFramebufferSizeCallback(this->window.get(), [](GLFWwindow */*window*/, int width, int height) {
     glViewport(0, 0, width, height);
+  });
+
+  glfwSetCursorPosCallback(this->window.get(), [](GLFWwindow *win, double x, double y) {
+    Input::OnMousePositionChanged(x, y);
   });
 }
 
@@ -72,4 +78,29 @@ bool GLFWWindow::isKeyPressed(Key key) {
 bool GLFWWindow::isKeyPressed(int key) {
   return glfwGetKey(this->window.get(), key) == GLFW_PRESS;
 }
+
+void GLFWWindow::setMouseAccelerated(bool accelerated) {
+  if (glfwRawMouseMotionSupported()) {
+    glfwSetInputMode(window.get(), GLFW_RAW_MOUSE_MOTION, accelerated);
+  }
+}
+
+void GLFWWindow::setCursorMode(CursorMode mode) {
+  switch (mode) {
+    case CursorMode::CAPTURED:
+      glfwSetInputMode(window.get(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+      break;
+    case CursorMode::VISIBLE:
+      glfwSetInputMode(window.get(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+      break;
+    case CursorMode::HIDDEN:
+      glfwSetInputMode(window.get(), GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+      break;
+  }
+}
+
+void GLFWWindow::close() {
+  glfwSetWindowShouldClose(window.get(), true);
+}
+
 }

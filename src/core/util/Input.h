@@ -14,9 +14,16 @@ namespace black {
  * User input utils
  */
 class BLACK_EXPORTED Input {
+private:
+  static double mouseX, mouseY;
+
 public:
   static bool IsKeyPressed(Key key);
   static bool IsKeyPressed(int key);
+  static double GetMouseX();
+  static double GetMouseY();
+
+  static void OnMousePositionChanged(double x, double y);
 };
 
 }

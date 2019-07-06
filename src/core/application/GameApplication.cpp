@@ -41,6 +41,8 @@ void GameApplication::init() {
   AbstractApplication::init();
 
   auto renderSystem = Engine::GetCurrentRenderSystem();
+  renderSystem->getSystemInterface()->setCursorMode(CursorMode::CAPTURED);
+  renderSystem->getSystemInterface()->setMouseAccelerated(true);
 
   try {
     this->logger->info("Creating renderer and render window");
@@ -52,4 +54,9 @@ void GameApplication::init() {
     throw ApplicationInitializationException(e.getMessage());
   }
 }
+
+void GameApplication::stop() {
+  this->window->close();
+}
+
 }

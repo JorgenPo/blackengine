@@ -11,6 +11,7 @@ class BlackEngineApplication : public GameApplication {
 
   float cameraRadius;
   float cameraSpeed;
+  float cameraOffsetX = 0.0f;
 
   bool rotating;
 public:
@@ -20,11 +21,9 @@ public:
 
 private:
   void handleInput() {
-    if (Input::IsKeyPressed(Key::KEY_S)) {
-      this->cameraRadius += this->cameraSpeed;
-    }
-    if (Input::IsKeyPressed(Key::KEY_W)) {
-      this->cameraRadius -= this->cameraSpeed;
+
+    if (Input::IsKeyPressed(KEY_ESCAPE)) {
+      this->stop();
     }
 
     this->rotating = !Input::IsKeyPressed(Key::KEY_SPACE);
@@ -35,7 +34,7 @@ private:
 
     auto time = this->timer->getUptime();
 
-    float camX = static_cast<float>(sin(time / 1000.0)) * this->cameraRadius;
+    float camX = static_cast<float>(sin(time / 1000.0)) * this->cameraRadius + this->cameraOffsetX;
     float camZ = static_cast<float>(cos(time / 1000.0)) * this->cameraRadius;
 
     if (this->rotating) {

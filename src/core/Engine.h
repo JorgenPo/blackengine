@@ -31,6 +31,8 @@ private:
   RenderSystemMap renderSystems;
   std::shared_ptr<RenderSystemInterface> currentRenderSystem;
 
+  double mouseX, mouseY;
+
   /**
    * This method is private. Use appropriate static methods.
    *
@@ -87,6 +89,7 @@ public:
    * Return a currently active render system
    */
   static std::shared_ptr<RenderSystemInterface> GetCurrentRenderSystem();
+
 
 private:
   /**
