@@ -95,7 +95,7 @@ void ObjParser::parse(std::string file) {
       }
 
       // TODO: use not only red channel spectacular, improve material system (shaders)
-      material.spectacularFactor = mat.specular[0];
+      material.spectacularFactor = mat.shininess;
     } catch (const std::out_of_range &e) {
       // default material
     } catch (const FileNotFoundException &e) {
