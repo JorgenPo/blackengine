@@ -18,6 +18,6 @@ list(APPEND LINKLIBS_SOURCES ${BLACKENGINE_LIBRARY_DIR}/glad/src/glad.c)
 
 set(CONAN_DISABLE_CHECK_COMPILER ON)
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-conan_basic_setup()
+conan_basic_setup(KEEP_RPATHS)
 
 list(APPEND LINKLIBS_LIBRARIES ${CONAN_LIBS})

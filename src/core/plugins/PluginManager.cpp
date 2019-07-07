@@ -35,12 +35,13 @@ PluginNotFoundException::PluginNotFoundException(
 
 PluginManager::PluginManager() {
   /* Default folders */
-  this->addPluginDirs({"", "plugins/"});
+  this->addPluginDirs({fmt::format("{}", config::PLUGIN_PATH), "", "plugins/"});
 
   /* Linux */
   if constexpr (Constants::RuntimePlatform == Platform::LINUX) {
-    this->addPluginDir("/usr/lib32/blackengine/plugins/");
     this->addPluginDir("/usr/lib/blackengine/plugins/");
+    this->addPluginDir("/usr/lib32/blackengine/plugins/");
+    this->addPluginDir("/usr/lib64/blackengine/plugins/");
   }
 
   this->logger = Logger::Get("PluginManager");
@@ -88,7 +89,7 @@ std::shared_ptr<AbstractSharedLibrary> PluginManager::searchForPluginLibrary(con
   // Search for plugin in all dirs
   for (auto &pluginDir : this->pluginDirs) {
     try {
-      auto library = std::make_shared<SharedLibrary>(pluginDir + pluginName);
+      auto library = std::make_shared<SharedLibrary>(fmt::format("{}/{}", pluginDir, pluginName));
       library->load();
 
       // Library found

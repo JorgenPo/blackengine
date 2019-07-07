@@ -101,8 +101,8 @@ private:
   }
 
   void initScene() {
-    auto cottageModel = ModelManager::CreateFromFile("models/cottage_obj.obj");
-    auto cubeModel = ModelManager::CreateFromFile("models/cube.obj");
+    auto cottageModel = ModelManager::CreateFromFile("resources/cottage_obj.obj");
+    auto cubeModel = ModelManager::CreateFromFile("resources/cube.obj");
 
     auto cottage = std::make_shared<GameEntity>("Cottage");
     cottage->add(cottageModel);
@@ -121,14 +121,6 @@ private:
       std::make_shared<BoundingComponent>(
         std::make_shared<Sphere>(cube->transform, 1.0f)));
 
-    auto car = std::make_shared<GameEntity>("Car");
-    car->add(ModelManager::CreateFromFile("models/Shelby.obj"));
-    car->transform->setPosition({0.0f, 0.0f, 2.0f});
-    car->transform->scale(0.3f);
-    car->add(
-      std::make_shared<BoundingComponent>(
-        std::make_shared<Sphere>(car->transform, 2.5f)));
-
     auto light = std::make_shared<GameEntity>("Sun");
     light->transform->setPosition({10.0f, 200.0f, 0.0f});
     light->add(std::make_shared<LightComponent>(LightType::DIRECTIONAL));
@@ -137,7 +129,6 @@ private:
     this->scene.emplace_back(light);
     this->scene.emplace_back(cottage);
     this->scene.emplace_back(cube);
-    this->scene.emplace_back(car);
 
     this->camera = std::make_shared<Camera>(ProjectionType::PERSPECTIVE);
     this->camera->setPosition({0.0f, 10.0f, 1.0f});

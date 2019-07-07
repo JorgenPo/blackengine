@@ -7,6 +7,7 @@ function(SetupPlugin pluginName)
     set(CMAKE_CXX_STANDARD 17)
 
     file(GLOB SOURCES "src/*.h" "src/*.cpp")
+    file(GLOB SHADERS "shaders/*.glsl")
 
     include_directories(${BLACKENGINE_SOURCE_DIR})
 
@@ -23,11 +24,10 @@ function(SetupPlugin pluginName)
     get_target_property(OUTPUT_DIR ${pluginName} RUNTIME_OUTPUT_DIRECTORY)
     message(INFO " output dir is ${OUTPUT_DIR}")
 
-    # Without this on linux executable does not find black engine library
-    set_target_properties(${pluginName} PROPERTIES INSTALL_RPATH_USE_LINK_PATH TRUE)
+    set_target_properties(${pluginName} PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 
-    install(TARGETS ${pluginName} DESTINATION ${CMAKE_INSTALL_PREFIX}/blackengine/plugins)
-    install(TARGETS ${pluginName} DESTINATION ${CMAKE_INSTALL_PREFIX}/blackengine/examples/plugins)
+    install(TARGETS ${pluginName} DESTINATION lib/blackengine/plugins)
+    install(FILES ${SHADERS} DESTINATION ${SHADER_INSTALL_PREFIX})
 
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS OFF)
 endfunction(SetupPlugin)

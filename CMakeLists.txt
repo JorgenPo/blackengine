@@ -12,6 +12,10 @@ set(BLACKENGINE_TARGET ${PROJECT_NAME})
 set(BLACKENGINE_SOURCE_DIR ${CMAKE_SOURCE_DIR}/src/core)
 set(BLACKENGINE_LIBRARY_DIR ${CMAKE_SOURCE_DIR}/libs)
 
+set(EXAMPLE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX}/bin/blackengine/examples)
+set(SHADER_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX}/lib/blackengine/shaders)
+set(RESOURCE_INSTALL_PREFIX ${EXAMPLE_INSTALL_PREFIX}/resources)
+
 include(Version)
 
 # Link with appropriate libraries
@@ -32,7 +36,11 @@ list(FILTER SOURCES EXCLUDE REGEX "(.*)windows(.*)")
 list(FILTER SOURCES EXCLUDE REGEX "(.*)linux(.*)")
 list(FILTER SOURCES EXCLUDE REGEX "(.*)macos(.*)")
 
-set(SOURCES ${SOURCES} ${PLATFORM_SOURCES} ${LINKLIBS_SOURCES} src/core/util/ShaderManager.cpp src/core/util/ShaderManager.h src/core/components/LightComponent.cpp src/core/components/LightComponent.h src/core/RayCaster.cpp src/core/RayCaster.h src/core/components/BoundingComponent.cpp src/core/components/BoundingComponent.h src/core/components/BoundingShapes.cpp src/core/components/BoundingShapes.h src/core/tracer/RayTracer.cpp src/core/tracer/RayTracer.h src/core/log/Formatters.cpp src/core/log/Formatters.h src/core/shader/ApplicationShader.cpp src/core/shader/ApplicationShader.h src/core/shader/SimpleShader.cpp src/core/shader/SimpleShader.h examples/simple/src/SelectedShader.cpp examples/simple/src/SelectedShader.h)
+set(SOURCES ${SOURCES} ${PLATFORM_SOURCES} ${LINKLIBS_SOURCES})
+
+set(HEADERS ${SOURCES} ${PLATFORM_SOURCES})
+list(FILTER HEADERS EXCLUDE REGEX "(.*)\\.cpp")
+list(FILTER HEADERS EXCLUDE REGEX "(.*)\\.c")
 
 message(INFO " Linking with libs: ${LINKLIBS_LIBRARIES}")
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
@@ -57,4 +65,5 @@ message(INFO " Platform is ${BLACK_PLATFORM}")
 message(INFO " Installation path is: " ${CMAKE_INSTALL_PREFIX})
 
 # Install main target
-install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX})
+install(TARGETS ${PROJECT_NAME} DESTINATION lib/)
+install(FILES ${HEADERS} DESTINATION include)
