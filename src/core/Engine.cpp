@@ -1,4 +1,5 @@
 #include "Engine.h"
+#include "Config.h"
 
 #include <log/Logger.h>
 #include <plugins/PluginInterface.h>
@@ -12,7 +13,7 @@ namespace black {
 Engine::Engine() : pluginManager(), renderSystems() {
   this->logger = Logger::Get("Engine");
 
-  logger->trace("Initializing BlackEngine");
+  logger->trace("Initializing BlackEngine v{}", config::VERSION_STRING);
   logger->info("Runtime platform is '{0}'", Constants::RuntimePlatformString);
 
   logger->trace("Initializing Plugin Manager");

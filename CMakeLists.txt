@@ -12,6 +12,8 @@ set(BLACKENGINE_TARGET ${PROJECT_NAME})
 set(BLACKENGINE_SOURCE_DIR ${CMAKE_SOURCE_DIR}/src/core)
 set(BLACKENGINE_LIBRARY_DIR ${CMAKE_SOURCE_DIR}/libs)
 
+include(Version)
+
 # Link with appropriate libraries
 # LINKLIBS_LIBRARIES, LINKLIBS_SOURCES and LINKLIBS_INCLUDE_DIRS
 include(Libraries)
@@ -46,7 +48,7 @@ add_subdirectory(src/plugins)
 include(SetMainTargetSettings)
 
 # Config
-CONFIGURE_FILE(
+configure_file(
         ${CMAKE_SOURCE_DIR}/src/config/Config.h.in
         ${BLACKENGINE_SOURCE_DIR}/Config.h
 )
