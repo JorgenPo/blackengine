@@ -7,11 +7,14 @@
 
 #include <Exported.h>
 #include <Config.h>
+#include <glm/vec3.hpp>
+#include <fmt/format.h>
 
 #if defined(BLACK_PLATFORM_WINDOWS)
 #include <plugins/windows/WindowsSharedLibrary.h>
 #elif defined(BLACK_PLATFORM_LINUX)
 #include <plugins/linux/LinuxSharedLibrary.h>
+
 #endif
 
 namespace black {

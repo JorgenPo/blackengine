@@ -41,7 +41,7 @@ void GameApplication::init() {
   AbstractApplication::init();
 
   auto renderSystem = Engine::GetCurrentRenderSystem();
-  renderSystem->getSystemInterface()->setCursorMode(CursorMode::CAPTURED);
+  renderSystem->getSystemInterface()->setCursorMode(CursorMode::VISIBLE);
   renderSystem->getSystemInterface()->setMouseAccelerated(true);
 
   try {

@@ -15,7 +15,7 @@
 #include <vector>
 
 namespace black {
-class ShaderProgram;
+class ApplicationShader;
 class Logger;
 class ModelPart;
 
@@ -24,7 +24,7 @@ class ModelPart;
  */
 class GLRenderer : public RendererInterface {
   std::shared_ptr<RenderTargetInterface> currentTarget;
-  std::shared_ptr<ShaderProgram> diffuseShader;
+  std::shared_ptr<ApplicationShader> defaultShader;
   std::shared_ptr<Logger> logger;
 
   glm::mat4 model;
@@ -41,7 +41,7 @@ public:
   void setViewPort(int x, int y, int width, int height) override;
 
 private:
-  void renderObject(const std::shared_ptr<GameEntity> &object) const;
+  void renderObject(const std::shared_ptr<GameEntity> &object, const std::shared_ptr<Camera> &camera) const;
   void renderPart(const ModelPart &part) const;
   void createShaders();
 };

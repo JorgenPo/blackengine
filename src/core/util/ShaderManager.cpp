@@ -42,4 +42,5 @@ std::shared_ptr<ShaderProgram> ShaderManager::CreateShaderProgramFromFile(
   return program;
 }
 
+
 }

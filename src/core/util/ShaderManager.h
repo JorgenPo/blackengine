@@ -33,7 +33,18 @@ public:
    */
   static std::shared_ptr<ShaderProgram> CreateShaderProgramFromFile(
       std::string_view vertexShaderFile, std::string_view fragmentShaderFile);
+
+  template<typename ShaderClass>
+  static std::shared_ptr<ShaderClass> CreateApplicationShaderFromFile(
+    std::string_view vertexShaderFile, std::string_view fragmentShaderFile);
 };
+
+template<typename ShaderClass>
+std::shared_ptr<ShaderClass>
+ShaderManager::CreateApplicationShaderFromFile(std::string_view vertexShaderFile, std::string_view fragmentShaderFile) {
+  auto shaderProgram = CreateShaderProgramFromFile(vertexShaderFile, fragmentShaderFile);
+  return std::make_shared<ShaderClass>(shaderProgram);
+}
 
 }}
 

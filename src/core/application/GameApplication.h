@@ -19,14 +19,19 @@
 #include <render/RendererInterface.h>
 #include <render/Material.h>
 
+#include <shader/ApplicationShader.h>
+#include <log/Formatters.h>
+
 #include <components/ModelComponent.h>
 #include <components/TransformComponent.h>
 #include <components/LightComponent.h>
+#include <components/BoundingComponent.h>
 
 #include <performance/PerformanceCounter.h>
 
 #include <util/ModelManager.h>
 #include <util/Input.h>
+#include <util/ShaderManager.h>
 
 namespace black {
 

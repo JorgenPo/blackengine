@@ -16,6 +16,7 @@
 namespace black {
 
 class Mesh;
+class ApplicationShader;
 
 class BLACK_EXPORTED ModelPartNotFoundException : public Exception {
 public:
@@ -39,6 +40,7 @@ struct BLACK_EXPORTED ModelPart {
  */
 class BLACK_EXPORTED ModelComponent : public Component {
   std::vector<ModelPart> parts;
+  std::shared_ptr<ApplicationShader> shader;
 
 public:
   static std::string GetName();
@@ -63,6 +65,10 @@ public:
    * @throws ModelPartNotFoundException If ModelPart with a given name has not been found
    */
   ModelPart &getPart(const std::string& name);
+
+  [[nodiscard]] const std::shared_ptr<ApplicationShader> &getShader() const;
+
+  void setShader(const std::shared_ptr<ApplicationShader> &shader);
 };
 
 }

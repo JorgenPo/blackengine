@@ -4,7 +4,6 @@
 
 #include "GLRenderer.h"
 #include "GLSLShader.h"
-#include "GLSLShaderProgram.h"
 
 #include "OpenGLRenderSystem.h"
 
@@ -16,10 +15,14 @@
 #include <components/ModelComponent.h>
 #include <components/TransformComponent.h>
 #include <components/LightComponent.h>
-#include <util/FileSystem.h>
+
+#include <shader/ApplicationShader.h>
+#include <shader/SimpleShader.h>
 
 #include <log/Logger.h>
 #include <util/ShaderManager.h>
+#include <util/FileSystem.h>
+
 
 namespace black {
 
@@ -37,20 +40,12 @@ void GLRenderer::render(const std::vector<std::shared_ptr<GameEntity>> &objects,
     this->logger->critical("OpenGL error: {0}", OpenGLRenderSystem::getErrorString(lastError));
   }
 
-  // Make the diffuse shader current
-  this->diffuseShader->use();
-
-  glm::vec4 lightPosition = glm::vec4{70.0f, 200.0f, 1.0f, 1.0f};
-  //lightPosition = glm::vec4(camera->getPosition(), 1.0f);
-
-  this->diffuseShader->setUniformVariable("view", camera->getViewMatrix());
-  this->diffuseShader->setUniformVariable("projection", camera->getProjectionMatrix());
-  this->diffuseShader->setUniformVariable("ambientLight.intensity", 0.2f);
-  this->diffuseShader->setUniformVariable("ambientLight.color", glm::vec3(1.0f, 1.0f, 1.0f));
-  this->diffuseShader->setUniformVariable("cameraPosition", camera->getPosition());
+  this->defaultShader->use();
+  this->defaultShader->setCamera(camera);
+  this->defaultShader->setAmbientLight(glm::vec3(1.0f, 1.0f, 1.0f), 0.2f);
 
   for (auto && object : objects) {
-    renderObject(object);
+    renderObject(object, camera);
   }
 }
 
@@ -75,26 +70,31 @@ GLRenderer::GLRenderer()
 }
 
 void GLRenderer::createShaders() {
-  this->diffuseShader = util::ShaderManager::CreateShaderProgramFromFile(
+  this->defaultShader = util::ShaderManager::CreateApplicationShaderFromFile<SimpleShader>(
       "shaders/simple_vertex.glsl", "shaders/simple_fragment.glsl");
-  this->diffuseShader->use();
+  this->defaultShader->use();
 
   glEnable(GL_DEPTH_TEST);
 }
 
-void GLRenderer::renderObject(const std::shared_ptr<GameEntity> &object) const {
-  this->diffuseShader->setUniformVariable("model", object->transform->getModelMatrix());
+void GLRenderer::renderObject(const std::shared_ptr<GameEntity> &object, const std::shared_ptr<Camera> &camera) const {
+  this->defaultShader->setModelMatrix(object->transform->getModelMatrix());
 
   if (auto light = object->get<LightComponent>(); light != nullptr) {
-      this->diffuseShader->setUniformVariable("light.position", glm::vec3(object->transform->getPosition()));
-      this->diffuseShader->setUniformVariable("light.color", light->getColor().getRgb());
-      this->diffuseShader->setUniformVariable("light.diffuseIntensity", light->getIntensity());
-      this->diffuseShader->setUniformVariable("light.spectacularIntensity", light->getSpectacularIntensity());
+      this->defaultShader->setLight(object->transform->getPosition(), light);
   }
 
   auto modelComponent = object->get<ModelComponent>();
   if (modelComponent == nullptr) {
     return;
+  }
+
+  if (const auto &shader = object->get<ModelComponent>()->getShader(); shader != nullptr) {
+//    shader->use();
+//    shader->setCamera(camera);
+//    shader->setAmbientLight(glm::vec3(1.0f, 1.0f, 1.0f), 0.2f);
+  } else {
+    this->defaultShader->use();
   }
 
   for (const auto &part : modelComponent->getParts()) {
@@ -109,9 +109,7 @@ void GLRenderer::renderPart(const ModelPart &part) const {
     part.material.texture->bind();
   }
 
-  auto color = part.material.color;
-  this->diffuseShader->setUniformVariable("material.color", color.getRgb());
-  this->diffuseShader->setUniformVariable("material.spectacularFactor", part.material.spectacularFactor);
+  this->defaultShader->setMaterial(part.material);
 
   glDrawArrays(static_cast<GLenum>(part.mesh->getDrawMode()), 0, static_cast<GLsizei>(part.mesh->getVerticesCount()));
 

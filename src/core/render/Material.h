@@ -12,6 +12,7 @@
 
 namespace black {
 class Texture;
+class ShaderProgram;
 
 /**
  * Some shader information about concrete material.

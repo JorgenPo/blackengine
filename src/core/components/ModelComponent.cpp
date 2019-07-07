@@ -36,6 +36,14 @@ ModelPart &ModelComponent::getPart(const std::string& name) {
   return *foundPart;
 }
 
+const std::shared_ptr<ApplicationShader> &ModelComponent::getShader() const {
+  return shader;
+}
+
+void ModelComponent::setShader(const std::shared_ptr<ApplicationShader> &appShader) {
+  shader = appShader;
+}
+
 ModelPart::ModelPart(std::string name, std::shared_ptr<Mesh> mesh, const Material &material)
                      : name(std::move(name)),
                      mesh(std::move(mesh)),
