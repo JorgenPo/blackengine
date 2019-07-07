@@ -18,7 +18,7 @@ void BoundingComponent::setShape(std::shared_ptr<BoundingShape> newShape) {
   shape = std::move(newShape);
 }
 
-bool BoundingComponent::isIntersectsWith(const glm::vec3 &ray) {
+bool BoundingComponent::isIntersectsWith(const Ray &ray) {
   return shape->isIntersectsWith(ray);
 }
 

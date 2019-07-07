@@ -43,6 +43,11 @@ public:
   void setLookAt(const glm::vec3 &newLookAt);
   void setUpVector(const glm::vec3 &newUp);
 
+  void strafeRight(float value);
+  void strafeLeft(float value);
+  void moveForward(float value);
+  void moveBackward(float value);
+
   void setProjection(ProjectionType projection);
 
 private:

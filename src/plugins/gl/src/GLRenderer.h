@@ -13,6 +13,7 @@
 #include <glm/glm.hpp>
 #include <memory>
 #include <vector>
+#include <unordered_map>
 
 namespace black {
 class ApplicationShader;
@@ -25,9 +26,12 @@ class ModelPart;
 class GLRenderer : public RendererInterface {
   std::shared_ptr<RenderTargetInterface> currentTarget;
   std::shared_ptr<ApplicationShader> defaultShader;
+  std::shared_ptr<ApplicationShader> currentShader;
   std::shared_ptr<Logger> logger;
 
   glm::mat4 model;
+
+  int lastError = 0;
 
 public:
   GLRenderer();
@@ -41,7 +45,7 @@ public:
   void setViewPort(int x, int y, int width, int height) override;
 
 private:
-  void renderObject(const std::shared_ptr<GameEntity> &object, const std::shared_ptr<Camera> &camera) const;
+  void renderObject(const std::shared_ptr<GameEntity> &object, const std::shared_ptr<Camera> &camera);
   void renderPart(const ModelPart &part) const;
   void createShaders();
 };

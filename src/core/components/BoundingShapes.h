@@ -5,26 +5,25 @@
 #ifndef BLACKENGINE_BOUNDINGSHAPES_H
 #define BLACKENGINE_BOUNDINGSHAPES_H
 
-#include <glm/vec3.hpp>
-
 #include <memory>
 
 namespace black {
 
 class TransformComponent;
+class Ray;
 
 /**
  * Bounding shape such as box cylinder and sphere
  */
 class BoundingShape {
 protected:
-  std::shared_ptr<TransformComponent> center;
+  std::shared_ptr<TransformComponent> transform;
 
 public:
 
-  explicit BoundingShape(std::shared_ptr<TransformComponent> center);
+  explicit BoundingShape(std::shared_ptr<TransformComponent> transform);
 
-  virtual bool isIntersectsWith(const glm::vec3 &ray) = 0;
+  virtual bool isIntersectsWith(const Ray &ray) = 0;
 };
 
 class Sphere : public BoundingShape {
@@ -34,7 +33,7 @@ public:
   Sphere(std::shared_ptr<TransformComponent> transform, float radius);
 
 private:
-  bool isIntersectsWith(const glm::vec3 &ray) override;
+  bool isIntersectsWith(const Ray &ray) override;
 };
 
 }

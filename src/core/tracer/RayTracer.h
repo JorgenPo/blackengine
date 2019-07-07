@@ -12,6 +12,11 @@ namespace black {
 
 class Camera;
 
+struct Ray {
+  glm::vec3 origin;
+  glm::vec3 direction;
+};
+
 class RayTracer {
   std::shared_ptr<Camera> camera;
 
@@ -24,7 +29,7 @@ public:
    * @param y Screen coordinate y
    * @return World space unit vector from screen point to the world
    */
-  [[nodiscard]] glm::vec3 calculateRay(double x, double y) const;
+  [[nodiscard]] Ray calculateRay(double x, double y) const;
 
   void setCamera(const std::shared_ptr<Camera> &camera);
 };

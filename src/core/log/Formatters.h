@@ -10,7 +10,9 @@
 #include <string>
 
 namespace black {
+std::string toString(const glm::vec4 &vec);
 std::string toString(const glm::vec3 &vec);
+std::string toString(const glm::vec2 &vec);
 }
 
 #endif //BLACKENGINE_FORMATTERS_H

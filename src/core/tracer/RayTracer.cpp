@@ -7,6 +7,7 @@
 #include <Camera.h>
 #include <render/RenderSystemInterface.h>
 #include <render/AbstractRenderWindow.h>
+#include <log/Logger.h>
 
 #include <glm/vec2.hpp>
 #include <glm/vec4.hpp>
@@ -23,7 +24,7 @@ glm::vec2 getNDCCoordinates(double x, double y) {
 
   return glm::vec2{
     static_cast<float>(2 * x / window->getRenderTargetWidth() - 1),
-    -2 * y / window->getRenderTargetHeight() - 1
+    -2 * y / window->getRenderTargetHeight() + 1
   };
 }
 
@@ -37,11 +38,11 @@ glm::vec3 getWorldCoordinates(const glm::vec4 &eyeCoordinates, const std::shared
   return {worldCoords.x, worldCoords.y, worldCoords.z};
 }
 
-glm::vec3 RayTracer::calculateRay(double x, double y) const {
+Ray RayTracer::calculateRay(double x, double y) const {
   auto ndcCoordinates = getNDCCoordinates(x, y);
   auto clipCoordinates = glm::vec4(ndcCoordinates.x, ndcCoordinates.y, -1, 1);
   auto eyeCoordinates = getEyeCoordinates(clipCoordinates, camera);
-  return glm::normalize(getWorldCoordinates(eyeCoordinates, camera));
+  return {camera->getPosition(), glm::normalize(getWorldCoordinates(eyeCoordinates, camera))};
 }
 
 void RayTracer::setCamera(const std::shared_ptr<Camera> &newCamera) {

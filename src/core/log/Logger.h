@@ -7,6 +7,8 @@
 
 #include <Exported.h>
 
+#include "Formatters.h"
+
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 

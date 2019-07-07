@@ -42,7 +42,7 @@ void GameApplication::init() {
 
   auto renderSystem = Engine::GetCurrentRenderSystem();
   renderSystem->getSystemInterface()->setCursorMode(CursorMode::VISIBLE);
-  renderSystem->getSystemInterface()->setMouseAccelerated(true);
+  renderSystem->getSystemInterface()->setMouseAccelerated(false);
 
   try {
     this->logger->info("Creating renderer and render window");

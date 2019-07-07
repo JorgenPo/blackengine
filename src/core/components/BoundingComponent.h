@@ -25,7 +25,7 @@ public:
   [[nodiscard]] const std::shared_ptr<BoundingShape> &getShape() const;
   void setShape(std::shared_ptr<BoundingShape> shape);
 
-  bool isIntersectsWith(const glm::vec3 &ray);
+  bool isIntersectsWith(const Ray &ray);
 };
 
 }

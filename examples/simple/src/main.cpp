@@ -29,18 +29,29 @@ public:
 private:
   void handleInput() {
 
+    if (Input::IsKeyPressed(KEY_LEFT)) {
+      this->camera->strafeLeft(0.05f);
+    }
+    if (Input::IsKeyPressed(KEY_RIGHT)) {
+      this->camera->strafeRight(0.05f);
+    }
+    if (Input::IsKeyPressed(KEY_UP)) {
+      this->camera->moveForward(0.1f);
+    }
+    if (Input::IsKeyPressed(KEY_DOWN)) {
+      this->camera->moveBackward(0.1f);
+    }
+
     if (Input::IsKeyPressed(KEY_ESCAPE)) {
       this->stop();
     }
 
     if (Input::IsKeyPressed(KEY_ENTER) && selectedObject) {
-      selectedObject->transform->setPosition(tracer.calculateRay(Input::GetMouseX(), Input::GetMouseY()));
+
     }
   }
 
-  std::shared_ptr<GameEntity> findSelectedObject() {
-    auto ray = tracer.calculateRay(Input::GetMouseX(), Input::GetMouseY());
-
+  std::shared_ptr<GameEntity> findSelectedObject(const Ray &ray) {
     for (auto i = scene.rbegin(); i != scene.rend(); i++) {
       const auto &object = *i;
       if (auto bounds = object->get<BoundingComponent>(); bounds != nullptr) {
@@ -73,9 +84,11 @@ private:
       this->selectedObject = nullptr;
     }
 
+    auto ray = tracer.calculateRay(Input::GetMouseX(), Input::GetMouseY());
+
     // Set highlighting shader if some object was selected
-    if (auto selected = findSelectedObject(); selected != nullptr) {
-      logger->debug(fmt::format("Selected object: {}", selectedObject->getName()));
+    if (auto selected = findSelectedObject(ray); selected != nullptr) {
+      //logger->debug(fmt::format("Selected object: {}", selectedObject->getName()));
       selected->get<ModelComponent>()->setShader(selectedShader);
     }
 
@@ -95,7 +108,7 @@ private:
     cottage->add(cottageModel);
     cottage->add(
       std::make_shared<BoundingComponent>(
-        std::make_shared<Sphere>(cottage->transform, 3.0f)));
+        std::make_shared<Sphere>(cottage->transform, 12.0f)));
 
     cottage->transform->scale(0.1f);
 
@@ -106,15 +119,15 @@ private:
     cube->transform->setPosition({3.0f, 0.5f, 3.0f});
     cube->add(
       std::make_shared<BoundingComponent>(
-        std::make_shared<Sphere>(cube->transform, 3.0f)));
+        std::make_shared<Sphere>(cube->transform, 1.0f)));
 
     auto car = std::make_shared<GameEntity>("Car");
     car->add(ModelManager::CreateFromFile("models/Shelby.obj"));
     car->transform->setPosition({0.0f, 0.0f, 2.0f});
     car->transform->scale(0.3f);
-    cube->add(
+    car->add(
       std::make_shared<BoundingComponent>(
-        std::make_shared<Sphere>(car->transform, 2.0f)));
+        std::make_shared<Sphere>(car->transform, 2.5f)));
 
     auto light = std::make_shared<GameEntity>("Sun");
     light->transform->setPosition({10.0f, 200.0f, 0.0f});
@@ -127,7 +140,7 @@ private:
     this->scene.emplace_back(car);
 
     this->camera = std::make_shared<Camera>(ProjectionType::PERSPECTIVE);
-    this->camera->setPosition({0.0f, 1.0f, 5.0f});
+    this->camera->setPosition({0.0f, 10.0f, 1.0f});
     tracer.setCamera(camera);
   }
 

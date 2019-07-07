@@ -53,12 +53,12 @@ void Camera::setPosition(const glm::vec3 &newPosition) {
 }
 
 void Camera::setLookAt(const glm::vec3 &newLookAt) {
-  this->lookAt = newLookAt;
+  this->lookAt = glm::normalize(newLookAt);
   this->updateMatrices();
 }
 
 void Camera::setUpVector(const glm::vec3 &newUp) {
-  this->up = newUp;
+  this->up = glm::normalize(newUp);
   this->updateMatrices();
 }
 
@@ -72,5 +72,25 @@ void Camera::setProjection(ProjectionType projection) {
   case ProjectionType::ORTHOGRAPHIC:this->projectionMatrix = glm::ortho(0, Screen::GetWidth(), 0, Screen::GetHeight());
     break;
   }
+}
+
+void Camera::strafeRight(float value) {
+  this->position += glm::vec3(value, 0.0f, 0.0f);
+  updateMatrices();
+}
+
+void Camera::strafeLeft(float value) {
+  this->position -= glm::vec3(value, 0.0f, 0.0f);
+  updateMatrices();
+}
+
+void Camera::moveForward(float value) {
+  this->position += lookAt * value;
+  updateMatrices();
+}
+
+void Camera::moveBackward(float value) {
+  this->position -= lookAt * value;
+  updateMatrices();
 }
 }

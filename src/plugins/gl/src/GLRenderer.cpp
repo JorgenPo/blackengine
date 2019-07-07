@@ -34,7 +34,7 @@ void GLRenderer::render(const std::vector<std::shared_ptr<GameEntity>> &objects,
   glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  auto lastError = glGetError();
+  lastError = glGetError();
 
   if (lastError != GL_NO_ERROR) {
     this->logger->critical("OpenGL error: {0}", OpenGLRenderSystem::getErrorString(lastError));
@@ -45,6 +45,8 @@ void GLRenderer::render(const std::vector<std::shared_ptr<GameEntity>> &objects,
   this->defaultShader->setAmbientLight(glm::vec3(1.0f, 1.0f, 1.0f), 0.2f);
 
   for (auto && object : objects) {
+    this->currentShader = defaultShader;
+    this->currentShader->use();
     renderObject(object, camera);
   }
 }
@@ -77,25 +79,28 @@ void GLRenderer::createShaders() {
   glEnable(GL_DEPTH_TEST);
 }
 
-void GLRenderer::renderObject(const std::shared_ptr<GameEntity> &object, const std::shared_ptr<Camera> &camera) const {
-  this->defaultShader->setModelMatrix(object->transform->getModelMatrix());
+void GLRenderer::renderObject(const std::shared_ptr<GameEntity> &object, const std::shared_ptr<Camera> &camera)  {
+  auto modelComponent = object->get<ModelComponent>();
 
-  if (auto light = object->get<LightComponent>(); light != nullptr) {
-      this->defaultShader->setLight(object->transform->getPosition(), light);
+  if (modelComponent != nullptr) {
+    if (const auto &shader = object->get<ModelComponent>()->getShader(); shader != nullptr) {
+      this->currentShader = shader;
+      this->currentShader->use();
+      this->currentShader->setCamera(camera);
+      this->currentShader->setAmbientLight(glm::vec3(1.0f, 1.0f, 1.0f), 0.2f);
+    }
   }
 
-  auto modelComponent = object->get<ModelComponent>();
-  if (modelComponent == nullptr) {
+  if (auto light = object->get<LightComponent>(); light != nullptr) {
+    this->currentShader->setLight(object->transform->getPosition(), light);
+  }
+
+  if (!modelComponent) {
     return;
   }
 
-  if (const auto &shader = object->get<ModelComponent>()->getShader(); shader != nullptr) {
-//    shader->use();
-//    shader->setCamera(camera);
-//    shader->setAmbientLight(glm::vec3(1.0f, 1.0f, 1.0f), 0.2f);
-  } else {
-    this->defaultShader->use();
-  }
+  this->currentShader->setModelMatrix(object->transform->getModelMatrix());
+
 
   for (const auto &part : modelComponent->getParts()) {
     renderPart(part);
@@ -109,7 +114,7 @@ void GLRenderer::renderPart(const ModelPart &part) const {
     part.material.texture->bind();
   }
 
-  this->defaultShader->setMaterial(part.material);
+  this->currentShader->setMaterial(part.material);
 
   glDrawArrays(static_cast<GLenum>(part.mesh->getDrawMode()), 0, static_cast<GLsizei>(part.mesh->getVerticesCount()));
 
