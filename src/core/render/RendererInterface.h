@@ -11,9 +11,10 @@
 #include <vector>
 
 namespace black {
-class GameEntity;
+class GameObject;
 class Camera;
 class RenderTargetInterface;
+class AbstractScene;
 
 class RendererInitializationException : public Exception {
 public:
@@ -28,8 +29,8 @@ public:
    * Renders a next frame
    */
   virtual void render(
-      const std::vector<std::shared_ptr<GameEntity>> &objects,
-      const std::shared_ptr<Camera> &camera) = 0;
+      const std::vector<std::shared_ptr<GameObject>> &objects,
+      const std::shared_ptr<Camera> &camera, const std::shared_ptr<AbstractScene> &scene) = 0;
 
   /**
    * Set renderer viewport so all rendering will be in this bounds.

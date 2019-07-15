@@ -14,15 +14,12 @@
 
 namespace black {
 
-class GameEntity;
 class TransformComponent;
-
-using GameEntityVector = std::vector<std::shared_ptr<GameEntity>>;
 
 /**
  * Game entity object
  */
-class BLACK_EXPORTED GameEntity : public ComponentsContainer, public std::enable_shared_from_this<GameEntity> {
+class BLACK_EXPORTED GameObject : public ComponentsContainer, public std::enable_shared_from_this<GameObject> {
   static long long int idCounter;
 
   std::string name;
@@ -33,8 +30,8 @@ public:
   /**
    * Creates an empty entity with only transform component
    */
-  explicit GameEntity(std::string name = "");
-  virtual ~GameEntity();
+  explicit GameObject(std::string name = "");
+  virtual ~GameObject();
 
   const std::string &getName() const;
   void setName(const std::string &name);

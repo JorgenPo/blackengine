@@ -11,7 +11,7 @@
 
 #include <Engine.h>
 #include <Image.h>
-#include <GameEntity.h>
+#include <GameObject.h>
 #include <Camera.h>
 
 #include <render/AbstractRenderWindow.h>
@@ -21,6 +21,7 @@
 
 #include <shader/ApplicationShader.h>
 #include <log/Formatters.h>
+#include <scene/SimpleScene.h>
 
 #include <components/ModelComponent.h>
 #include <components/TransformComponent.h>

@@ -22,7 +22,7 @@ namespace black {
 
 std::unordered_map<std::string, std::shared_ptr<ModelParser>> ModelManager::parsers;
 
-std::shared_ptr<ModelComponent> ModelManager::CreateSquare(float sideSize) {
+std::shared_ptr<ModelComponent> ModelManager::CreateXYSquare(float sideSize) {
   const auto halfSide = sideSize / 2;
 
   auto mesh = Engine::GetCurrentRenderSystem()->createMesh({
@@ -51,7 +51,7 @@ std::shared_ptr<ModelComponent> ModelManager::CreateFromMesh(std::shared_ptr<Mes
   return std::make_shared<ModelComponent>(parts);
 }
 
-std::shared_ptr<ModelComponent> ModelManager::CreateEquilateralTriangle(float sideSize) {
+std::shared_ptr<ModelComponent> ModelManager::CreateXYEquilateralTriangle(float sideSize) {
   const auto halfSide = sideSize / 2;
 
   auto mesh = Engine::GetCurrentRenderSystem()->createMesh({
@@ -65,7 +65,7 @@ std::shared_ptr<ModelComponent> ModelManager::CreateEquilateralTriangle(float si
   return ModelManager::CreateFromMesh(mesh);
 }
 
-std::shared_ptr<ModelComponent> ModelManager::CreateRectangle(float a, float b) {
+std::shared_ptr<ModelComponent> ModelManager::CreateXYRectangle(float a, float b) {
   const auto halfA = a / 2;
   const auto halfB = b / 2;
 

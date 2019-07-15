@@ -39,13 +39,13 @@ public:
   void setCurrentRenderTarget(std::shared_ptr<RenderTargetInterface> target) override;
 
   void render(
-      const std::vector<std::shared_ptr<GameEntity>> &objects,
-      const std::shared_ptr<Camera> &camera) override;
+      const std::vector<std::shared_ptr<GameObject>> &objects,
+      const std::shared_ptr<Camera> &camera, const std::shared_ptr<AbstractScene> &scene) override;
 
   void setViewPort(int x, int y, int width, int height) override;
 
 private:
-  void renderObject(const std::shared_ptr<GameEntity> &object, const std::shared_ptr<Camera> &camera);
+  void renderObject(const std::shared_ptr<GameObject> &object, const std::shared_ptr<Camera> &camera);
   void renderPart(const ModelPart &part) const;
   void createShaders();
 };

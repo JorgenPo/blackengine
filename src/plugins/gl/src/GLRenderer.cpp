@@ -7,7 +7,7 @@
 
 #include "OpenGLRenderSystem.h"
 
-#include <GameEntity.h>
+#include <GameObject.h>
 #include <Camera.h>
 
 #include <render/Mesh.h>
@@ -18,6 +18,7 @@
 
 #include <shader/ApplicationShader.h>
 #include <shader/SimpleShader.h>
+#include <scene/AbstractScene.h>
 
 #include <log/Logger.h>
 #include <util/ShaderManager.h>
@@ -30,7 +31,8 @@ void GLRenderer::setCurrentRenderTarget(std::shared_ptr<RenderTargetInterface> t
   this->currentTarget = target;
 }
 
-void GLRenderer::render(const std::vector<std::shared_ptr<GameEntity>> &objects, const std::shared_ptr<Camera> &camera) {
+void GLRenderer::render(const std::vector<std::shared_ptr<GameObject>> &objects,
+                        const std::shared_ptr<Camera> &camera, const std::shared_ptr<AbstractScene> &scene) {
   glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -40,15 +42,15 @@ void GLRenderer::render(const std::vector<std::shared_ptr<GameEntity>> &objects,
     this->logger->critical("OpenGL error: {0}", OpenGLRenderSystem::getErrorString(lastError));
   }
 
-  this->defaultShader->use();
-  this->defaultShader->setCamera(camera);
-  this->defaultShader->setAmbientLight(glm::vec3(1.0f, 1.0f, 1.0f), 0.2f);
-
-  for (auto && object : objects) {
-    this->currentShader = defaultShader;
-    this->currentShader->use();
-    renderObject(object, camera);
-  }
+//  this->defaultShader->use();
+//  this->defaultShader->setCamera(camera);
+//  this->defaultShader->setAmbientLight(glm::vec3(1.0f, 1.0f, 1.0f), 0.2f);
+//
+//  for (auto && object : objects) {
+//    this->currentShader = defaultShader;
+//    this->currentShader->use();
+//    renderObject(object, camera);
+//  }
 }
 
 void GLRenderer::setViewPort(int x, int y, int width, int height) {
@@ -79,7 +81,7 @@ void GLRenderer::createShaders() {
   glEnable(GL_DEPTH_TEST);
 }
 
-void GLRenderer::renderObject(const std::shared_ptr<GameEntity> &object, const std::shared_ptr<Camera> &camera)  {
+void GLRenderer::renderObject(const std::shared_ptr<GameObject> &object, const std::shared_ptr<Camera> &camera)  {
   auto modelComponent = object->get<ModelComponent>();
 
   if (modelComponent != nullptr) {

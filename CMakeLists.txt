@@ -66,4 +66,4 @@ message(INFO " Installation path is: " ${CMAKE_INSTALL_PREFIX})
 
 # Install main target
 install(TARGETS ${PROJECT_NAME} DESTINATION lib/)
-install(FILES ${HEADERS} DESTINATION include)
+install(FILES ${HEADERS} DESTINATION include/BlackEngine)
