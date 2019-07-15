@@ -28,9 +28,7 @@ public:
   /**
    * Renders a next frame
    */
-  virtual void render(
-      const std::vector<std::shared_ptr<GameObject>> &objects,
-      const std::shared_ptr<Camera> &camera, const std::shared_ptr<AbstractScene> &scene) = 0;
+  virtual void render(const std::shared_ptr<AbstractScene> &scene) = 0;
 
   /**
    * Set renderer viewport so all rendering will be in this bounds.

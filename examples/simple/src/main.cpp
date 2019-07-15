@@ -90,7 +90,7 @@ private:
       selected->get<ModelComponent>()->setShader(selectedShader);
     }
 
-    this->renderer->render(this->scene->getObjects(), this->scene->getCurrentCamera(), this->scene);
+    this->renderer->render(this->scene);
   }
 
   void initializeResources() override {

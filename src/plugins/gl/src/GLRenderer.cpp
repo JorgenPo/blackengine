@@ -31,8 +31,7 @@ void GLRenderer::setCurrentRenderTarget(std::shared_ptr<RenderTargetInterface> t
   this->currentTarget = target;
 }
 
-void GLRenderer::render(const std::vector<std::shared_ptr<GameObject>> &objects,
-                        const std::shared_ptr<Camera> &camera, const std::shared_ptr<AbstractScene> &scene) {
+void GLRenderer::render(const std::shared_ptr<AbstractScene> &scene) {
   glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

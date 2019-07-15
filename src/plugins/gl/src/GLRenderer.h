@@ -38,9 +38,7 @@ public:
 
   void setCurrentRenderTarget(std::shared_ptr<RenderTargetInterface> target) override;
 
-  void render(
-      const std::vector<std::shared_ptr<GameObject>> &objects,
-      const std::shared_ptr<Camera> &camera, const std::shared_ptr<AbstractScene> &scene) override;
+  void render(const std::shared_ptr<AbstractScene> &scene) override;
 
   void setViewPort(int x, int y, int width, int height) override;
 
