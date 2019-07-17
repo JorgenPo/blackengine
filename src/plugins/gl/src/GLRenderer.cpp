@@ -19,6 +19,7 @@
 #include <shader/ApplicationShader.h>
 #include <shader/SimpleShader.h>
 #include <scene/AbstractScene.h>
+#include <render/RenderTargetInterface.h>
 
 #include <log/Logger.h>
 #include <util/ShaderManager.h>
@@ -41,15 +42,15 @@ void GLRenderer::render(const std::shared_ptr<AbstractScene> &scene) {
     this->logger->critical("OpenGL error: {0}", OpenGLRenderSystem::getErrorString(lastError));
   }
 
-//  this->defaultShader->use();
-//  this->defaultShader->setCamera(camera);
-//  this->defaultShader->setAmbientLight(glm::vec3(1.0f, 1.0f, 1.0f), 0.2f);
-//
-//  for (auto && object : objects) {
-//    this->currentShader = defaultShader;
-//    this->currentShader->use();
-//    renderObject(object, camera);
-//  }
+  this->defaultShader->use();
+  this->defaultShader->setCamera(scene->getCurrentCamera());
+  this->defaultShader->setAmbientLight(glm::vec3(1.0f, 1.0f, 1.0f), 0.2f);
+
+  for (auto && object : scene->getObjects()) {
+    this->currentShader = defaultShader;
+    this->currentShader->use();
+    renderObject(object, scene->getCurrentCamera());
+  }
 }
 
 void GLRenderer::setViewPort(int x, int y, int width, int height) {
@@ -74,7 +75,7 @@ GLRenderer::GLRenderer()
 
 void GLRenderer::createShaders() {
   this->defaultShader = util::ShaderManager::CreateApplicationShaderFromFile<SimpleShader>(
-      "shaders/simple_vertex.glsl", "shaders/simple_fragment.glsl");
+      "resources/simple_vertex.glsl", "resources/simple_fragment.glsl");
   this->defaultShader->use();
 
   glEnable(GL_DEPTH_TEST);

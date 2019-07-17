@@ -135,7 +135,7 @@ private:
 
   void loadShaders() {
     this->selectedShader = util::ShaderManager::CreateApplicationShaderFromFile<SelectedShader>(
-      "shaders/selected_vertex.glsl", "shaders/selected_fragment.glsl");
+      "resources/selected_vertex.glsl", "resources/selected_fragment.glsl");
   }
 };
 
