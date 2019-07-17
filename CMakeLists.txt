@@ -66,4 +66,17 @@ message(INFO " Installation path is: " ${CMAKE_INSTALL_PREFIX})
 
 # Install main target
 install(TARGETS ${PROJECT_NAME} DESTINATION lib/)
-install(FILES ${HEADERS} DESTINATION include)
+install(FILES ${HEADERS} DESTINATION include/BlackEngine)
+
+# Copy shaders and resources to the binary dir to developing and testing
+file(GLOB SHADERS ${CMAKE_SOURCE_DIR}/src/plugins/gl/shaders/*.glsl ${CMAKE_SOURCE_DIR}/examples/simple/shaders/*.glsl)
+file(GLOB RESOURCES ${CMAKE_SOURCE_DIR}/examples/simple/models/*)
+list(APPEND RESOURCES ${SHADERS})
+
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/lib/resources)
+add_custom_command(
+        TARGET BlackEngine POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+        ${RESOURCES}
+        ${CMAKE_CURRENT_BINARY_DIR}/lib/resources
+)

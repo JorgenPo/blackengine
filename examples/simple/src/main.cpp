@@ -10,9 +10,10 @@
 using namespace black;
 
 class BlackEngineApplication : public GameApplication {
-  std::vector<std::shared_ptr<GameEntity>> scene;
-  std::shared_ptr<GameEntity> selectedObject;
+  std::shared_ptr<AbstractScene> scene;
+  std::shared_ptr<GameObject> selectedObject;
   std::shared_ptr<Camera> camera;
+  std::shared_ptr<GameObject> light;
   std::shared_ptr<ApplicationShader> selectedShader;
   RayTracer tracer;
 
@@ -22,8 +23,9 @@ class BlackEngineApplication : public GameApplication {
 
   bool rotating = true;
 public:
-  BlackEngineApplication() : GameApplication(std::string("BlackEngineApplication") + Constants::RuntimePlatformString,
-      800, 600, false), tracer(camera) {
+  BlackEngineApplication() :
+  GameApplication(std::string("BlackEngineApplication") + Constants::RuntimePlatformString,
+    800, 600, false), tracer(camera), scene(new SimpleScene("Test")) {
   }
 
 private:
@@ -45,14 +47,10 @@ private:
     if (Input::IsKeyPressed(KEY_ESCAPE)) {
       this->stop();
     }
-
-    if (Input::IsKeyPressed(KEY_ENTER) && selectedObject) {
-
-    }
   }
 
-  std::shared_ptr<GameEntity> findSelectedObject(const Ray &ray) {
-    for (auto i = scene.rbegin(); i != scene.rend(); i++) {
+  std::shared_ptr<GameObject> findSelectedObject(const Ray &ray) {
+    for (auto i = scene->getObjects().rbegin(); i != scene->getObjects().rend(); i++) {
       const auto &object = *i;
       if (auto bounds = object->get<BoundingComponent>(); bounds != nullptr) {
         if (bounds->isIntersectsWith(ray)) {
@@ -75,7 +73,7 @@ private:
 
     if (this->rotating) {
       // Light
-      this->scene.at(0)->transform->setPosition({camX, 10.3f, camZ});
+      this->light->transform->setPosition({camX, 10.3f, camZ});
     }
 
     // Reset selected object
@@ -92,7 +90,7 @@ private:
       selected->get<ModelComponent>()->setShader(selectedShader);
     }
 
-    this->renderer->render(this->scene, this->camera);
+    this->renderer->render(this->scene);
   }
 
   void initializeResources() override {
@@ -104,7 +102,7 @@ private:
     auto cottageModel = ModelManager::CreateFromFile("resources/cottage_obj.obj");
     auto cubeModel = ModelManager::CreateFromFile("resources/cube.obj");
 
-    auto cottage = std::make_shared<GameEntity>("Cottage");
+    auto cottage = std::make_shared<GameObject>("Cottage");
     cottage->add(cottageModel);
     cottage->add(
       std::make_shared<BoundingComponent>(
@@ -112,7 +110,7 @@ private:
 
     cottage->transform->scale(0.1f);
 
-    auto cube = std::make_shared<GameEntity>("Cube");
+    auto cube = std::make_shared<GameObject>("Cube");
     cube->add(cubeModel);
     cube->transform->scale(1.0f);
     cube->transform->rotateX(35.0f);
@@ -121,23 +119,23 @@ private:
       std::make_shared<BoundingComponent>(
         std::make_shared<Sphere>(cube->transform, 1.0f)));
 
-    auto light = std::make_shared<GameEntity>("Sun");
+    light = std::make_shared<GameObject>("Sun");
     light->transform->setPosition({10.0f, 200.0f, 0.0f});
     light->add(std::make_shared<LightComponent>(LightType::DIRECTIONAL));
     light->get<LightComponent>()->setColor(Color{1.0f, 0.8f, 0.8f});
 
-    this->scene.emplace_back(light);
-    this->scene.emplace_back(cottage);
-    this->scene.emplace_back(cube);
+    scene->addObjects({light, cottage, cube});
 
     this->camera = std::make_shared<Camera>(ProjectionType::PERSPECTIVE);
     this->camera->setPosition({0.0f, 10.0f, 1.0f});
     tracer.setCamera(camera);
+
+    scene->setCurrentCamera(camera);
   }
 
   void loadShaders() {
     this->selectedShader = util::ShaderManager::CreateApplicationShaderFromFile<SelectedShader>(
-      "shaders/selected_vertex.glsl", "shaders/selected_fragment.glsl");
+      "resources/selected_vertex.glsl", "resources/selected_fragment.glsl");
   }
 };
 

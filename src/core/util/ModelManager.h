@@ -31,11 +31,11 @@ class BLACK_EXPORTED ModelManager {
   static std::unordered_map<std::string, std::shared_ptr<ModelParser>> parsers;
 
 public:
-  static std::shared_ptr<ModelComponent> CreateSquare(float sideSize);
+  static std::shared_ptr<ModelComponent> CreateXYSquare(float sideSize);
 
-  static std::shared_ptr<ModelComponent> CreateEquilateralTriangle(float sideSize);
+  static std::shared_ptr<ModelComponent> CreateXYEquilateralTriangle(float sideSize);
 
-  static std::shared_ptr<ModelComponent> CreateRectangle(float a, float b);
+  static std::shared_ptr<ModelComponent> CreateXYRectangle(float a, float b);
 
   /**
    * Creates a model from a given file name.

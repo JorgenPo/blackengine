@@ -6,8 +6,6 @@
 
 #include <Engine.h>
 
-#include <render/RendererInterface.h>
-#include <render/RenderSystemInterface.h>
 #include <render/AbstractRenderWindow.h>
 #include <performance/PerformanceCounter.h>
 

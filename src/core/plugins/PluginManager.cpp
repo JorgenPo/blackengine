@@ -35,7 +35,7 @@ PluginNotFoundException::PluginNotFoundException(
 
 PluginManager::PluginManager() {
   /* Default folders */
-  this->addPluginDirs({fmt::format("{}", config::PLUGIN_PATH), "", "plugins/"});
+  this->addPluginDirs({"", "plugins/", fmt::format("{}", config::PLUGIN_PATH)});
 
   /* Linux */
   if constexpr (Constants::RuntimePlatform == Platform::LINUX) {
@@ -49,9 +49,12 @@ PluginManager::PluginManager() {
 
 void PluginManager::loadPlugin(const std::string& pluginName) {
 
+  this->logger->trace(fmt::format("Loading plugin \"{}\"", pluginName));
+
   /* Check if plugin was loaded already */
   auto plugin = this->loadedPluginsLibraries.find(pluginName);
   if (plugin != this->loadedPluginsLibraries.end()) {
+    this->logger->info(fmt::format("Plugin \"{}\" already loaded", pluginName));
     return;
   }
 
@@ -88,9 +91,14 @@ void PluginManager::addPluginDirs(const std::vector<std::string>& dirs) {
 std::shared_ptr<AbstractSharedLibrary> PluginManager::searchForPluginLibrary(const std::string& pluginName) {
   // Search for plugin in all dirs
   for (auto &pluginDir : this->pluginDirs) {
+    this->logger->trace(R"(Looking for "{}" in "{}")", pluginName, pluginDir);
+
     try {
-      auto library = std::make_shared<SharedLibrary>(fmt::format("{}/{}", pluginDir, pluginName));
+      auto pluginFullName = pluginDir.empty() ? pluginName : fmt::format("{}/{}", pluginDir, pluginName);
+      auto library = std::make_shared<SharedLibrary>(pluginFullName);
       library->load();
+
+      this->logger->info(R"(Plugin "{}" found in "{}")", pluginName, pluginDir);
 
       // Library found
       return library;
