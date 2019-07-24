@@ -5,7 +5,7 @@
 #ifndef BLACKENGINE_COLOR_H
 #define BLACKENGINE_COLOR_H
 
-#include <Exported.h>
+#include <common/Exported.h>
 #include <array>
 
 namespace black {

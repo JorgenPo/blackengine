@@ -5,8 +5,8 @@
 #ifndef BLACKENGINE_TYPES_H
 #define BLACKENGINE_TYPES_H
 
-#include <Exported.h>
-#include <Config.h>
+#include <common/Exported.h>
+#include <common/Config.h>
 #include <glm/vec3.hpp>
 #include <fmt/format.h>
 

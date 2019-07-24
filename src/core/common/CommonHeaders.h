@@ -5,9 +5,9 @@
 #ifndef BLACKENGINE_COMMONHEADERS_H
 #define BLACKENGINE_COMMONHEADERS_H
 
-#include <Exported.h>
-#include <Config.h>
-#include <PlatformHeaders.h>
-#include <Constants.h>
+#include <common/Exported.h>
+#include <common/Config.h>
+#include <common/PlatformHeaders.h>
+#include <common/Constants.h>
 
 #endif //BLACKENGINE_COMMONHEADERS_H

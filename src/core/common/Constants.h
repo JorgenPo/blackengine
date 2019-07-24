@@ -5,8 +5,8 @@
 #ifndef BLACKENGINE_CONSTANTS_H
 #define BLACKENGINE_CONSTANTS_H
 
-#include <Config.h>
-#include <Exported.h>
+#include <common/Config.h>
+#include <common/Exported.h>
 
 #include <string>
 
