@@ -5,8 +5,8 @@
 #ifndef BLACKENGINE_MESH_H
 #define BLACKENGINE_MESH_H
 
-#include <CommonHeaders.h>
-#include <Types.h>
+#include <common/CommonHeaders.h>
+#include <common/Types.h>
 
 #include <vector>
 

@@ -5,7 +5,7 @@
 #ifndef BLACKENGINE_MODELPARSER_H
 #define BLACKENGINE_MODELPARSER_H
 
-#include <CommonHeaders.h>
+#include <common/CommonHeaders.h>
 
 #include <exceptions/Exception.h>
 
@@ -15,9 +15,8 @@ class ModelComponent;
 
 class ParseException : public Exception {
 public:
-  explicit ParseException(const std::string& file, const std::string &message)
-      : Exception(message) {
-    this->message << "Failed to parse " << file << ": " << message << std::endl;
+  explicit ParseException(std::string_view file, std::string_view message)
+      : Exception(fmt::format("Failed to parse '{}': {}", file, message)) {
   }
 };
 

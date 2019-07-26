@@ -1,7 +1,7 @@
 #ifndef BLACKENGINE_SHADERPROGRAM_H
 #define BLACKENGINE_SHADERPROGRAM_H
 
-#include <CommonHeaders.h>
+#include <common/CommonHeaders.h>
 #include <exceptions/Exception.h>
 
 #include <glm/glm.hpp>

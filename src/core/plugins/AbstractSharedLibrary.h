@@ -23,7 +23,7 @@ public:
    * @param library Name of a library
    * @param function Function name
    */
-  FunctionNotFoundException(const std::string& library, std::string function);
+  FunctionNotFoundException(std::string_view library, std::string_view function);
 
   /**
    * Returns a function name which cannot be found
@@ -43,7 +43,7 @@ public:
    *
    * @param name A library name
    */
-  explicit LibraryNotFoundException(const std::string& name);
+  explicit LibraryNotFoundException(std::string_view name);
 };
 
 /**

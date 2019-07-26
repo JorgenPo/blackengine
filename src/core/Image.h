@@ -5,7 +5,7 @@
 #ifndef BLACKENGINE_IMAGE_H
 #define BLACKENGINE_IMAGE_H
 
-#include <CommonHeaders.h>
+#include <common/CommonHeaders.h>
 
 namespace black {
 /**

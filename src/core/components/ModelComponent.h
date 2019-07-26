@@ -7,7 +7,7 @@
 
 #include "Component.h"
 
-#include <CommonHeaders.h>
+#include <common/CommonHeaders.h>
 #include <exceptions/Exception.h>
 #include <render/Material.h>
 
@@ -20,7 +20,7 @@ class ApplicationShader;
 
 class BLACK_EXPORTED ModelPartNotFoundException : public Exception {
 public:
-  explicit ModelPartNotFoundException(const std::string& partName);
+  explicit ModelPartNotFoundException(std::string_view partName);
 };
 
 /**

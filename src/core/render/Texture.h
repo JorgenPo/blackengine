@@ -5,7 +5,7 @@
 #ifndef BLACKENGINE_TEXTURE_H
 #define BLACKENGINE_TEXTURE_H
 
-#include <CommonHeaders.h>
+#include <common/CommonHeaders.h>
 
 #include <memory>
 

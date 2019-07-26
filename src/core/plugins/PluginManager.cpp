@@ -6,31 +6,31 @@
 #include "AbstractSharedLibrary.h"
 #include "PluginInterface.h"
 
-#include <Types.h>
+#include <common/Types.h>
 #include <log/Logger.h>
 
 #include <algorithm>
 
 namespace black {
 
-PluginFunctionNotFound::PluginFunctionNotFound(const std::string &pluginName, const std::string &entryPointName)
-    : pluginName(pluginName), entryPointName(entryPointName) {
-
-  this->message << "Plugin '" << pluginName
-                << "' does not contain the mandatory function '" << entryPointName << "'";
+PluginFunctionNotFound::PluginFunctionNotFound(std::string_view pluginName, std::string_view entryPointName)
+    : Exception(fmt::format("Plugin '{}' required function '{}' not found", pluginName, entryPointName)),
+      pluginName(pluginName), entryPointName(entryPointName) {
 }
 
 PluginNotFoundException::PluginNotFoundException(
-    const std::string &pluginName, const std::vector<std::string> &pluginDirs)
+    std::string_view pluginName, const std::vector<std::string> &pluginDirs)
     : pluginName(pluginName), pluginDirs(pluginDirs) {
-
-  this->message << "Plugin with name '" << pluginName << "' not found. Searching dirs are: [";
+  std::stringstream ss;
+  ss << "Plugin with name '" << pluginName << "' not found. Searching dirs are: [";
 
   for (const auto &dir : pluginDirs) {
-    this->message << "\"" << dir << "\", ";
+    ss << "\"" << dir << "\", ";
   }
 
-  this->message << "]";
+  ss << "]";
+
+  this->message = ss.str();
 }
 
 PluginManager::PluginManager() {

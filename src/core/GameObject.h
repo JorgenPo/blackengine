@@ -5,7 +5,7 @@
 #ifndef BLACKENGINE_OBJECT_H
 #define BLACKENGINE_OBJECT_H
 
-#include <CommonHeaders.h>
+#include <common/CommonHeaders.h>
 
 #include <components/ComponentsContainer.h>
 

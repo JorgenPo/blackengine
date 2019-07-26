@@ -6,7 +6,7 @@
 #define BLACKENGINE_GLTEXTURE_H
 
 #include "OpenGLCommonHeaders.h"
-#include <CommonHeaders.h>
+#include <common/CommonHeaders.h>
 #include <render/Texture.h>
 
 namespace black {

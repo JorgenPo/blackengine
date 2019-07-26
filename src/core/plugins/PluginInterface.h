@@ -5,7 +5,7 @@
 #ifndef BLACKENGINE_PLUGININTERFACE_H
 #define BLACKENGINE_PLUGININTERFACE_H
 
-#include "CommonHeaders.h"
+#include "common/CommonHeaders.h"
 
 namespace black {
 

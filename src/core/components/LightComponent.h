@@ -7,7 +7,7 @@
 
 #include "Component.h"
 
-#include <Color.h>
+#include <common/Color.h>
 #include <glm/vec3.hpp>
 
 namespace black {

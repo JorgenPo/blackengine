@@ -5,7 +5,7 @@
 #ifndef BLACKENGINE_WINDOWSSHAREDLIBRARY_H
 #define BLACKENGINE_WINDOWSSHAREDLIBRARY_H
 
-#include <PlatformHeaders.h>
+#include <common/PlatformHeaders.h>
 #include <plugins/AbstractSharedLibrary.h>
 
 namespace black::os {

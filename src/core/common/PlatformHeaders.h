@@ -5,7 +5,7 @@
 #ifndef BLACKENGINE_PLATFORMHEADERS_H
 #define BLACKENGINE_PLATFORMHEADERS_H
 
-#include <Config.h>
+#include <common/Config.h>
 
 #if defined(BLACK_PLATFORM_WINDOWS)
 #include <windows.h>

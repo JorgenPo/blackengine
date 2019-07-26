@@ -5,7 +5,9 @@
 #ifndef BLACKENGINE_EXCEPTION_H
 #define BLACKENGINE_EXCEPTION_H
 
-#include <Exported.h>
+#include <common/Exported.h>
+
+#include <fmt/format.h>
 
 #include <string>
 #include <sstream>
@@ -23,20 +25,18 @@ namespace black {
 class BLACK_EXPORTED Exception : public std::exception, std::enable_shared_from_this<Exception> {
 protected:
   // Underlying string stream for better performance
-  std::stringstream message;
+  std::string message;
 
 public:
-  Exception(const Exception &another)  : enable_shared_from_this(another) {
-    message << another.getMessage();
+  Exception(const Exception &another)  : enable_shared_from_this(another), message(another.getMessage()) {
   }
 
   explicit Exception() : message() {}
-  explicit Exception(const std::string &message) : message() {
-    this->message << message;
+  explicit Exception(std::string_view message) : message(message.data()) {
   }
 
   const char *what() const noexcept override {
-    return this->message.str().c_str();
+    return this->message.c_str();
   }
 
   /**
@@ -44,8 +44,8 @@ public:
    *
    * @return A message string
    */
-  std::string getMessage() const {
-    return message.str();
+  const std::string &getMessage() const {
+    return message;
   }
 };
 
@@ -54,7 +54,7 @@ public:
  */
 class NotInitializedException : public Exception {
 public:
-  explicit NotInitializedException(const std::string &message) : Exception(message) {}
+  explicit NotInitializedException(std::string_view message) : Exception(message) {}
 };
 
 /**
@@ -62,8 +62,8 @@ public:
  */
 class FileNotFoundException : public Exception {
 public:
-  explicit FileNotFoundException(const std::string &filename) : Exception() {
-    this->message << "File with name '" << filename << "' not found";
+  explicit FileNotFoundException(std::string_view filename)
+    : Exception(fmt::format("File with name '{}' not found", filename)) {
   }
 };
 
@@ -72,10 +72,23 @@ public:
  */
 class FileFormatUnknownException : public Exception {
 public:
-  explicit FileFormatUnknownException(const std::string &format) : Exception() {
-    this->message << "Unknown file format '" << format << "'";
+  explicit FileFormatUnknownException(std::string_view format)
+    : Exception(fmt::format("Unknown file format '{}'", format)) {
   }
 };
+
+class NotEnoughDataException : public Exception {
+public:
+  explicit NotEnoughDataException()  : Exception("Not enough data for operation") {
+  }
+};
+
+class NotFoundException : public Exception {
+public:
+  explicit NotFoundException(std::string_view message)  : Exception(message) {
+  }
+};
+
 }
 
 #endif //BLACKENGINE_EXCEPTION_H

@@ -120,7 +120,7 @@ void ModelManager::AddModelParser(const std::string& extension, std::shared_ptr<
   parsers[extension] = std::move(parser);
 }
 
-UnknownFormatException::UnknownFormatException(const std::string& extension) {
-  this->message << "No parser for '" << extension << "' model found!" << std::endl;
+UnknownFormatException::UnknownFormatException(std::string_view extension)
+  : Exception("No parser for '{}' model format found") {
 }
 }

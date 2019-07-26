@@ -5,7 +5,7 @@
 #ifndef BLACKENGINE_CAMERA_H
 #define BLACKENGINE_CAMERA_H
 
-#include <CommonHeaders.h>
+#include <common/CommonHeaders.h>
 #include <glm/glm.hpp>
 
 namespace black {

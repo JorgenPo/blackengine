@@ -5,7 +5,7 @@
 #ifndef BLACKENGINE_PERFORMANCECOUNTER_H
 #define BLACKENGINE_PERFORMANCECOUNTER_H
 
-#include <Exported.h>
+#include <common/Exported.h>
 #include <chrono>
 
 namespace black {

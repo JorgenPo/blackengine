@@ -5,14 +5,14 @@
 #ifndef BLACKENGINE_SHADER_H
 #define BLACKENGINE_SHADER_H
 
-#include <CommonHeaders.h>
+#include <common/CommonHeaders.h>
 #include <exceptions/Exception.h>
 
 namespace black {
 
 class BLACK_EXPORTED ShaderCompileException : public Exception {
 public:
-  explicit ShaderCompileException(const std::string& message);
+  explicit ShaderCompileException(std::string_view message);
 };
 
 /**

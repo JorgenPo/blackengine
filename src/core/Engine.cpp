@@ -1,10 +1,11 @@
 #include "Engine.h"
-#include "Config.h"
+#include "common/Config.h"
 
 #include <log/Logger.h>
 #include <plugins/PluginInterface.h>
 #include <plugins/PluginManager.h>
 #include <render/RenderSystemInterface.h>
+#include <terrain/FlatTerrainBuilder.h>
 
 #include <thread>
 
@@ -36,11 +37,12 @@ void Engine::Initialize(std::string title, int width, int height, bool isFullScr
 
   // Create an instance of engine. Also loads plugins.
   auto engine = Engine::GetInstance();
-
   engine->setDefaultRenderSystem();
 
   // Initialize render system
   engine->currentRenderSystem->initialize(std::move(title), width, height, isFullScreen);
+
+  RegisterTerrainBuilder("Flat", std::make_shared<FlatTerrainBuilder>());
 }
 
 void Engine::UnregisterPlugin(const std::shared_ptr<PluginInterface>& plugin) {
@@ -123,6 +125,24 @@ void Engine::SetTerminationHandler() {
 
     std::abort();
   });
+}
+
+Engine::TerrainBuilderMap &Engine::GetTerrainBuilders() {
+  return GetInstance()->terrainBuilders;
+}
+
+std::shared_ptr<TerrainBuilder> Engine::GetTerrainBuilder(std::string_view name) {
+  try {
+    return GetTerrainBuilders().at(name.data());
+  } catch (const std::exception &e) {
+    throw NotFoundException(fmt::format("TerrainBuilder '{}' not found", name));
+  }
+}
+
+void Engine::RegisterTerrainBuilder(std::string_view name, std::shared_ptr<TerrainBuilder> builder) {
+  if (builder) {
+    GetInstance()->terrainBuilders[name.data()] = std::move(builder);
+  }
 }
 
 EngineInitializationException::EngineInitializationException(const std::string &message) : Exception(message) {}

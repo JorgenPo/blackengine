@@ -5,7 +5,7 @@
 #ifndef BLACKENGINE_RENDERTARGETINTERFACE_H
 #define BLACKENGINE_RENDERTARGETINTERFACE_H
 
-#include <CommonHeaders.h>
+#include <common/CommonHeaders.h>
 
 namespace black {
 

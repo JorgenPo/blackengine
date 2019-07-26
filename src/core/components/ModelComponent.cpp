@@ -49,7 +49,7 @@ ModelPart::ModelPart(std::string name, std::shared_ptr<Mesh> mesh, const Materia
                      mesh(std::move(mesh)),
                      material(material) {}
 
-ModelPartNotFoundException::ModelPartNotFoundException(const std::string& partName) : Exception() {
-  this->message << "Model part with name '" << partName << "' does not exist" << std::endl;
+ModelPartNotFoundException::ModelPartNotFoundException(std::string_view partName)
+  : Exception(fmt::format("Model part with name '{}' not found", partName)) {
 }
 }

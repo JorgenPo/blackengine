@@ -5,7 +5,7 @@
 #ifndef BLACKENGINE_RENDERERINTERFACE_H
 #define BLACKENGINE_RENDERERINTERFACE_H
 
-#include <CommonHeaders.h>
+#include <common/CommonHeaders.h>
 #include <exceptions/Exception.h>
 
 #include <vector>

@@ -5,7 +5,7 @@
 #ifndef BLACKENGINE_ABSTRACTAPPLICATION_H
 #define BLACKENGINE_ABSTRACTAPPLICATION_H
 
-#include <CommonHeaders.h>
+#include <common/CommonHeaders.h>
 
 #include <exceptions/Exception.h>
 #include <log/Logger.h>

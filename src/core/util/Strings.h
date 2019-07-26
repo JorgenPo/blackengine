@@ -5,7 +5,7 @@
 #ifndef BLACKENGINE_STRINGS_H
 #define BLACKENGINE_STRINGS_H
 
-#include <Exported.h>
+#include <common/Exported.h>
 #include <string>
 #include <vector>
 

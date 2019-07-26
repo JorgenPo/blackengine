@@ -5,7 +5,7 @@
 #ifndef BLACKENGINE_MESHMANAGER_H
 #define BLACKENGINE_MESHMANAGER_H
 
-#include <CommonHeaders.h>
+#include <common/CommonHeaders.h>
 #include <exceptions/Exception.h>
 
 #include <unordered_map>
@@ -21,7 +21,7 @@ class Mesh;
  */
 class UnknownFormatException : public Exception {
 public:
-  explicit UnknownFormatException(const std::string& extension);
+  explicit UnknownFormatException(std::string_view extension);
 };
 
 /**

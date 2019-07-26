@@ -5,7 +5,7 @@
 #ifndef BLACKENGINE_PATHS_H
 #define BLACKENGINE_PATHS_H
 
-#include <Exported.h>
+#include <common/Exported.h>
 #include <string>
 
 namespace black {

@@ -9,7 +9,7 @@
 
 #include "RenderTargetInterface.h"
 
-#include <CommonHeaders.h>
+#include <common/CommonHeaders.h>
 #include <exceptions/Exception.h>
 
 namespace black {

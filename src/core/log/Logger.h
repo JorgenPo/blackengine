@@ -5,7 +5,7 @@
 #ifndef BLACKENGINE_LOGGER_H
 #define BLACKENGINE_LOGGER_H
 
-#include <Exported.h>
+#include <common/Exported.h>
 
 #include "Formatters.h"
 

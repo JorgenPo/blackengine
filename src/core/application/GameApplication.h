@@ -7,7 +7,7 @@
 
 #include "AbstractApplication.h"
 
-#include <CommonHeaders.h>
+#include <common/CommonHeaders.h>
 
 #include <Engine.h>
 #include <Image.h>

@@ -5,7 +5,7 @@
 #ifndef BLACKENGINE_GLRENDERER_H
 #define BLACKENGINE_GLRENDERER_H
 
-#include <CommonHeaders.h>
+#include <common/CommonHeaders.h>
 #include <render/RendererInterface.h>
 
 #include "OpenGLCommonHeaders.h"

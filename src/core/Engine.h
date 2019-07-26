@@ -1,11 +1,11 @@
 #ifndef BLACKENGINE_LIBRARY_H
 #define BLACKENGINE_LIBRARY_H
 
-#include <CommonHeaders.h>
+#include <common/CommonHeaders.h>
 #include <exceptions/Exception.h>
 
 #include <memory>
-#include <map>
+#include <unordered_map>
 
 namespace black {
 
@@ -13,6 +13,7 @@ class RenderSystemInterface;
 class PluginManager;
 class Logger;
 class PluginInterface;
+class TerrainBuilder;
 
 class BLACK_EXPORTED EngineInitializationException : public Exception {
 public:
@@ -21,7 +22,8 @@ public:
 
 class BLACK_EXPORTED Engine {
 private:
-  using RenderSystemMap = std::map<std::string, std::shared_ptr<RenderSystemInterface>>;
+  using RenderSystemMap = std::unordered_map<std::string, std::shared_ptr<RenderSystemInterface>>;
+  using TerrainBuilderMap = std::unordered_map<std::string, std::shared_ptr<TerrainBuilder>>;
 
   static constexpr const char *GL_RENDERER_PLUGIN_NAME = "glPlugin";
   static constexpr const char *MODEL_PARSERS_PLUGIN_NAME = "modelParsersPlugin";
@@ -29,6 +31,7 @@ private:
   std::unique_ptr<PluginManager> pluginManager;
   std::shared_ptr<Logger> logger;
   RenderSystemMap renderSystems;
+  TerrainBuilderMap terrainBuilders;
   std::shared_ptr<RenderSystemInterface> currentRenderSystem;
 
   /**
@@ -88,6 +91,9 @@ public:
    */
   static std::shared_ptr<RenderSystemInterface> GetCurrentRenderSystem();
 
+  static TerrainBuilderMap &GetTerrainBuilders();
+  static std::shared_ptr<TerrainBuilder> GetTerrainBuilder(std::string_view name);
+  static void RegisterTerrainBuilder(std::string_view name, std::shared_ptr<TerrainBuilder> builder);
 
 private:
   /**

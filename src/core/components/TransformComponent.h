@@ -5,7 +5,7 @@
 #ifndef BLACKENGINE_TRANSFORMCOMPONENT_H
 #define BLACKENGINE_TRANSFORMCOMPONENT_H
 
-#include <CommonHeaders.h>
+#include <common/CommonHeaders.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>

@@ -5,7 +5,7 @@
 #ifndef BLACKENGINE_INPUT_H
 #define BLACKENGINE_INPUT_H
 
-#include <CommonHeaders.h>
+#include <common/CommonHeaders.h>
 
 #include <input/SystemInterface.h>
 

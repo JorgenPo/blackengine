@@ -5,7 +5,7 @@
 #ifndef BLACKENGINE_LINUXSHAREDLIBRARY_H
 #define BLACKENGINE_LINUXSHAREDLIBRARY_H
 
-#include <PlatformHeaders.h>
+#include <common/PlatformHeaders.h>
 #include <plugins/AbstractSharedLibrary.h>
 
 namespace black::os {

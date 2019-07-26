@@ -23,7 +23,7 @@ Shader::Type Shader::getType() const {
   return type;
 }
 
-ShaderCompileException::ShaderCompileException(const std::string& message) : Exception() {
-  this->message << "Shader compiled with errors: \n" << message;
+ShaderCompileException::ShaderCompileException(std::string_view message)
+  : Exception(fmt::format("Shader compiled with errors: \n{}", message)) {
 }
 }

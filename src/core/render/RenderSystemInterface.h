@@ -9,7 +9,7 @@
 
 #include <shader/Shader.h>
 
-#include <CommonHeaders.h>
+#include <common/CommonHeaders.h>
 
 #include <vector>
 

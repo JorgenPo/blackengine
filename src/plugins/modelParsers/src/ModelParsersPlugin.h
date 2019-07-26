@@ -5,7 +5,7 @@
 #ifndef BLACKENGINE_MODELPARSERSPLUGIN_H
 #define BLACKENGINE_MODELPARSERSPLUGIN_H
 
-#include <CommonHeaders.h>
+#include <common/CommonHeaders.h>
 #include <plugins/PluginInterface.h>
 
 namespace black {

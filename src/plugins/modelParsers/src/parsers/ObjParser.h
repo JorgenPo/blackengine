@@ -5,7 +5,7 @@
 #ifndef BLACKENGINE_OBJPARSER_H
 #define BLACKENGINE_OBJPARSER_H
 
-#include <CommonHeaders.h>
+#include <common/CommonHeaders.h>
 #include <util/ModelParser.h>
 
 #include <memory>

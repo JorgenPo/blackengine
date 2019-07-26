@@ -2,5 +2,5 @@
 cmake-build-*/
 bin/*
 
-src/core/Config.h
-src/core/Exported.h
+src/core/common/Config.h
+src/core/common/Exported.h

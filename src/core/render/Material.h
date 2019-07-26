@@ -5,8 +5,8 @@
 #ifndef BLACKENGINE_MATERIAL_H
 #define BLACKENGINE_MATERIAL_H
 
-#include <CommonHeaders.h>
-#include <Color.h>
+#include <common/CommonHeaders.h>
+#include <common/Color.h>
 
 #include <memory>
 
@@ -18,6 +18,11 @@ class ShaderProgram;
  * Some shader information about concrete material.
  */
 struct BLACK_EXPORTED Material {
+  Material(const Material &material);
+  Material();
+
+  Material(std::shared_ptr<Texture> texture, const Color &color, float spectacularFactor);
+
   std::shared_ptr<Texture> texture;
   Color color = Color::BLACK;
   float spectacularFactor = 1.0f;

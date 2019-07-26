@@ -8,13 +8,12 @@ namespace black {
 
 AbstractSharedLibrary::AbstractSharedLibrary(std::string name) : name(std::move(name)) {}
 
-LibraryNotFoundException::LibraryNotFoundException(const std::string& name) : Exception() {
-  this->message << "Library with name " << name << " not found";
+LibraryNotFoundException::LibraryNotFoundException(std::string_view name)
+  : Exception(fmt::format("Library with name '{}' not found", name)) {
 }
 
-FunctionNotFoundException::FunctionNotFoundException(const std::string& library, std::string function)
-    : function(std::move(function)) {
-  this->message << "Function " << function << "() not found in " << library;
+FunctionNotFoundException::FunctionNotFoundException(std::string_view library, std::string_view function)
+    : Exception(fmt::format("Function '{}' not found in library '{}'", function, library)), function(function) {
 }
 
 const std::string &FunctionNotFoundException::getFunction() const {

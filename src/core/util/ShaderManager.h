@@ -1,7 +1,7 @@
 #ifndef BLACKENGINE_SRC_CORE_UTIL_SHADERMANAGER_H
 #define BLACKENGINE_SRC_CORE_UTIL_SHADERMANAGER_H
 
-#include <Exported.h>
+#include <common/Exported.h>
 #include <shader/Shader.h>
 
 #include <memory>

@@ -5,7 +5,7 @@
 #ifndef BLACKENGINE_PLUGINMANAGER_H
 #define BLACKENGINE_PLUGINMANAGER_H
 
-#include <CommonHeaders.h>
+#include <common/CommonHeaders.h>
 #include <exceptions/Exception.h>
 
 #include <vector>
@@ -31,7 +31,7 @@ public:
    * @param pluginName Name of a plugin
    * @param pluginDirs Directories in which plugins are searched
    */
-  PluginNotFoundException(const std::string &pluginName, const std::vector<std::string> &pluginDirs);
+  PluginNotFoundException(std::string_view pluginName, const std::vector<std::string> &pluginDirs);
 };
 
 class BLACK_EXPORTED PluginFunctionNotFound : public Exception {
@@ -39,7 +39,7 @@ class BLACK_EXPORTED PluginFunctionNotFound : public Exception {
   std::string entryPointName;
 
 public:
-  PluginFunctionNotFound(const std::string &pluginName, const std::string &entryPointName);
+  PluginFunctionNotFound(std::string_view pluginName, std::string_view entryPointName);
 };
 
 /**

@@ -5,6 +5,8 @@
 
 #include <iostream>
 #include <memory>
+#include <terrain/Terrain.h>
+#include <terrain/TerrainBuilder.h>
 
 
 using namespace black;
@@ -99,6 +101,15 @@ private:
   }
 
   void initScene() {
+    auto builder = Engine::GetTerrainBuilder("Flat");
+    TerrainBuilder::Data data;
+    data.width = 1000;
+    data.height = 1000;
+    data.lod = 10.0f;
+
+    auto terrain = builder->build(data);
+    this->scene->addObject(terrain);
+
     auto cottageModel = ModelManager::CreateFromFile("resources/cottage_obj.obj");
     auto cubeModel = ModelManager::CreateFromFile("resources/cube.obj");
 
@@ -144,7 +155,7 @@ int main(int argc, char **argv) {
     BlackEngineApplication application;
     application.start();
   } catch (const std::exception &e) {
-    Logger::Get("Initialization example")->critical("Initialization Example error: ", e.what());
+    Logger::Get("Initialization example")->critical("Initialization Example error: {}", e.what());
     return 1;
   }
 
