@@ -61,4 +61,8 @@ void ApplicationShader::setAmbientLight(Color color, float intensity) {
   setAmbientLightImpl(ambientLightColor, ambientLightIntensity);
 }
 
+Color ApplicationShader::getAmbientLightColor() const {
+  return ambientLightColor;
+}
+
 }

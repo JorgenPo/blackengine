@@ -5,16 +5,73 @@
 
 #include <iostream>
 #include <memory>
+#include <utility>
 #include <terrain/Terrain.h>
 #include <terrain/TerrainBuilder.h>
 
 
 using namespace black;
 
+class SelectableGameObject {
+  std::shared_ptr<GameObject> object;
+  std::shared_ptr<ApplicationShader> selectedShader;
+  std::shared_ptr<ApplicationShader> hoveredShader;
+  bool isSelected = false;
+
+public:
+  SelectableGameObject() = default;
+
+  explicit SelectableGameObject(
+    std::shared_ptr<ApplicationShader> hoveredShader,
+    std::shared_ptr<ApplicationShader> selectedShader)
+    : selectedShader(std::move(selectedShader)), hoveredShader(std::move(hoveredShader)) {}
+
+  void setObject(std::shared_ptr<GameObject> newObject) {
+    if (object && object->getName() == newObject->getName()) {
+      return;
+    }
+
+    resetObject();
+    object = std::move(newObject);
+
+    object->get<ModelComponent>()->setShader(hoveredShader);
+  }
+
+  void resetObject() {
+    if (object) {
+      object->get<ModelComponent>()->setShader(nullptr);
+    }
+
+    object = nullptr;
+    isSelected = false;
+  }
+
+  [[nodiscard]] std::shared_ptr<GameObject> getObject() const {
+    return object;
+  }
+
+  void select() {
+    if (object) {
+      object->get<ModelComponent>()->setShader(selectedShader);
+    }
+    isSelected = true;
+  }
+
+  [[nodiscard]] bool isObjectSelected() const {
+    return isSelected;
+  }
+
+  void unselect() {
+    if (object) {
+      object->get<ModelComponent>()->setShader(nullptr);
+    }
+    isSelected = false;
+  }
+};
+
 class BlackEngineApplication : public GameApplication {
   std::shared_ptr<AbstractScene> scene;
-  std::shared_ptr<GameObject> hoveredObject;
-  std::shared_ptr<GameObject> selectedObject;
+  SelectableGameObject selected;
   std::shared_ptr<Camera> camera;
   std::shared_ptr<Terrain> terrain;
   std::shared_ptr<GameObject> light;
@@ -50,17 +107,15 @@ private:
     }
 
     if (Input::IsKeyPressed(KEY_ESCAPE)) {
-      if (this->selectedObject) {
-        this->selectedObject->get<ModelComponent>()->setShader(nullptr);
-        this->selectedObject = nullptr;
-      }
-
       this->stop();
     }
 
-    if (Input::IsKeyPressed(KEY_ENTER) && hoveredObject) {
-      this->selectedObject = this->hoveredObject;
-      this->selectedObject->get<ModelComponent>()->setShader(selectedShader);
+    if (Input::IsKeyPressed(KEY_ENTER)) {
+      if (selected.isObjectSelected()) {
+        selected.unselect();
+      } else {
+        selected.select();
+      }
     }
   }
 
@@ -69,8 +124,7 @@ private:
       const auto &object = *i;
       if (auto bounds = object->get<BoundingComponent>(); bounds != nullptr) {
         if (bounds->isIntersectsWith(ray)) {
-          hoveredObject = object;
-          return hoveredObject;
+          return object;
         }
       }
     }
@@ -91,18 +145,15 @@ private:
       this->light->transform->setPosition({camX, 10.3f, camZ});
     }
 
-    // Reset selected object
-    if (this->hoveredObject) {
-      this->hoveredObject->get<ModelComponent>()->setShader(nullptr);
-      this->hoveredObject = nullptr;
-    }
-
     auto ray = tracer.calculateRay(Input::GetMouseX(), Input::GetMouseY());
 
+    auto hovered = findSelectedObject(ray);
+
     // Set highlighting shader if some object was selected
-    if (auto selected = findSelectedObject(ray); selected != nullptr) {
-      //logger->debug(fmt::format("Selected object: {}", selectedObject->getName()));
-      selected->get<ModelComponent>()->setShader(hoveredShader);
+    if (hovered && !selected.isObjectSelected()) {
+      selected.setObject(hovered);
+    } else if (!hovered && !selected.isObjectSelected()) {
+      selected.resetObject();
     }
 
     this->renderer->render(this->scene);
@@ -163,7 +214,9 @@ private:
     this->hoveredShader = std::make_shared<SelectedShader>(this->selectedShader);
 
     this->hoveredShader->setAmbientLight(Color::RED, 0.1f);
-    this->selectedShader->setAmbientLight(Color::RED, 0.1f);
+    this->selectedShader->setAmbientLight(Color::GREEN, 0.1f);
+
+    this->selected = SelectableGameObject(hoveredShader, selectedShader);
   }
 };
 

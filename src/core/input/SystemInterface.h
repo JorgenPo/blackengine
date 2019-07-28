@@ -149,6 +149,8 @@ class SystemInterface {
 public:
   virtual bool isKeyPressed(Key key) = 0;
   virtual bool isKeyPressed(int key) = 0;
+  virtual bool isKeyReleased(Key key) = 0;
+  virtual bool isKeyReleased(int key) = 0;
   virtual void setCursorMode(CursorMode mode) = 0;
   virtual void setMouseAccelerated(bool accelerated) = 0;
 };

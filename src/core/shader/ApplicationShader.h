@@ -44,6 +44,7 @@ public:
   void setDirectedLight(const glm::vec3 &position, const std::shared_ptr<LightComponent> &light);
   void setAmbientLight(Color color, float intensity);
 
+  Color getAmbientLightColor() const;
 private:
   virtual void setCameraImpl(const std::shared_ptr<Camera> &camera) = 0;
   virtual void setModelMatrixImpl(const glm::mat4 &model) = 0;

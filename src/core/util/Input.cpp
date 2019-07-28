@@ -37,4 +37,17 @@ double Input::GetMouseY() {
 double Input::GetMouseX() {
   return mouseX;
 }
+
+bool Input::IsKeyReleased(Key key) {
+  auto systemInterface = Engine::GetCurrentRenderSystem()->getSystemInterface();
+  if (!systemInterface) {
+    return false;
+  }
+
+  return systemInterface->isKeyReleased(key);
+}
+
+bool Input::IsKeyReleased(int key) {
+  return IsKeyReleased(Key(key));
+}
 }

@@ -47,6 +47,10 @@ public:
   bool isKeyPressed(Key key) override;
   bool isKeyPressed(int key) override;
 
+  bool isKeyReleased(Key key) override;
+
+  bool isKeyReleased(int key) override;
+
   void setCursorMode(CursorMode mode) override;
   void setMouseAccelerated(bool accelerated) override;
 };

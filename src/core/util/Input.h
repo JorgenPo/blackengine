@@ -20,6 +20,9 @@ private:
 public:
   static bool IsKeyPressed(Key key);
   static bool IsKeyPressed(int key);
+  static bool IsKeyReleased(Key key);
+  static bool IsKeyReleased(int key);
+
   static double GetMouseX();
   static double GetMouseY();
 

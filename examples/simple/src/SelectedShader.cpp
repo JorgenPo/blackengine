@@ -17,7 +17,6 @@ void SelectedShader::setModelMatrixImpl(const glm::mat4 &model) {
 }
 
 void SelectedShader::setAmbientLightImpl(Color color, float intensity) {
-  Logger::Get("SelectedShader")->debug(color);
   this->impl->setUniformVariable("ambientLight", color.getRgba());
 }
 

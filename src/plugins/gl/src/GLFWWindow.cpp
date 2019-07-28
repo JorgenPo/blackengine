@@ -103,4 +103,12 @@ void GLFWWindow::close() {
   glfwSetWindowShouldClose(window.get(), true);
 }
 
+bool GLFWWindow::isKeyReleased(Key key) {
+  return glfwGetKey(this->window.get(), static_cast<int>(key)) == GLFW_RELEASE;
+}
+
+bool GLFWWindow::isKeyReleased(int key) {
+  return glfwGetKey(this->window.get(), key) == GLFW_RELEASE;
+}
+
 }
