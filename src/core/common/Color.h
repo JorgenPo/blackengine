@@ -6,6 +6,8 @@
 #define BLACKENGINE_COLOR_H
 
 #include <common/Exported.h>
+
+#include <fmt/format.h>
 #include <array>
 
 namespace black {
@@ -33,4 +35,16 @@ public:
   [[nodiscard]] std::array<float, 4> getRgba() const;
 };
 }
+
+template<>
+struct fmt::formatter<black::Color> {
+  template <typename ParseContext>
+  constexpr auto parse(ParseContext &ctx) { return ctx.begin(); }
+
+  template <typename FormatContext>
+  auto format(const black::Color &c, FormatContext &ctx) {
+    return format_to(ctx.out(), "Color({},{},{},{})", c.r, c.g, c.b, c.a);
+  }
+};
+
 #endif //BLACKENGINE_COLOR_H

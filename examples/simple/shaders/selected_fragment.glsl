@@ -5,6 +5,8 @@ in vec2 TexCoord;
 in vec3 Position;
 in vec3 Normal;
 
+uniform vec4 ambientLight;
+
 uniform sampler2D diffuse;
 
 uniform struct Material {
@@ -15,5 +17,5 @@ void main()
 {
     vec4 objectColor = vec4(material.color, 1.0f) + texture(diffuse, TexCoord);
 
-    FragColor = objectColor * vec4(1.0f, 0.0f, 0.0f, 1.0f);
+    FragColor = objectColor * ambientLight;
 }

@@ -5,6 +5,8 @@
 #ifndef BLACKENGINE_FORMATTERS_H
 #define BLACKENGINE_FORMATTERS_H
 
+#include <common/Color.h>
+
 #include <fmt/format.h>
 #include <glm/glm.hpp>
 #include <string>

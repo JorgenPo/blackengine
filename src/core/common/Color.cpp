@@ -28,4 +28,5 @@ std::array<float, 3> Color::getRgb() const {
 std::array<float, 4> Color::getRgba() const {
   return {r, g, b, a};
 }
+
 }

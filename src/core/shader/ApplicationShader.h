@@ -21,18 +21,36 @@ namespace black {
 class ApplicationShader {
 protected:
   std::shared_ptr<ShaderProgram> impl;
+  std::shared_ptr<Camera> camera;
+  std::shared_ptr<LightComponent> directedLight;
+  glm::mat4 model{};
+  Color ambientLightColor = Color::WHITE;
+  float ambientLightIntensity = 0.1f;
+  glm::vec3 directedLightPosition{};
+  Material material;
 
 public:
   explicit ApplicationShader(std::shared_ptr<ShaderProgram> impl);
+  explicit ApplicationShader(const std::shared_ptr<ApplicationShader>& shader);
+
   virtual ~ApplicationShader();
 
-  virtual void setCamera(const std::shared_ptr<Camera> &camera) = 0;
-  virtual void setModelMatrix(const glm::mat4 &model) = 0;
-  virtual void setAmbientLight(const glm::vec3 &color, float intensity) = 0;
-  virtual void setLight(const glm::vec3 &position, const std::shared_ptr<LightComponent> &light) = 0;
-  virtual void setMaterial(const Material &material) = 0;
-
   void use();
+
+  void setCamera(const std::shared_ptr<Camera> &camera);
+  void setModelMatrix(const glm::mat4 &model);
+  void setMaterial(const Material &material);
+
+  void setDirectedLight(const glm::vec3 &position, const std::shared_ptr<LightComponent> &light);
+  void setAmbientLight(Color color, float intensity);
+
+private:
+  virtual void setCameraImpl(const std::shared_ptr<Camera> &camera) = 0;
+  virtual void setModelMatrixImpl(const glm::mat4 &model) = 0;
+  virtual void setAmbientLightImpl(Color color, float intensity) = 0;
+  virtual void setLightImpl(const glm::vec3 &position, const std::shared_ptr<LightComponent> &light) = 0;
+  virtual void setMaterialImpl(const Material &material) = 0;
+
 };
 
 }

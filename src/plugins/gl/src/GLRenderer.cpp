@@ -44,7 +44,7 @@ void GLRenderer::render(const std::shared_ptr<AbstractScene> &scene) {
 
   this->defaultShader->use();
   this->defaultShader->setCamera(scene->getCurrentCamera());
-  this->defaultShader->setAmbientLight(glm::vec3(1.0f, 1.0f, 1.0f), 0.2f);
+  this->defaultShader->setAmbientLight(Color::WHITE, 0.2f);
 
   for (auto && object : scene->getObjects()) {
     this->currentShader = defaultShader;
@@ -89,12 +89,11 @@ void GLRenderer::renderObject(const std::shared_ptr<GameObject> &object, const s
       this->currentShader = shader;
       this->currentShader->use();
       this->currentShader->setCamera(camera);
-      this->currentShader->setAmbientLight(glm::vec3(1.0f, 1.0f, 1.0f), 0.2f);
     }
   }
 
   if (auto light = object->get<LightComponent>(); light != nullptr) {
-    this->currentShader->setLight(object->transform->getPosition(), light);
+    this->currentShader->setDirectedLight(object->transform->getPosition(), light);
   }
 
   if (!modelComponent) {

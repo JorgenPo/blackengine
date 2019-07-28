@@ -13,9 +13,12 @@ using namespace black;
 
 class BlackEngineApplication : public GameApplication {
   std::shared_ptr<AbstractScene> scene;
+  std::shared_ptr<GameObject> hoveredObject;
   std::shared_ptr<GameObject> selectedObject;
   std::shared_ptr<Camera> camera;
+  std::shared_ptr<Terrain> terrain;
   std::shared_ptr<GameObject> light;
+  std::shared_ptr<ApplicationShader> hoveredShader;
   std::shared_ptr<ApplicationShader> selectedShader;
   RayTracer tracer;
 
@@ -47,7 +50,17 @@ private:
     }
 
     if (Input::IsKeyPressed(KEY_ESCAPE)) {
+      if (this->selectedObject) {
+        this->selectedObject->get<ModelComponent>()->setShader(nullptr);
+        this->selectedObject = nullptr;
+      }
+
       this->stop();
+    }
+
+    if (Input::IsKeyPressed(KEY_ENTER) && hoveredObject) {
+      this->selectedObject = this->hoveredObject;
+      this->selectedObject->get<ModelComponent>()->setShader(selectedShader);
     }
   }
 
@@ -56,8 +69,8 @@ private:
       const auto &object = *i;
       if (auto bounds = object->get<BoundingComponent>(); bounds != nullptr) {
         if (bounds->isIntersectsWith(ray)) {
-          selectedObject = object;
-          return selectedObject;
+          hoveredObject = object;
+          return hoveredObject;
         }
       }
     }
@@ -79,9 +92,9 @@ private:
     }
 
     // Reset selected object
-    if (this->selectedObject) {
-      this->selectedObject->get<ModelComponent>()->setShader(nullptr);
-      this->selectedObject = nullptr;
+    if (this->hoveredObject) {
+      this->hoveredObject->get<ModelComponent>()->setShader(nullptr);
+      this->hoveredObject = nullptr;
     }
 
     auto ray = tracer.calculateRay(Input::GetMouseX(), Input::GetMouseY());
@@ -89,7 +102,7 @@ private:
     // Set highlighting shader if some object was selected
     if (auto selected = findSelectedObject(ray); selected != nullptr) {
       //logger->debug(fmt::format("Selected object: {}", selectedObject->getName()));
-      selected->get<ModelComponent>()->setShader(selectedShader);
+      selected->get<ModelComponent>()->setShader(hoveredShader);
     }
 
     this->renderer->render(this->scene);
@@ -107,7 +120,7 @@ private:
     data.height = 1000;
     data.lod = 10.0f;
 
-    auto terrain = builder->build(data);
+    terrain = builder->build(data);
     this->scene->addObject(terrain);
 
     auto cottageModel = ModelManager::CreateFromFile("resources/cottage_obj.obj");
@@ -147,6 +160,10 @@ private:
   void loadShaders() {
     this->selectedShader = util::ShaderManager::CreateApplicationShaderFromFile<SelectedShader>(
       "resources/selected_vertex.glsl", "resources/selected_fragment.glsl");
+    this->hoveredShader = std::make_shared<SelectedShader>(this->selectedShader);
+
+    this->hoveredShader->setAmbientLight(Color::RED, 0.1f);
+    this->selectedShader->setAmbientLight(Color::RED, 0.1f);
   }
 };
 

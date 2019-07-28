@@ -74,9 +74,10 @@ file(GLOB RESOURCES ${CMAKE_SOURCE_DIR}/examples/simple/models/*)
 list(APPEND RESOURCES ${SHADERS})
 
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/lib/resources)
-add_custom_command(
-        TARGET BlackEngine POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy
-        ${RESOURCES}
-        ${CMAKE_CURRENT_BINARY_DIR}/lib/resources
-)
+
+foreach(SHADER ${SHADERS})
+    get_filename_component(SHADER_NAME ${SHADER} NAME)
+    file(GENERATE
+            OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/lib/resources/${SHADER_NAME}
+            INPUT ${SHADER})
+endforeach()

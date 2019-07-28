@@ -12,16 +12,17 @@ using namespace black;
 class SelectedShader : public ApplicationShader {
 public:
   explicit SelectedShader(const std::shared_ptr<ShaderProgram> &impl);
+  SelectedShader(std::shared_ptr<ApplicationShader> shader);
 
-  void setCamera(const std::shared_ptr<Camera> &camera) override;
+  void setCameraImpl(const std::shared_ptr<Camera> &camera) override;
 
-  void setModelMatrix(const glm::mat4 &model) override;
+  void setModelMatrixImpl(const glm::mat4 &model) override;
 
-  void setAmbientLight(const glm::vec3 &color, float intensity) override;
+  void setAmbientLightImpl(Color color, float intensity) override;
 
-  void setLight(const glm::vec3 &position, const std::shared_ptr<LightComponent> &light) override;
+  void setLightImpl(const glm::vec3 &position, const std::shared_ptr<LightComponent> &light) override;
 
-  void setMaterial(const Material &material) override;
+  void setMaterialImpl(const Material &material) override;
 };
 
 
