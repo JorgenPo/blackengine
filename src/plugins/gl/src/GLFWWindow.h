@@ -12,11 +12,16 @@
 
 namespace black {
 class GLFWWindow : public AbstractRenderWindow, public SystemInterface {
+  using Cursor = std::unique_ptr<GLFWcursor, void (*)(GLFWcursor *)>;
+
   std::unique_ptr<GLFWwindow, void (*)(GLFWwindow *)> window;
+
+  std::unordered_map<std::string, Cursor> cursors;
 
   bool isWindowShown;
   double mouseX, mouseY;
 
+  std::string currentCursorName;
 public:
 
   /**
@@ -53,6 +58,10 @@ public:
 
   void setCursorMode(CursorMode mode) override;
   void setMouseAccelerated(bool accelerated) override;
+
+  void addCursor(std::string name, const Image &image) override;
+
+  void setCursor(std::string name) override;
 };
 }
 

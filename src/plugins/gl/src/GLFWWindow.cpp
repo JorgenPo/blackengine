@@ -3,12 +3,18 @@
 //
 
 #include "GLFWWindow.h"
+
+#include <Image.h>
+
 #include <util/Input.h>
+#include <log/Logger.h>
 
 namespace black {
 
 GLFWWindow::GLFWWindow(const std::string &title, int width, int height, bool isFullScreen)
-    : AbstractRenderWindow(title, width, height, isFullScreen), window(nullptr, nullptr), isWindowShown(false),
+    : AbstractRenderWindow(title, width, height, isFullScreen),
+      window(nullptr, nullptr),
+      isWindowShown(false),
     mouseX(0), mouseY(0) {
 
   // Init GLFW window
@@ -109,6 +115,32 @@ bool GLFWWindow::isKeyReleased(Key key) {
 
 bool GLFWWindow::isKeyReleased(int key) {
   return glfwGetKey(this->window.get(), key) == GLFW_RELEASE;
+}
+
+void GLFWWindow::addCursor(std::string name, const Image &image) {
+  GLFWimage glfwImage;
+  glfwImage.width = image.getWidth();
+  glfwImage.height = image.getHeight();
+  glfwImage.pixels = image.getData();
+
+  auto glfwCursor = glfwCreateCursor(&glfwImage, 0, 0);
+  auto cursor = std::unique_ptr<GLFWcursor, void (*)(GLFWcursor *)>(glfwCursor, glfwDestroyCursor);
+  cursors.insert(std::make_pair(std::move(name), std::move(cursor)));
+}
+
+void GLFWWindow::setCursor(std::string name) {
+  if (name == currentCursorName) {
+    return;
+  }
+
+  try {
+    auto &cursor = cursors.at(name);
+    glfwSetCursor(this->window.get(), cursor.get());
+    currentCursorName = std::move(name);
+  } catch (const std::out_of_range &e) {
+    Logger::Get("GLFWWindow")->warning("Cursor '{}' not found", name);
+    return;
+  }
 }
 
 }

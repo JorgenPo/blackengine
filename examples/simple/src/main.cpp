@@ -78,6 +78,8 @@ class BlackEngineApplication : public GameApplication {
   std::shared_ptr<ApplicationShader> hoveredShader;
   std::shared_ptr<ApplicationShader> selectedShader;
   RayTracer tracer;
+  Image cursorHovered;
+  Image cursorNormal;
 
   float cameraRadius = 10.0f;
   float cameraSpeed = 0.1f;
@@ -87,8 +89,12 @@ class BlackEngineApplication : public GameApplication {
 public:
   BlackEngineApplication() :
   GameApplication(std::string("BlackEngineApplication") + Constants::RuntimePlatformString,
-    800, 600, false), tracer(camera), scene(new SimpleScene("Test")) {
-  }
+    800, 600, false),
+    tracer(nullptr),
+    scene(new SimpleScene("Test")),
+    cursorHovered("resources/cursor_hovered.png"),
+    cursorNormal("resources/cursor_normal.png")
+    {}
 
 private:
   void handleInput() {
@@ -145,18 +151,26 @@ private:
       this->light->transform->setPosition({camX, 10.3f, camZ});
     }
 
+    bool wasHovered = selected.getObject() != nullptr;
+
     auto ray = tracer.calculateRay(Input::GetMouseX(), Input::GetMouseY());
 
-    auto hovered = findSelectedObject(ray);
+    auto hoveredObject = findSelectedObject(ray);
+    auto hovered = hoveredObject != nullptr;
 
     // Set highlighting shader if some object was selected
-    if (hovered && !selected.isObjectSelected()) {
-      selected.setObject(hovered);
-    } else if (!hovered && !selected.isObjectSelected()) {
+    if (hoveredObject && !selected.isObjectSelected()) {
+      selected.setObject(hoveredObject);
+    } else if (!hoveredObject && !selected.isObjectSelected()) {
       selected.resetObject();
     }
 
     this->renderer->render(this->scene);
+
+    if (hovered != wasHovered) {
+      auto cursor = hovered ? "Hovered" : "Normal";
+      Input::SetCursor(cursor);
+    }
   }
 
   void initializeResources() override {
@@ -169,7 +183,7 @@ private:
     TerrainBuilder::Data data;
     data.width = 1000;
     data.height = 1000;
-    data.lod = 10.0f;
+    data.lod = 5.0f;
 
     terrain = builder->build(data);
     this->scene->addObject(terrain);
@@ -206,6 +220,10 @@ private:
     tracer.setCamera(camera);
 
     scene->setCurrentCamera(camera);
+
+    Input::AddCursor("Hovered", cursorHovered);
+    Input::AddCursor("Normal", cursorNormal);
+    Input::SetCursor("Normal");
   }
 
   void loadShaders() {

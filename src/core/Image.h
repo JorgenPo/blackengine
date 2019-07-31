@@ -6,8 +6,15 @@
 #define BLACKENGINE_IMAGE_H
 
 #include <common/CommonHeaders.h>
+#include <exceptions/Exception.h>
 
 namespace black {
+
+class FailedToLoadImageException : public Exception {
+public:
+  explicit FailedToLoadImageException(std::string_view fileName);
+};
+
 /**
  * Image file
  */
@@ -28,7 +35,7 @@ public:
    * @throws FileNotFoundException If file isn't exist
    * @param fileName
    */
-  void load(std::string fileName, bool flipVertically = true);
+  void load(const std::string& fileName, bool flipVertically = true);
 
   bool isLoaded();
   [[nodiscard]] int getWidth() const;

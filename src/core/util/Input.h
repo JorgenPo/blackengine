@@ -5,11 +5,14 @@
 #ifndef BLACKENGINE_INPUT_H
 #define BLACKENGINE_INPUT_H
 
+#include <Image.h>
+
 #include <common/CommonHeaders.h>
 
 #include <input/SystemInterface.h>
 
 namespace black {
+
 /**
  * User input utils
  */
@@ -27,6 +30,9 @@ public:
   static double GetMouseY();
 
   static void OnMousePositionChanged(double x, double y);
+
+  static void AddCursor(std::string_view name, const Image &image);
+  static void SetCursor(std::string_view name);
 };
 
 }

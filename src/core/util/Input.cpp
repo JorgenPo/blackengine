@@ -50,4 +50,22 @@ bool Input::IsKeyReleased(Key key) {
 bool Input::IsKeyReleased(int key) {
   return IsKeyReleased(Key(key));
 }
+
+void Input::AddCursor(std::string_view name, const Image &image) {
+  auto systemInterface = Engine::GetCurrentRenderSystem()->getSystemInterface();
+  if (!systemInterface) {
+    return;
+  }
+
+  systemInterface->addCursor(name.data(), image);
+}
+
+void Input::SetCursor(std::string_view name) {
+  auto systemInterface = Engine::GetCurrentRenderSystem()->getSystemInterface();
+  if (!systemInterface) {
+    return;
+  }
+
+  systemInterface->setCursor(name.data());
+}
 }

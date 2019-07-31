@@ -8,6 +8,8 @@
 
 namespace black {
 
+class Image;
+
 /**
  * Keyboard keys. The US keyboard layout is used
  */
@@ -153,6 +155,9 @@ public:
   virtual bool isKeyReleased(int key) = 0;
   virtual void setCursorMode(CursorMode mode) = 0;
   virtual void setMouseAccelerated(bool accelerated) = 0;
+
+  virtual void addCursor(std::string name, const Image &image) = 0;
+  virtual void setCursor(std::string name) = 0;
 };
 }
 #endif //BLACKENGINE_SYSTEMINTERFACE_H
