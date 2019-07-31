@@ -5,7 +5,9 @@
 #include "GLFWWindow.h"
 
 #include <Image.h>
+#include <Engine.h>
 
+#include <render/RenderSystemInterface.h>
 #include <util/Input.h>
 #include <log/Logger.h>
 
@@ -32,6 +34,16 @@ GLFWWindow::GLFWWindow(const std::string &title, int width, int height, bool isF
 
   glfwSetCursorPosCallback(this->window.get(), [](GLFWwindow *win, double x, double y) {
     Input::OnMousePositionChanged(x, y);
+  });
+
+  glfwSetKeyCallback(this->window.get(), [](GLFWwindow *win, int key, int scanCode, int action, int modifiers) {
+    KeyEvent event{Key{key}, scanCode, KeyAction{action}, modifiers};
+    Engine::GetCurrentRenderSystem()->getSystemInterface()->emitKeyPressedEvent(event);
+  });
+
+  glfwSetMouseButtonCallback(this->window.get(), [](GLFWwindow *win, int button, int action, int modifiers) {
+    MouseButtonEvent event{MouseButton{button}, MouseButtonAction{action}, modifiers};
+    Engine::GetCurrentRenderSystem()->getSystemInterface()->emitMouseButtonEvent(event);
   });
 }
 

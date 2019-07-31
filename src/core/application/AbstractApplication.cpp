@@ -5,6 +5,8 @@
 #include "AbstractApplication.h"
 #include <Engine.h>
 
+#include <util/Input.h>
+
 namespace black {
 
 AbstractApplication::AbstractApplication(const std::string &name, int windowWidth, int windowHeight, bool isFullScreen)
@@ -70,6 +72,37 @@ void AbstractApplication::init() {
 
   // Application resources init
   this->initializeResources();
+
+  Input::GetKeyboardEventEmitter()->listenForKeyboardEvents(this);
+  Input::GetMouseEventEmitter()->listenForMouseEvents(this);
+}
+
+void AbstractApplication::onKeyEvent(KeyEvent keyEvent) {
+
+}
+
+void AbstractApplication::onKeyPressed(KeyEvent keyEvent) {
+
+}
+
+void AbstractApplication::onKeyReleased(KeyEvent keyEvent) {
+
+}
+
+void AbstractApplication::onKeyRepeat(KeyEvent keyEvent) {
+
+}
+
+void AbstractApplication::onMouseButtonEvent(MouseButtonEvent event) {
+
+}
+
+void AbstractApplication::onMouseButtonPressed(MouseButtonEvent event) {
+
+}
+
+void AbstractApplication::onMouseButtonReleased(MouseButtonEvent event) {
+
 }
 
 ApplicationInitializationException::ApplicationInitializationException(const std::string &message)

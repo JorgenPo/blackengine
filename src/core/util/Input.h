@@ -13,6 +13,8 @@
 
 namespace black {
 
+class KeyboardEventEmitter;
+
 /**
  * User input utils
  */
@@ -33,6 +35,9 @@ public:
 
   static void AddCursor(std::string_view name, const Image &image);
   static void SetCursor(std::string_view name);
+
+  static std::shared_ptr<KeyboardEventEmitter> GetKeyboardEventEmitter();
+  static std::shared_ptr<MouseEventEmitter> GetMouseEventEmitter();
 };
 
 }

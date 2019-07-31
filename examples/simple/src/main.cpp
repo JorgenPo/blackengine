@@ -1,4 +1,5 @@
 #include "SelectedShader.h"
+#include "SelectableGameObject.h"
 
 #include <application/GameApplication.h>
 #include <tracer/RayTracer.h>
@@ -11,63 +12,6 @@
 
 
 using namespace black;
-
-class SelectableGameObject {
-  std::shared_ptr<GameObject> object;
-  std::shared_ptr<ApplicationShader> selectedShader;
-  std::shared_ptr<ApplicationShader> hoveredShader;
-  bool isSelected = false;
-
-public:
-  SelectableGameObject() = default;
-
-  explicit SelectableGameObject(
-    std::shared_ptr<ApplicationShader> hoveredShader,
-    std::shared_ptr<ApplicationShader> selectedShader)
-    : selectedShader(std::move(selectedShader)), hoveredShader(std::move(hoveredShader)) {}
-
-  void setObject(std::shared_ptr<GameObject> newObject) {
-    if (object && object->getName() == newObject->getName()) {
-      return;
-    }
-
-    resetObject();
-    object = std::move(newObject);
-
-    object->get<ModelComponent>()->setShader(hoveredShader);
-  }
-
-  void resetObject() {
-    if (object) {
-      object->get<ModelComponent>()->setShader(nullptr);
-    }
-
-    object = nullptr;
-    isSelected = false;
-  }
-
-  [[nodiscard]] std::shared_ptr<GameObject> getObject() const {
-    return object;
-  }
-
-  void select() {
-    if (object) {
-      object->get<ModelComponent>()->setShader(selectedShader);
-    }
-    isSelected = true;
-  }
-
-  [[nodiscard]] bool isObjectSelected() const {
-    return isSelected;
-  }
-
-  void unselect() {
-    if (object) {
-      object->get<ModelComponent>()->setShader(nullptr);
-    }
-    isSelected = false;
-  }
-};
 
 class BlackEngineApplication : public GameApplication {
   std::shared_ptr<AbstractScene> scene;
@@ -96,32 +40,46 @@ public:
     cursorNormal("resources/cursor_normal.png")
     {}
 
+protected:
+  void onKeyReleased(KeyEvent keyEvent) override {
+    switch (keyEvent.key) {
+      case Key::ESCAPE:
+        this->stop();
+        break;
+      default:
+        return;
+    }
+  }
+
+  void onMouseButtonPressed(MouseButtonEvent event) override {
+    switch (event.button) {
+      case MouseButton::LEFT:
+        if (selected.isObjectSelected()) {
+          selected.unselect();
+        } else {
+          selected.select();
+        }
+        break;
+      case MouseButton::RIGHT:
+        break;
+      case MouseButton::MIDDLE:
+        break;
+    }
+  }
+
 private:
   void handleInput() {
-
-    if (Input::IsKeyPressed(KEY_LEFT)) {
+    if (Input::IsKeyPressed(Key::LEFT)) {
       this->camera->strafeLeft(0.05f);
     }
-    if (Input::IsKeyPressed(KEY_RIGHT)) {
+    if (Input::IsKeyPressed(Key::RIGHT)) {
       this->camera->strafeRight(0.05f);
     }
-    if (Input::IsKeyPressed(KEY_UP)) {
+    if (Input::IsKeyPressed(Key::UP)) {
       this->camera->moveForward(0.1f);
     }
-    if (Input::IsKeyPressed(KEY_DOWN)) {
+    if (Input::IsKeyPressed(Key::DOWN)) {
       this->camera->moveBackward(0.1f);
-    }
-
-    if (Input::IsKeyPressed(KEY_ESCAPE)) {
-      this->stop();
-    }
-
-    if (Input::IsKeyPressed(KEY_ENTER)) {
-      if (selected.isObjectSelected()) {
-        selected.unselect();
-      } else {
-        selected.select();
-      }
     }
   }
 
@@ -139,8 +97,7 @@ private:
   }
 
   void update(float dt) override {
-    this->handleInput();
-
+    handleInput();
     auto time = this->timer->getUptime();
 
     float camX = static_cast<float>(sin(time / 1000.0)) * this->cameraRadius + this->cameraOffsetX;

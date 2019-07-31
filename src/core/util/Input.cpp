@@ -4,6 +4,7 @@
 
 #include "Input.h"
 
+#include <input/KeyboardEventEmitter.h>
 #include <render/RenderSystemInterface.h>
 #include <Engine.h>
 
@@ -68,4 +69,23 @@ void Input::SetCursor(std::string_view name) {
 
   systemInterface->setCursor(name.data());
 }
+
+std::shared_ptr<KeyboardEventEmitter> Input::GetKeyboardEventEmitter() {
+  auto systemInterface = Engine::GetCurrentRenderSystem()->getSystemInterface();
+  if (!systemInterface) {
+    return nullptr;
+  }
+
+  return systemInterface;
+}
+
+std::shared_ptr<MouseEventEmitter> Input::GetMouseEventEmitter() {
+  auto systemInterface = Engine::GetCurrentRenderSystem()->getSystemInterface();
+  if (!systemInterface) {
+    return nullptr;
+  }
+
+  return systemInterface;
+}
+
 }

@@ -1,0 +1,25 @@
+//
+// Created by popov on 31.07.2019.
+//
+
+#ifndef BLACKENGINE_MOUSE_H
+#define BLACKENGINE_MOUSE_H
+
+enum class MouseButton {
+  LEFT,
+  RIGHT,
+  MIDDLE
+};
+
+enum class MouseButtonAction {
+  PRESSED,
+  RELEASED
+};
+
+struct MouseButtonEvent {
+  MouseButton button;
+  MouseButtonAction action;
+  int modifiers; // see KEY_MODIFIER_ enum in Keyboard.h
+};
+
+#endif //BLACKENGINE_MOUSE_H

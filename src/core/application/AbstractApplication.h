@@ -10,6 +10,9 @@
 #include <exceptions/Exception.h>
 #include <log/Logger.h>
 
+#include <input/KeyboardEventListener.h>
+#include <input/MouseEventListener.h>
+
 namespace black {
 
 class BLACK_EXPORTED ApplicationInitializationException : public Exception {
@@ -21,7 +24,7 @@ public:
  * Abstract engine application.
  * Concrete subclasses must define some special application loop and window counts.
  */
-class BLACK_EXPORTED AbstractApplication {
+class BLACK_EXPORTED AbstractApplication : protected KeyboardEventListener, protected MouseEventListener {
 protected:
   std::string name;
   std::shared_ptr<Logger> logger;
@@ -60,6 +63,17 @@ protected:
   virtual void update(float dt) = 0;
 
   virtual void init();
+
+  // Default implementation (stub) for key and mouse events
+  // override it to handle events
+  void onKeyEvent(KeyEvent keyEvent) override;
+  void onKeyPressed(KeyEvent keyEvent) override;
+  void onKeyReleased(KeyEvent keyEvent) override;
+  void onKeyRepeat(KeyEvent keyEvent) override;
+
+  void onMouseButtonEvent(MouseButtonEvent event) override;
+  void onMouseButtonPressed(MouseButtonEvent event) override;
+  void onMouseButtonReleased(MouseButtonEvent event) override;
 
 private:
   /**

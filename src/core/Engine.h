@@ -94,7 +94,6 @@ public:
   static TerrainBuilderMap &GetTerrainBuilders();
   static std::shared_ptr<TerrainBuilder> GetTerrainBuilder(std::string_view name);
   static void RegisterTerrainBuilder(std::string_view name, std::shared_ptr<TerrainBuilder> builder);
-
 private:
   /**
    * Initialize engine. Load plugins.
