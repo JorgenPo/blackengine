@@ -18,8 +18,8 @@ void BoundingComponent::setShape(std::shared_ptr<BoundingShape> newShape) {
   shape = std::move(newShape);
 }
 
-bool BoundingComponent::isIntersectsWith(const Ray &ray) {
-  return shape->isIntersectsWith(ray);
+std::vector<Point3D> BoundingComponent::getIntersectionsWith(const Ray &ray) {
+  return shape->getIntersectionsWith(ray);
 }
 
 

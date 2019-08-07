@@ -25,7 +25,7 @@ public:
   [[nodiscard]] const std::shared_ptr<BoundingShape> &getShape() const;
   void setShape(std::shared_ptr<BoundingShape> shape);
 
-  bool isIntersectsWith(const Ray &ray);
+  std::vector<Point3D> getIntersectionsWith(const Ray &ray);
 };
 
 }

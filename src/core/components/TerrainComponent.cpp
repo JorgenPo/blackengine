@@ -9,11 +9,12 @@
 namespace black {
 
 TerrainComponent::TerrainComponent(std::shared_ptr<ModelComponent> model, HeightMap map)
-  : model(std::move(model)), heightMap(std::move(map)) {
+  : model(std::move(model)),
+  heightMap(std::move(map)) {
 }
 
 float TerrainComponent::getHeightAt(float width, float height) const {
-  return 0;
+  return 0.0f;
 }
 
 const std::shared_ptr<ModelComponent> &TerrainComponent::getModel() const {

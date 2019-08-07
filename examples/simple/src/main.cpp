@@ -86,8 +86,13 @@ private:
   std::shared_ptr<GameObject> findSelectedObject(const Ray &ray) {
     for (auto i = scene->getObjects().rbegin(); i != scene->getObjects().rend(); i++) {
       const auto &object = *i;
+
+      if (object == this->terrain) {
+        continue;
+      }
+
       if (auto bounds = object->get<BoundingComponent>(); bounds != nullptr) {
-        if (bounds->isIntersectsWith(ray)) {
+        if (!bounds->getIntersectionsWith(ray).empty()) {
           return object;
         }
       }
@@ -120,6 +125,14 @@ private:
       selected.setObject(hoveredObject);
     } else if (!hoveredObject && !selected.isObjectSelected()) {
       selected.resetObject();
+    } else if (selected.getObject() && selected.isObjectSelected()) {
+      auto intersectPoints = this->terrain->getBounding()->getIntersectionsWith(ray);
+      if (!intersectPoints.empty()) {
+        auto point = intersectPoints[0];
+
+        auto position = glm::vec3(point.x, terrain->getTerrain()->getHeightAt(point.x, point.y), point.z);
+        selected.getObject()->transform->setPosition(position);
+      }
     }
 
     this->renderer->render(this->scene);
@@ -174,6 +187,8 @@ private:
 
     this->camera = std::make_shared<Camera>(ProjectionType::PERSPECTIVE);
     this->camera->setPosition({0.0f, 10.0f, 1.0f});
+    this->camera->setLookAt({0.0f, -1.0f, 0.0f});
+
     tracer.setCamera(camera);
 
     scene->setCurrentCamera(camera);

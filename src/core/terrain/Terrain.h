@@ -12,12 +12,14 @@ namespace black {
 
 class ModelComponent;
 class TerrainComponent;
+class BoundingComponent;
 class Material;
 
 class BLACK_EXPORTED Terrain : public GameObject {
 private:
   std::shared_ptr<ModelComponent> model;
   std::shared_ptr<TerrainComponent> terrain;
+  std::shared_ptr<BoundingComponent> bounding;
 
 public:
   Terrain(std::shared_ptr<ModelComponent> model, std::shared_ptr<TerrainComponent> terrain);
@@ -29,6 +31,8 @@ public:
   const std::shared_ptr<TerrainComponent> &getTerrain() const;
 
   void setTerrain(const std::shared_ptr<TerrainComponent> &terrain);
+
+  const std::shared_ptr<BoundingComponent> &getBounding() const;
 };
 
 }

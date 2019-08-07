@@ -26,6 +26,7 @@
 #include <components/ModelComponent.h>
 #include <components/TransformComponent.h>
 #include <components/LightComponent.h>
+#include <components/TerrainComponent.h>
 #include <components/BoundingComponent.h>
 
 #include <performance/PerformanceCounter.h>

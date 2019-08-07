@@ -5,11 +5,10 @@
 #include "Terrain.h"
 #include "components/ModelComponent.h"
 #include "components/TerrainComponent.h"
+#include "components/BoundingComponent.h"
+#include "components/BoundingShapes.h"
 
-#include <Engine.h>
-#include <log/Logger.h>
 #include <render/RenderSystemInterface.h>
-#include <util/ModelManager.h>
 
 #include <vector>
 
@@ -33,8 +32,16 @@ void Terrain::setTerrain(const std::shared_ptr<TerrainComponent> &newTerrain) {
 
 Terrain::Terrain(std::shared_ptr<ModelComponent> model, std::shared_ptr<TerrainComponent> terrain)
   : model(std::move(model)), terrain(std::move(terrain)) {
+  auto planeShape = std::make_shared<Plane>(transform, glm::vec3{0.0f, 1.0f, 0.0f}, 0.0f);
+  bounding = std::make_shared<BoundingComponent>(std::move(planeShape));
+
   this->add(this->model);
   this->add(this->terrain);
+  this->add(this->bounding);
+}
+
+const std::shared_ptr<BoundingComponent> &Terrain::getBounding() const {
+  return bounding;
 }
 
 }
