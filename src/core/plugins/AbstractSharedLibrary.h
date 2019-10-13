@@ -46,6 +46,11 @@ public:
   explicit LibraryNotFoundException(std::string_view name);
 };
 
+class LibraryLoadingException : public Exception {
+public:
+  LibraryLoadingException(std::string_view name, std::string_view error);
+};
+
 /**
  * Abstract class for shared libraries (dll, so, ...)
  */

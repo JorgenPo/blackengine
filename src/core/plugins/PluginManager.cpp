@@ -104,6 +104,8 @@ std::shared_ptr<AbstractSharedLibrary> PluginManager::searchForPluginLibrary(con
       return library;
     } catch (const LibraryNotFoundException &e) {
       continue;
+    } catch (const LibraryLoadingException &e) {
+      this->logger->warning("Library loading error: {}", e.getMessage());
     } catch (const Exception &e) {
       this->logger->critical("Exception while loading {0} library: {1}", pluginDir + pluginName, e.getMessage());
       throw Exception(e.getMessage());

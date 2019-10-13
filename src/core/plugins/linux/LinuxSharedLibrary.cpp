@@ -1,8 +1,10 @@
 //
 // Created by jorgen on 07.10.18.
 //
-
 #include "LinuxSharedLibrary.h"
+
+#include <log/Logger.h>
+#include <util/FileSystem.h>
 
 namespace black::os {
 
@@ -14,10 +16,14 @@ LinuxSharedLibrary::LinuxSharedLibrary(const std::string &name)
 void LinuxSharedLibrary::load() {
   auto name = this->name + ".so";
 
+  if (!FileSystem::IsFileExist(name)) {
+    throw LibraryNotFoundException(name);
+  }
+
   this->handle = dlopen(name.c_str(), RTLD_LAZY);
 
   if (!this->handle) {
-    throw LibraryNotFoundException(name);
+    throw LibraryLoadingException(name, dlerror());
   }
 }
 

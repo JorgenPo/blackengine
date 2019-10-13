@@ -31,7 +31,7 @@ public:
    *
    * @return Is the file exist
    */
-  static bool IsFileExist(std::string path);
+  static bool IsFileExist(std::string_view path);
 
   /**
    * Write string data to a file. If create flag is true

@@ -19,4 +19,10 @@ FunctionNotFoundException::FunctionNotFoundException(std::string_view library, s
 const std::string &FunctionNotFoundException::getFunction() const {
   return function;
 }
+
+LibraryLoadingException::LibraryLoadingException(std::string_view name, std::string_view error)
+  : Exception(fmt::format("{} loading error: {}", name, error)) {
+
+}
+
 }

@@ -25,8 +25,8 @@ std::string FileSystem::GetFileExtension(std::string path) {
   return splitVector.back();
 }
 
-bool FileSystem::IsFileExist(std::string path) {
-  return boost::filesystem::exists(path);
+bool FileSystem::IsFileExist(std::string_view path) {
+  return boost::filesystem::exists(path.data());
 }
 
 void FileSystem::SaveToFile(std::string_view fileName, const std::string &content, bool create) {
