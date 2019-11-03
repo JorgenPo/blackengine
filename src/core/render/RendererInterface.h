@@ -25,6 +25,8 @@ class BLACK_EXPORTED RendererInterface {
 public:
   virtual void setCurrentRenderTarget(std::shared_ptr<RenderTargetInterface> target) = 0;
 
+  [[nodiscard]] virtual std::shared_ptr<RenderTargetInterface> getCurrentRenderTarget() const noexcept = 0;
+
   /**
    * Renders a next frame
    */

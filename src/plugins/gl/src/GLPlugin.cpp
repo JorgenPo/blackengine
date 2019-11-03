@@ -3,6 +3,8 @@
 //
 
 #include <Engine.h>
+
+#include "glfw/GLFWSystemInterface.h"
 #include "GLPlugin.h"
 #include "OpenGLRenderSystem.h"
 
@@ -18,7 +20,10 @@ std::string GLPlugin::getName() {
 
 void GLPlugin::install() {
   auto renderSystem = std::make_shared<OpenGLRenderSystem>();
-  Engine::RegisterRenderSystem(renderSystem);
+  Engine::RegisterRenderSystem(std::move(renderSystem));
+
+  auto systemInterface = std::make_shared<GLFWSystemInterface>();
+  Engine::RegisterSystemInterface(std::move(systemInterface));
 }
 
 void GLPlugin::initialize() {

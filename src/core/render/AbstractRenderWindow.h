@@ -12,9 +12,25 @@
 
 namespace black {
 
+class InputSystemInterface;
+
 class BLACK_EXPORTED RenderWindowInitializationException : public Exception {
 public:
   explicit RenderWindowInitializationException(const std::string &message) : Exception(message) {}
+};
+
+struct ContextVersion {
+  int major;
+  int minor;
+};
+
+// Data required for initialization
+struct WindowData {
+  std::string title;
+  int width;
+  int height;
+  bool isFullScreen = false;
+  ContextVersion contextVersion = {3, 0};
 };
 
 /**
@@ -22,23 +38,20 @@ public:
  */
 class BLACK_EXPORTED AbstractRenderWindow : public RenderTargetInterface {
 protected:
-  std::string title;
-  int width;
-  int height;
-  bool fullScreen;
+  WindowData data;
 
 public:
 
   /**
-   * Construct a window.
+   * Construct a window and initialize context
    *
    * @param title            Window title
    * @param width            Window width
    * @param height           Window height
    * @param isFullScreen     Is full screen
    */
-  AbstractRenderWindow(std::string title, int width, int height, bool isFullScreen = false) :
-      title(std::move(title)), width(width), height(height), fullScreen(isFullScreen) {
+  explicit AbstractRenderWindow(WindowData data) :
+      data(std::move(data)) {
 
   }
 
@@ -56,35 +69,35 @@ public:
   virtual bool shouldClose() = 0;
 
   [[nodiscard]] const std::string &getTitle() const {
-    return title;
+    return data.title;
   }
 
-  void setTitle(const std::string &newTitle) {
-    AbstractRenderWindow::title = newTitle;
-  }
-
-  [[nodiscard]] int getWidth() const {
-    return width;
-  }
-
-  void setWidth(int newWidth) {
-    AbstractRenderWindow::width = newWidth;
+  [[nodiscard]] bool isFullScreen() {
+    return data.isFullScreen;
   }
 
   [[nodiscard]] int getHeight() const {
-    return height;
+    return data.height;
+  }
+
+  [[nodiscard]] int getWidth() const {
+    return data.width;
+  }
+
+  void setWidth(int newWidth) {
+    data.width = newWidth;
+  }
+
+  void setTitle(std::string title) {
+    data.title = std::move(title);
   }
 
   void setHeight(int newHeight) {
-    AbstractRenderWindow::height = newHeight;
-  }
-
-  [[nodiscard]] bool isFullScreen() const {
-    return fullScreen;
+    data.height = newHeight;
   }
 
   void setFullScreen(bool isFullScreen) {
-    this->fullScreen = isFullScreen;
+    data.isFullScreen = isFullScreen;
   }
 };
 }

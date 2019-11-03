@@ -15,16 +15,17 @@
 
 namespace black {
 
-RayTracer::RayTracer(std::shared_ptr<Camera> camera) : camera(std::move(camera)) {
+RayTracer::RayTracer(std::shared_ptr<Camera> camera, std::shared_ptr<AbstractRenderWindow> window) :
+camera(std::move(camera)),
+window(std::move(window))
+{
 
 }
 
-glm::vec2 getNDCCoordinates(double x, double y) {
-  auto window = Engine::GetCurrentRenderSystem()->getRenderWindow();
-
+glm::vec2 getNDCCoordinates(double x, double y, float windowWidth, float windowHeight) {
   return glm::vec2{
-    static_cast<float>(2 * x / window->getRenderTargetWidth() - 1),
-    -2 * y / window->getRenderTargetHeight() + 1
+    static_cast<float>(2 * x / windowWidth - 1),
+    -2 * y / windowHeight + 1
   };
 }
 
@@ -39,7 +40,8 @@ glm::vec3 getWorldCoordinates(const glm::vec4 &eyeCoordinates, const std::shared
 }
 
 Ray RayTracer::calculateRay(double x, double y) const {
-  auto ndcCoordinates = getNDCCoordinates(x, y);
+  auto ndcCoordinates = getNDCCoordinates(x, y,
+    window->getRenderTargetWidth(), window->getRenderTargetHeight());
   auto clipCoordinates = glm::vec4(ndcCoordinates.x, ndcCoordinates.y, -1, 1);
   auto eyeCoordinates = getEyeCoordinates(clipCoordinates, camera);
   return {camera->getPosition(), glm::normalize(getWorldCoordinates(eyeCoordinates, camera))};

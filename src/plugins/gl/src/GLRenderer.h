@@ -37,6 +37,9 @@ public:
   GLRenderer();
 
   void setCurrentRenderTarget(std::shared_ptr<RenderTargetInterface> target) override;
+
+  std::shared_ptr<RenderTargetInterface> getCurrentRenderTarget() const noexcept override;
+
   void render(const std::shared_ptr<AbstractScene> &scene) override;
 
   void setViewPort(int x, int y, int width, int height) override;

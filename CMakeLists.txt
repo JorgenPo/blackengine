@@ -52,6 +52,8 @@ add_subdirectory(examples)
 # Plugins
 add_subdirectory(src/plugins)
 
+message(STATUS "Plugins: ${BlackEngine_PLUGINS}")
+
 # Set up main target
 include(SetMainTargetSettings)
 

@@ -62,7 +62,7 @@ protected:
   */
   virtual void update(float dt) = 0;
 
-  virtual void init();
+  virtual void init() = 0;
 
   // Default implementation (stub) for key and mouse events
   // override it to handle events
@@ -85,6 +85,8 @@ private:
    * Start an application
    */
   virtual void run() = 0;
+
+  void initEngine();
 };
 }
 

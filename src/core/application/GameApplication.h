@@ -43,6 +43,7 @@ namespace black {
 class BLACK_EXPORTED GameApplication : public AbstractApplication {
 protected:
   std::shared_ptr<AbstractRenderWindow> window;
+  std::shared_ptr<InputSystemInterface> input;
   std::shared_ptr<RendererInterface> renderer;
   std::shared_ptr<PerformanceCounter> timer;
 

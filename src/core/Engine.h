@@ -9,11 +9,15 @@
 
 namespace black {
 
+class SystemInterface;
 class RenderSystemInterface;
+class InputSystemInterface;
 class PluginManager;
 class Logger;
 class PluginInterface;
 class TerrainBuilder;
+class KeyboardEventEmitter;
+class MouseEventEmitter;
 
 class BLACK_EXPORTED EngineInitializationException : public Exception {
 public:
@@ -23,6 +27,7 @@ public:
 class BLACK_EXPORTED Engine {
 private:
   using RenderSystemMap = std::unordered_map<std::string, std::shared_ptr<RenderSystemInterface>>;
+  using SystemInterfaceMap = std::unordered_map<std::string, std::shared_ptr<SystemInterface>>;
   using TerrainBuilderMap = std::unordered_map<std::string, std::shared_ptr<TerrainBuilder>>;
 
   static constexpr const char *GL_RENDERER_PLUGIN_NAME = "glPlugin";
@@ -32,7 +37,13 @@ private:
   std::shared_ptr<Logger> logger;
   RenderSystemMap renderSystems;
   TerrainBuilderMap terrainBuilders;
+  SystemInterfaceMap systemInterfaces;
+
   std::shared_ptr<RenderSystemInterface> currentRenderSystem;
+  std::shared_ptr<SystemInterface> currentSystemInterface;
+
+  std::shared_ptr<KeyboardEventEmitter> keyboard;
+  std::shared_ptr<MouseEventEmitter> mouse;
 
   /**
    * This method is private. Use appropriate static methods.
@@ -60,7 +71,7 @@ public:
    *
    * @throws EngineInitializationException
    */
-  static void Initialize(std::string title, int width, int height, bool isFullScreen);
+  static void Initialize();
 
   /**
    * Must be called explicitly to shutdown all engine's systems.
@@ -72,7 +83,7 @@ public:
    *
    * @param plugin Plugin to be registered
    */
-  static void RegisterPlugin(std::shared_ptr<PluginInterface> plugin);
+  static void RegisterPlugin(const std::shared_ptr<PluginInterface>& plugin);
 
   /**
    * Unregister external plugin
@@ -87,9 +98,22 @@ public:
   static void RegisterRenderSystem(std::shared_ptr<RenderSystemInterface> renderSystem);
 
   /**
+   * Register new system interface class. System interface interacts with Operating System.
+   * And provides user input handling.
+   *
+   * @param systemInterface
+   */
+  static void RegisterSystemInterface(std::shared_ptr<SystemInterface> systemInterface);
+
+  /**
    * Return a currently active render system
    */
   static std::shared_ptr<RenderSystemInterface> GetCurrentRenderSystem();
+
+  static std::shared_ptr<SystemInterface> GetCurrentSystemInterface();
+
+  static std::shared_ptr<KeyboardEventEmitter> GetKeyboard() noexcept;
+  static std::shared_ptr<MouseEventEmitter> GetMouse() noexcept;
 
   static TerrainBuilderMap &GetTerrainBuilders();
   static std::shared_ptr<TerrainBuilder> GetTerrainBuilder(std::string_view name);
@@ -111,6 +135,8 @@ private:
    * Set a default render system. Just took first available.
    */
   void setDefaultRenderSystem();
+
+  void setDefaultSystemInterface();
 
   static void SetTerminationHandler();
 };

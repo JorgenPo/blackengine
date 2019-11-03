@@ -8,43 +8,20 @@
 #include <Engine.h>
 
 #include <render/RenderSystemInterface.h>
+#include <SystemInterface.h>
+
 #include <util/Input.h>
 #include <log/Logger.h>
 
 namespace black {
 
-GLFWWindow::GLFWWindow(const std::string &title, int width, int height, bool isFullScreen)
-    : AbstractRenderWindow(title, width, height, isFullScreen),
+GLFWWindow::GLFWWindow(WindowData data)
+    : AbstractRenderWindow(std::move(data)),
       window(nullptr, nullptr),
       isWindowShown(false),
-    mouseX(0), mouseY(0) {
-
-  // Init GLFW window
-  auto glfwWindow = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
-
-  if (glfwWindow == nullptr) {
-    throw RenderWindowInitializationException("Failed to initialize glfw window");
-  }
-
-  this->window = std::unique_ptr<GLFWwindow, void (*)(GLFWwindow *)>(glfwWindow, glfwDestroyWindow);
-
-  glfwSetFramebufferSizeCallback(this->window.get(), [](GLFWwindow */*window*/, int width, int height) {
-    glViewport(0, 0, width, height);
-  });
-
-  glfwSetCursorPosCallback(this->window.get(), [](GLFWwindow *win, double x, double y) {
-    Input::OnMousePositionChanged(x, y);
-  });
-
-  glfwSetKeyCallback(this->window.get(), [](GLFWwindow *win, int key, int scanCode, int action, int modifiers) {
-    KeyEvent event{Key{key}, scanCode, KeyAction{action}, modifiers};
-    Engine::GetCurrentRenderSystem()->getSystemInterface()->emitKeyPressedEvent(event);
-  });
-
-  glfwSetMouseButtonCallback(this->window.get(), [](GLFWwindow *win, int button, int action, int modifiers) {
-    MouseButtonEvent event{MouseButton{button}, MouseButtonAction{action}, modifiers};
-    Engine::GetCurrentRenderSystem()->getSystemInterface()->emitMouseButtonEvent(event);
-  });
+      mouseX(0),
+      mouseY(0) {
+  initializeWindowAndContext();
 }
 
 void GLFWWindow::updateRenderTarget() {
@@ -56,15 +33,15 @@ void GLFWWindow::setRenderTargetCurrent() {
 }
 
 float GLFWWindow::getRenderTargetWidth() {
-  return static_cast<float>(width);
+  return static_cast<float>(data.width);
 }
 
 float GLFWWindow::getRenderTargetHeight() {
-  return static_cast<float>(height);
+  return static_cast<float>(data.height);
 }
 
 float GLFWWindow::getRenderTargetAspectRatio() {
-  return static_cast<float>(width) / static_cast<float>(height);
+  return static_cast<float>(data.width) / static_cast<float>(data.height);
 }
 
 void GLFWWindow::show() {
@@ -152,6 +129,60 @@ void GLFWWindow::setCursor(std::string name) {
   } catch (const std::out_of_range &e) {
     Logger::Get("GLFWWindow")->warning("Cursor '{}' not found", name);
     return;
+  }
+}
+
+void GLFWWindow::initializeContext() {
+  Logger::Get("GLFWWindow")->info("Initializing OpenGL {0}.{1} context using GLFW and GLAD",
+    data.contextVersion.major, data.contextVersion.minor);
+
+  glfwInit();
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, data.contextVersion.major);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, data.contextVersion.minor);
+  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+#ifdef BLACK_PLATFORM_MACOSX
+  glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif
+}
+
+void GLFWWindow::initializeWindowAndContext() {
+  initializeContext();
+
+  // Init GLFW window
+  auto glfwWindow = glfwCreateWindow(
+    getWidth(), getHeight(), getTitle().c_str(), nullptr, nullptr);
+
+  if (glfwWindow == nullptr) {
+    throw RenderWindowInitializationException("Failed to initialize glfw window");
+  }
+
+  this->window = std::unique_ptr<GLFWwindow, void (*)(GLFWwindow *)>(glfwWindow, glfwDestroyWindow);
+
+  glfwSetFramebufferSizeCallback(this->window.get(), [](GLFWwindow */*window*/, int width, int height) {
+    glViewport(0, 0, width, height);
+  });
+
+  glfwSetCursorPosCallback(this->window.get(), [](GLFWwindow *win, double x, double y) {
+    Input::OnMousePositionChanged(x, y);
+  });
+
+  glfwSetKeyCallback(this->window.get(), [](GLFWwindow *win, int key, int scanCode, int action, int modifiers) {
+    KeyEvent event{Key{key}, scanCode, KeyAction{action}, modifiers};
+    Engine::GetKeyboard()->emitKeyPressedEvent(event);
+  });
+
+  glfwSetMouseButtonCallback(this->window.get(), [](GLFWwindow *win, int button, int action, int modifiers) {
+    MouseButtonEvent event{MouseButton{button}, MouseButtonAction{action}, modifiers};
+    Engine::GetMouse()->emitMouseButtonEvent(event);
+  });
+
+  setRenderTargetCurrent();
+
+  // Init GLAD
+  if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
+    glfwTerminate();
+    throw RenderWindowInitializationException("Failed to initialize OpenGL Context");
   }
 }
 

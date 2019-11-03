@@ -5,13 +5,13 @@
 #ifndef BLACKENGINE_GLFWWINDOW_H
 #define BLACKENGINE_GLFWWINDOW_H
 
-#include "OpenGLCommonHeaders.h"
+#include "../OpenGLCommonHeaders.h"
 
 #include <render/AbstractRenderWindow.h>
-#include <input/SystemInterface.h>
+#include <input/InputSystemInterface.h>
 
 namespace black {
-class GLFWWindow : public AbstractRenderWindow, public SystemInterface {
+class GLFWWindow : public AbstractRenderWindow, public InputSystemInterface {
   using Cursor = std::unique_ptr<GLFWcursor, void (*)(GLFWcursor *)>;
 
   std::unique_ptr<GLFWwindow, void (*)(GLFWwindow *)> window;
@@ -29,7 +29,7 @@ public:
    *
    * {@inheritDoc}
    */
-  GLFWWindow(const std::string &title, int width, int height, bool isFullScreen);
+  explicit GLFWWindow(WindowData data);
 
   // RenderTargetInterface
   void updateRenderTarget() override;
@@ -48,7 +48,7 @@ public:
 
   void close() override;
 
-  // SystemInterface
+  // InputSystemInterface
   bool isKeyPressed(Key key) override;
   bool isKeyPressed(int key) override;
 
@@ -62,6 +62,10 @@ public:
   void addCursor(std::string name, const Image &image) override;
 
   void setCursor(std::string name) override;
+
+private:
+  void initializeContext();
+  void initializeWindowAndContext();
 };
 }
 

@@ -17,7 +17,7 @@ namespace black {
 
 class RendererInterface;
 class AbstractRenderWindow;
-class SystemInterface;
+class InputSystemInterface;
 class Mesh;
 class Shader;
 class ShaderProgram;
@@ -39,11 +39,10 @@ public:
 
   /**
    * Initialize a render system.
-   * Also will initialize the renderer and main render window.
    *
    * @throws RenderSystemInitializationException
    */
-  virtual void initialize(std::string title, int width, int height, bool isFullScreen) = 0;
+  virtual void initialize() = 0;
 
   /**
    * Shutdown a render system.
@@ -51,24 +50,12 @@ public:
   virtual void shutdown() = 0;
 
   /**
-   * Create an appropriate render system render and render window.
+   * Create an appropriate render system renderer.
    *
    * @return Renderer for this render system
    */
-  virtual std::shared_ptr<RendererInterface> getRenderer() = 0;
-
-  /**
-   * Return a main renderer window
-   *
-   * @return Pointer for the renderer window
-   */
-  virtual std::shared_ptr<AbstractRenderWindow> getRenderWindow() = 0;
-
-  /**
-   * Return a pointer to the System Interface
-   * @return System interface pointer
-   */
-  virtual std::shared_ptr<SystemInterface> getSystemInterface() = 0;
+  virtual std::shared_ptr<RendererInterface> createRenderer(
+    std::shared_ptr<AbstractRenderWindow> renderWindow) = 0;
 
   /**
    * Create a mesh

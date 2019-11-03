@@ -1,17 +1,25 @@
 #include "Engine.h"
 #include "common/Config.h"
+#include "SystemInterface.h"
 
 #include <log/Logger.h>
+#include <input/KeyboardEventEmitter.h>
+#include <input/MouseEventEmitter.h>
 #include <plugins/PluginInterface.h>
 #include <plugins/PluginManager.h>
 #include <render/RenderSystemInterface.h>
 #include <terrain/FlatTerrainBuilder.h>
 
-#include <thread>
+#include <memory>
 
 namespace black {
 
-Engine::Engine() : pluginManager(), renderSystems() {
+Engine::Engine() :
+pluginManager(),
+renderSystems(),
+keyboard(std::make_shared<KeyboardEventEmitter>()),
+mouse(std::make_shared<MouseEventEmitter>()) {
+
   this->logger = Logger::Get("Engine");
 
   logger->trace("Initializing BlackEngine v{}", config::VERSION_STRING);
@@ -21,7 +29,7 @@ Engine::Engine() : pluginManager(), renderSystems() {
   pluginManager = std::make_unique<PluginManager>();
 }
 
-void Engine::Initialize(std::string title, int width, int height, bool isFullScreen) {
+void Engine::Initialize() {
   // Init Logger
   Logger::Initialize();
 
@@ -37,10 +45,13 @@ void Engine::Initialize(std::string title, int width, int height, bool isFullScr
 
   // Create an instance of engine. Also loads plugins.
   auto engine = Engine::GetInstance();
+
+  // System interface should be created before the renderer
+  engine->setDefaultSystemInterface();
   engine->setDefaultRenderSystem();
 
   // Initialize render system
-  engine->currentRenderSystem->initialize(std::move(title), width, height, isFullScreen);
+  engine->currentRenderSystem->initialize();
 
   RegisterTerrainBuilder("Flat", std::make_shared<FlatTerrainBuilder>());
 }
@@ -49,13 +60,20 @@ void Engine::UnregisterPlugin(const std::shared_ptr<PluginInterface>& plugin) {
   plugin->uninstall();
 }
 
-void Engine::RegisterPlugin(std::shared_ptr<PluginInterface> plugin) {
+void Engine::RegisterPlugin(const std::shared_ptr<PluginInterface>& plugin) {
   auto engine = Engine::GetInstance();
-  Engine::GetInstance()->pluginManager->registerPlugin(std::move(plugin));
+  Engine::GetInstance()->pluginManager->registerPlugin(plugin);
+  Logger::Get("Engine")->info("Plugin with name '{0}' registered", plugin->getName());
 }
 
 void Engine::RegisterRenderSystem(std::shared_ptr<RenderSystemInterface> renderSystem) {
-  Engine::GetInstance()->renderSystems["Name"] = std::move(renderSystem);
+  if (!renderSystem) {
+    return;
+  }
+
+  auto name = renderSystem->getName();
+  Engine::GetInstance()->renderSystems[name] = std::move(renderSystem);
+  Logger::Get("Engine")->info("Render system '{0}' registered", name);
 }
 
 Engine::~Engine() = default;
@@ -82,7 +100,7 @@ void Engine::initializeEngine() {
 }
 
 void Engine::setDefaultRenderSystem() {
-  logger->trace("Set default render system");
+  logger->trace("Setting default render system");
 
   this->currentRenderSystem = this->renderSystems.begin()->second;
 
@@ -140,10 +158,44 @@ std::shared_ptr<TerrainBuilder> Engine::GetTerrainBuilder(std::string_view name)
 }
 
 void Engine::RegisterTerrainBuilder(std::string_view name, std::shared_ptr<TerrainBuilder> builder) {
-  if (builder) {
-    GetInstance()->terrainBuilders[name.data()] = std::move(builder);
+  if (!builder) {
+    return;
   }
+
+  GetInstance()->terrainBuilders[name.data()] = std::move(builder);
+  Logger::Get("Engine")->info("Terrain builder '{0}' registered", name);
 }
+
+void Engine::RegisterSystemInterface(std::shared_ptr<SystemInterface> systemInterface) {
+  if (!systemInterface) {
+    return;
+  }
+
+  auto name = systemInterface->getName();
+  GetInstance()->systemInterfaces[systemInterface->getName()] = std::move(systemInterface);
+  Logger::Get("Engine")->info("System interface '{0}' registered", name);
+}
+
+std::shared_ptr<SystemInterface> Engine::GetCurrentSystemInterface() {
+  return Engine::GetInstance()->currentSystemInterface;
+}
+
+void Engine::setDefaultSystemInterface() {
+  logger->trace("Setting default system interface");
+
+  this->currentSystemInterface = this->systemInterfaces.begin()->second;
+
+  logger->info("Using '{0}' system interface as default", this->currentSystemInterface->getName());
+}
+
+std::shared_ptr<KeyboardEventEmitter> Engine::GetKeyboard() noexcept {
+  return Engine::GetInstance()->keyboard;
+}
+
+std::shared_ptr<MouseEventEmitter> Engine::GetMouse() noexcept {
+  return Engine::GetInstance()->mouse;
+}
+
 
 EngineInitializationException::EngineInitializationException(const std::string &message) : Exception(message) {}
 }

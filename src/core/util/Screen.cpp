@@ -9,34 +9,39 @@
 
 #include <Engine.h>
 
-namespace black {
-float Screen::GetAspectRatio() {
-  const auto renderSystem = Engine::GetCurrentRenderSystem();
+#include <render/RendererInterface.h>
 
-  if (!renderSystem || !renderSystem->getRenderWindow()) {
-    return 0.0f;
+namespace black {
+
+std::shared_ptr<RendererInterface> Screen::renderer;
+
+float Screen::GetAspectRatio() {
+  if (!renderer) {
+    throw FatalError("Screen helper class is unitialized: render is nullptr!");
   }
 
-  return renderSystem->getRenderWindow()->getRenderTargetAspectRatio();
+  return renderer->getCurrentRenderTarget()->getRenderTargetAspectRatio();
 }
 
 int Screen::GetWidth() {
-  const auto renderSystem = Engine::GetCurrentRenderSystem();
-
-  if (!renderSystem || !renderSystem->getRenderWindow()) {
-    return 0;
+  if (!renderer) {
+    throw FatalError("Screen helper class is unitialized: render is nullptr!");
   }
 
-  return static_cast<int>(renderSystem->getRenderWindow()->getRenderTargetWidth());
+  return static_cast<int>(renderer->getCurrentRenderTarget()->getRenderTargetWidth());
 }
 
 int Screen::GetHeight() {
   const auto renderSystem = Engine::GetCurrentRenderSystem();
 
-  if (!renderSystem || !renderSystem->getRenderWindow()) {
-    return 0;
+  if (!renderer) {
+    throw FatalError("Screen helper class is unitialized: render is nullptr!");
   }
 
-  return static_cast<int>(renderSystem->getRenderWindow()->getRenderTargetHeight());
+  return static_cast<int>(renderer->getCurrentRenderTarget()->getRenderTargetHeight());
+}
+
+void Screen::Initialize(std::shared_ptr<RendererInterface> newRenderer) noexcept {
+  renderer = std::move(newRenderer);
 }
 }

@@ -3,7 +3,13 @@ cmake_minimum_required(VERSION 3.6)
 
 # Function to setup a plugin
 include(SetupPlugin.cmake)
+include(AddPlugin.cmake)
 
-# Add examples
-add_subdirectory(gl)
-add_subdirectory(modelParsers)
+# Set plugins here
+set(PLUGINS gl modelParsers qt)
+
+set(BlackEngine_PLUGINS ${BlackEngine_PLUGINS} ${PLUGINS} PARENT_SCOPE)
+
+foreach(Plugin ${PLUGINS})
+    AddPlugin(${Plugin})
+endforeach()

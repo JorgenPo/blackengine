@@ -5,9 +5,11 @@
 #include "GameApplication.h"
 
 #include <Engine.h>
+#include <SystemInterface.h>
 
 #include <render/AbstractRenderWindow.h>
 #include <performance/PerformanceCounter.h>
+#include <util/Screen.h>
 
 
 namespace black {
@@ -36,18 +38,31 @@ void GameApplication::run() {
 }
 
 void GameApplication::init() {
-  AbstractApplication::init();
-
   auto renderSystem = Engine::GetCurrentRenderSystem();
-  renderSystem->getSystemInterface()->setCursorMode(CursorMode::VISIBLE);
-  renderSystem->getSystemInterface()->setMouseAccelerated(false);
+  auto systemInterface = Engine::GetCurrentSystemInterface();
 
   try {
     this->logger->info("Creating renderer and render window");
 
-    this->renderer = renderSystem->getRenderer();
-    this->window = renderSystem->getRenderWindow();
-    this->renderer->setCurrentRenderTarget(window);
+    // Create window
+    WindowData data;
+    data.title = this->getName();
+    data.width = this->getWindowWidth();
+    data.height = this->getWindowHeight();
+    data.isFullScreen = this->isFullScreen();
+    data.contextVersion = {4, 0}; // TODO: choosing or automatic detections
+
+    auto systemWindow = systemInterface->createWindow(data);
+    this->window = systemWindow.window;
+    this->input = systemWindow.inputSystem;
+
+    this->input->setCursorMode(CursorMode::VISIBLE);
+    this->input->setMouseAccelerated(false);
+
+    this->renderer = renderSystem->createRenderer(window);
+
+    Input::Initialize(this->input);
+    Screen::Initialize(this->renderer);
   } catch (const Exception &e) {
     throw ApplicationInitializationException(e.getMessage());
   }

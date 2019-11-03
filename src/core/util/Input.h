@@ -9,7 +9,7 @@
 
 #include <common/CommonHeaders.h>
 
-#include <input/SystemInterface.h>
+#include <input/InputSystemInterface.h>
 
 namespace black {
 
@@ -21,8 +21,11 @@ class KeyboardEventEmitter;
 class BLACK_EXPORTED Input {
 private:
   static double mouseX, mouseY;
+  static std::shared_ptr<InputSystemInterface> input;
 
 public:
+  static void Initialize(std::shared_ptr<InputSystemInterface> inputInterface);
+
   static bool IsKeyPressed(Key key);
   static bool IsKeyPressed(int key);
   static bool IsKeyReleased(Key key);
@@ -35,9 +38,6 @@ public:
 
   static void AddCursor(std::string_view name, const Image &image);
   static void SetCursor(std::string_view name);
-
-  static std::shared_ptr<KeyboardEventEmitter> GetKeyboardEventEmitter();
-  static std::shared_ptr<MouseEventEmitter> GetMouseEventEmitter();
 };
 
 }

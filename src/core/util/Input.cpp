@@ -4,26 +4,24 @@
 
 #include "Input.h"
 
+#include <SystemInterface.h>
+#include <Engine.h>
+
 #include <input/KeyboardEventEmitter.h>
 #include <render/RenderSystemInterface.h>
-#include <Engine.h>
 
 namespace black {
 
 double Input::mouseX = 0;
 double Input::mouseY = 0;
+std::shared_ptr<InputSystemInterface> Input::input = nullptr;
 
 bool Input::IsKeyPressed(Key key) {
   return Input::IsKeyPressed(static_cast<int>(key));
 }
 
 bool Input::IsKeyPressed(int key) {
-  auto systemInterface = Engine::GetCurrentRenderSystem()->getSystemInterface();
-  if (!systemInterface) {
-    return false;
-  }
-
-  return systemInterface->isKeyPressed(key);
+  return input->isKeyPressed(key);
 }
 
 void Input::OnMousePositionChanged(double x, double y) {
@@ -40,12 +38,7 @@ double Input::GetMouseX() {
 }
 
 bool Input::IsKeyReleased(Key key) {
-  auto systemInterface = Engine::GetCurrentRenderSystem()->getSystemInterface();
-  if (!systemInterface) {
-    return false;
-  }
-
-  return systemInterface->isKeyReleased(key);
+  return input->isKeyReleased(key);
 }
 
 bool Input::IsKeyReleased(int key) {
@@ -53,39 +46,15 @@ bool Input::IsKeyReleased(int key) {
 }
 
 void Input::AddCursor(std::string_view name, const Image &image) {
-  auto systemInterface = Engine::GetCurrentRenderSystem()->getSystemInterface();
-  if (!systemInterface) {
-    return;
-  }
-
-  systemInterface->addCursor(name.data(), image);
+  input->addCursor(name.data(), image);
 }
 
 void Input::SetCursor(std::string_view name) {
-  auto systemInterface = Engine::GetCurrentRenderSystem()->getSystemInterface();
-  if (!systemInterface) {
-    return;
-  }
-
-  systemInterface->setCursor(name.data());
+  input->setCursor(name.data());
 }
 
-std::shared_ptr<KeyboardEventEmitter> Input::GetKeyboardEventEmitter() {
-  auto systemInterface = Engine::GetCurrentRenderSystem()->getSystemInterface();
-  if (!systemInterface) {
-    return nullptr;
-  }
-
-  return systemInterface;
-}
-
-std::shared_ptr<MouseEventEmitter> Input::GetMouseEventEmitter() {
-  auto systemInterface = Engine::GetCurrentRenderSystem()->getSystemInterface();
-  if (!systemInterface) {
-    return nullptr;
-  }
-
-  return systemInterface;
+void Input::Initialize(std::shared_ptr<InputSystemInterface> inputInterface) {
+  input = std::move(inputInterface);
 }
 
 }

@@ -1,6 +1,6 @@
 .idea/
 cmake-build-*/
 bin/*
-
+venv/
 src/core/common/Config.h
 src/core/common/Exported.h

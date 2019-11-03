@@ -3,12 +3,11 @@
 
 #include <application/GameApplication.h>
 #include <tracer/RayTracer.h>
+#include <terrain/Terrain.h>
+#include <terrain/TerrainBuilder.h>
 
 #include <iostream>
 #include <memory>
-#include <utility>
-#include <terrain/Terrain.h>
-#include <terrain/TerrainBuilder.h>
 
 
 using namespace black;
@@ -21,7 +20,7 @@ class BlackEngineApplication : public GameApplication {
   std::shared_ptr<GameObject> light;
   std::shared_ptr<ApplicationShader> hoveredShader;
   std::shared_ptr<ApplicationShader> selectedShader;
-  RayTracer tracer;
+  std::unique_ptr<RayTracer> tracer;
   Image cursorHovered;
   Image cursorNormal;
 
@@ -34,7 +33,6 @@ public:
   BlackEngineApplication() :
   GameApplication(std::string("BlackEngineApplication") + Constants::RuntimePlatformString,
     800, 600, false),
-    tracer(nullptr),
     scene(new SimpleScene("Test")),
     cursorHovered("resources/cursor_hovered.png"),
     cursorNormal("resources/cursor_normal.png")
@@ -103,6 +101,7 @@ private:
 
   void update(float dt) override {
     handleInput();
+
     auto time = this->timer->getUptime();
 
     float camX = static_cast<float>(sin(time / 1000.0)) * this->cameraRadius + this->cameraOffsetX;
@@ -115,7 +114,7 @@ private:
 
     bool wasHovered = selected.getObject() != nullptr;
 
-    auto ray = tracer.calculateRay(Input::GetMouseX(), Input::GetMouseY());
+    auto ray = tracer->calculateRay(Input::GetMouseX(), Input::GetMouseY());
 
     auto hoveredObject = findSelectedObject(ray);
     auto hovered = hoveredObject != nullptr;
@@ -189,7 +188,7 @@ private:
     this->camera->setPosition({0.0f, 10.0f, 1.0f});
     this->camera->setLookAt({0.0f, -1.0f, 0.0f});
 
-    tracer.setCamera(camera);
+    this->tracer = std::make_unique<RayTracer>(camera, window);
 
     scene->setCurrentCamera(camera);
 

@@ -7,13 +7,21 @@
 
 #include <common/CommonHeaders.h>
 
+#include <memory>
+
 namespace black {
+
+class RendererInterface;
 
 /**
  * Screen (main renderer window) parameters helper class
  */
 class BLACK_EXPORTED Screen {
+  static std::shared_ptr<RendererInterface> renderer;
+
 public:
+  static void Initialize(std::shared_ptr<RendererInterface> renderer) noexcept;
+
   /**
    * Returns the screen aspect ratio. If the render system hasn't been initialized yet then
    * returns 0.0f.

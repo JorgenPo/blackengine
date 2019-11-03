@@ -20,7 +20,11 @@ const std::string &AbstractApplication::getName() const {
 
 void AbstractApplication::start() {
   try {
+    this->initEngine();
     this->init();
+
+    // Application resources init
+    this->initializeResources();
   } catch (const ApplicationInitializationException &e) {
     this->logger->critical("Failed to init an application: {0}", e.getMessage());
     throw;
@@ -63,20 +67,6 @@ void AbstractApplication::setFullScreen(bool isFullScreen) {
   AbstractApplication::isWindowFullScreen = isFullScreen;
 }
 
-void AbstractApplication::init() {
-  this->logger->info("Initializing application");
-
-  Engine::Initialize(this->name, this->windowWidth, this->windowHeight, this->isWindowFullScreen);
-
-  this->logger->info("Initializing application resources");
-
-  // Application resources init
-  this->initializeResources();
-
-  Input::GetKeyboardEventEmitter()->listenForKeyboardEvents(this);
-  Input::GetMouseEventEmitter()->listenForMouseEvents(this);
-}
-
 void AbstractApplication::onKeyEvent(KeyEvent keyEvent) {
 
 }
@@ -103,6 +93,17 @@ void AbstractApplication::onMouseButtonPressed(MouseButtonEvent event) {
 
 void AbstractApplication::onMouseButtonReleased(MouseButtonEvent event) {
 
+}
+
+void AbstractApplication::initEngine() {
+  this->logger->info("Initializing application");
+
+  Engine::Initialize();
+
+  this->logger->info("Initializing application resources");
+
+  Engine::GetKeyboard()->listenForKeyboardEvents(this);
+  Engine::GetMouse()->listenForMouseEvents(this);
 }
 
 ApplicationInitializationException::ApplicationInitializationException(const std::string &message)

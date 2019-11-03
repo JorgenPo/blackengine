@@ -89,6 +89,11 @@ public:
   }
 };
 
+class FatalError : public Exception {
+public:
+  explicit FatalError(std::string_view message)
+  : Exception(fmt::format("Fatal error: {}", message)) {}
+};
 }
 
 #endif //BLACKENGINE_EXCEPTION_H

@@ -11,6 +11,7 @@
 namespace black {
 
 class Camera;
+class AbstractRenderWindow;
 
 struct Ray {
   glm::vec3 origin;
@@ -19,9 +20,10 @@ struct Ray {
 
 class RayTracer {
   std::shared_ptr<Camera> camera;
+  std::shared_ptr<AbstractRenderWindow> window;
 
 public:
-  explicit RayTracer(std::shared_ptr<Camera> camera);
+  explicit RayTracer(std::shared_ptr<Camera> camera, std::shared_ptr<AbstractRenderWindow> window);
 
   /**
    * Calculate world space unit vector that is a ray from screen coordinates x and y

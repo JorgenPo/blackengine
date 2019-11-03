@@ -124,4 +124,8 @@ void GLRenderer::renderPart(const ModelPart &part) const {
   }
 }
 
+std::shared_ptr<RenderTargetInterface> GLRenderer::getCurrentRenderTarget() const noexcept {
+  return currentTarget;
+}
+
 }

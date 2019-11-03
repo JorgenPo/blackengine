@@ -5,5 +5,7 @@ cmake_minimum_required(VERSION 3.6)
 
 set(PROJECT_NAME glPlugin)
 
-set(ADDITIONAL_SOURCES ${BLACKENGINE_LIBRARY_DIR}/glad/src/glad.c)
+file(GLOB GLFW_SOURCES src/glfw/*.h src/glfw/*.cpp)
+set(ADDITIONAL_SOURCES ${BLACKENGINE_LIBRARY_DIR}/glad/src/glad.c ${GLFW_SOURCES})
+
 SetupPlugin(${PROJECT_NAME})
