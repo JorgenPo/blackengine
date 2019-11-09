@@ -352,7 +352,7 @@ void LoadMtl(std::map<std::string, int> *material_map,
 #include <cstddef>
 #include <cstdlib>
 #include <cstring>
-#include <utility>
+#include <memory>
 
 #include <fstream>
 #include <sstream>

@@ -7,9 +7,9 @@
 
 #include <memory>
 
-#include <GameObject.h>
-#include <shader/ApplicationShader.h>
-#include <components/ModelComponent.h>
+#include <BlackEngine/GameObject.h>
+#include <BlackEngine/shader/ApplicationShader.h>
+#include <BlackEngine/components/ModelComponent.h>
 
 using namespace black;
 

@@ -5,7 +5,7 @@
 #ifndef BLACKENGINE_SELECTEDSHADER_H
 #define BLACKENGINE_SELECTEDSHADER_H
 
-#include <shader/ApplicationShader.h>
+#include <BlackEngine/shader/ApplicationShader.h>
 
 using namespace black;
 

@@ -2,5 +2,5 @@
 cmake-build-*/
 bin/*
 venv/
-src/core/common/Config.h
-src/core/common/Exported.h
+src/BlackEngine/common/Config.h
+src/BlackEngine/common/Exported.h

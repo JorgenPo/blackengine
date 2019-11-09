@@ -3,7 +3,7 @@
 //
 
 #include "SelectedShader.h"
-#include <log/Logger.h>
+#include <BlackEngine/log/Logger.h>
 
 SelectedShader::SelectedShader(const std::shared_ptr<ShaderProgram> &impl) : ApplicationShader(impl) {}
 

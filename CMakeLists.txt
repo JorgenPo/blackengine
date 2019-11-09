@@ -9,7 +9,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
 # Name of the main target to use in sub projects
 set(BLACKENGINE_TARGET ${PROJECT_NAME})
-set(BLACKENGINE_SOURCE_DIR ${CMAKE_SOURCE_DIR}/src/core)
+set(BLACKENGINE_SOURCE_DIR ${CMAKE_SOURCE_DIR}/src/BlackEngine)
 set(BLACKENGINE_LIBRARY_DIR ${CMAKE_SOURCE_DIR}/libs)
 
 set(EXAMPLE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX}/bin/blackengine/examples)
@@ -24,7 +24,7 @@ include(Libraries)
 
 include(Functions)
 
-include_directories(${BLACKENGINE_SOURCE_DIR})
+include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(${BLACKENGINE_LIBRARY_DIR}/glad/include ${BLACKENGINE_LIBRARY_DIR})
 include_directories(${LINKLIBS_INCLUDE_DIRS})
 
@@ -50,7 +50,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE ${LINKLIBS_LIBRARIES})
 add_subdirectory(examples)
 
 # Plugins
-add_subdirectory(src/plugins)
+add_subdirectory(plugins)
 
 message(STATUS "Plugins: ${BlackEngine_PLUGINS}")
 
@@ -59,8 +59,8 @@ include(SetMainTargetSettings)
 
 # Config
 configure_file(
-        ${CMAKE_SOURCE_DIR}/src/config/Config.h.in
-        ${BLACKENGINE_SOURCE_DIR}/Config.h
+        ${BLACKENGINE_SOURCE_DIR}/config/Config.h.in
+        ${BLACKENGINE_SOURCE_DIR}/common/Config.h
 )
 
 message(INFO " Platform is ${BLACK_PLATFORM}")
@@ -68,6 +68,6 @@ message(INFO " Installation path is: " ${CMAKE_INSTALL_PREFIX})
 
 # Install main target
 install(TARGETS ${PROJECT_NAME} DESTINATION lib/)
-install(FILES ${HEADERS} DESTINATION include/BlackEngine)
+install_headers()
 
 copy_resources_to_build_folder()
