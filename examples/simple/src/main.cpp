@@ -79,6 +79,17 @@ private:
     if (Input::IsKeyPressed(Key::DOWN)) {
       this->camera->moveBackward(0.1f);
     }
+
+    if (Input::IsKeyPressed(Key::ENTER)) {
+      if (selected.getObject() && selected.isObjectSelected()) {
+        this->scene->removeObject(selected.getObject()->getName());
+        selected.resetObject();
+      }
+    }
+
+    if (Input::IsKeyPressed(Key::BACKSPACE)) {
+      this->scene->removeObject(light->getName());
+    }
   }
 
   std::shared_ptr<GameObject> findSelectedObject(const Ray &ray) {
@@ -178,8 +189,8 @@ private:
         std::make_shared<Sphere>(cube->transform, 1.0f)));
 
     light = std::make_shared<GameObject>("Sun");
-    light->transform->setPosition({10.0f, 200.0f, 0.0f});
     light->add(std::make_shared<LightComponent>(LightType::DIRECTIONAL));
+    light->transform->setPosition({10.0f, 200.0f, 0.0f});
     light->get<LightComponent>()->setColor(Color{1.0f, 0.8f, 0.8f});
 
     scene->addObjects({light, cottage, cube});

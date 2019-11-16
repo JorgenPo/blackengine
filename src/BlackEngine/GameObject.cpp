@@ -10,9 +10,9 @@ namespace black {
 
 long long int GameObject::idCounter = 0;
 
-GameObject::GameObject(std::string name) : name(std::move(name)) {
+GameObject::GameObject(std::string name) : id(idCounter++), name(std::move(name)) {
   if (this->name.empty()) {
-    this->name = "Entity" + std::to_string(GameObject::idCounter);
+    this->name = "Entity" + std::to_string(id);
   }
 
   this->add(std::make_shared<TransformComponent>());
@@ -25,6 +25,10 @@ const std::string &GameObject::getName() const {
 
 void GameObject::setName(const std::string &name) {
   GameObject::name = name;
+}
+
+bool GameObject::operator==(const GameObject &another) const noexcept {
+  return another.id == this->id;
 }
 
 GameObject::~GameObject() = default;

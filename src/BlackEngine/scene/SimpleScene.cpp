@@ -5,24 +5,39 @@
 #include "SimpleScene.h"
 
 #include "../GameObject.h"
+#include <BlackEngine/Light.h>
+#include <BlackEngine/components/LightComponent.h>
 
 #include <algorithm>
 
 namespace black {
 
 void SimpleScene::addObject(std::shared_ptr<GameObject> object) {
-  if (!hasObject(object->getName())) {
+  if (object && !hasObject(object->getName())) {
+    if (auto lightComponent = object->get<LightComponent>(); lightComponent != nullptr) {
+      this->light = std::make_shared<Light>(object);
+    }
+
     objects.emplace_back(std::move(object));
   }
 }
 
 void SimpleScene::addObjects(const std::vector<std::shared_ptr<GameObject>> &newObjects) {
-  std::copy_if(newObjects.begin(), newObjects.end(), std::back_inserter(objects),
-    [=](auto && object) { return !hasObject(object->getName()); });
+  for (auto && object : newObjects) {
+    addObject(object);
+  }
 }
 
 void SimpleScene::removeObject(std::string_view name) {
-  objects.erase(getObjectIterator(name));
+  auto itemToDelete = getObjectIterator(name);
+
+  if (itemToDelete != objects.end()) {
+    if (*itemToDelete == light->getObject()) {
+      light.reset();
+    }
+
+    objects.erase(itemToDelete);
+  }
 }
 
 std::shared_ptr<GameObject> SimpleScene::getObject(std::string_view name) const {
@@ -51,4 +66,13 @@ std::string_view SimpleScene::getName() const {
 }
 
 SimpleScene::SimpleScene(std::string_view name) : sceneName(name) {}
+
+bool SimpleScene::hasLight() const {
+  return light != nullptr;
+}
+
+std::shared_ptr<Light> SimpleScene::getLight() const {
+  return light;
+}
+
 }

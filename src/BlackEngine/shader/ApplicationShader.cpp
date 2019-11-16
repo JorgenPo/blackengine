@@ -22,7 +22,7 @@ void ApplicationShader::use() {
   }
 
   if (directedLight) {
-    setLightImpl(directedLightPosition, directedLight);
+    setLightImpl(directedLight);
   }
 
   setModelMatrixImpl(model);
@@ -49,10 +49,9 @@ void ApplicationShader::setMaterial(const Material &newMaterial) {
   setMaterialImpl(newMaterial);
 }
 
-void ApplicationShader::setDirectedLight(const glm::vec3 &position, const std::shared_ptr<LightComponent> &light) {
-  directedLightPosition = position;
-  directedLight = light;
-  setLightImpl(directedLightPosition, directedLight);
+void ApplicationShader::setDirectedLight(std::shared_ptr<Light> light) {
+  directedLight = std::move(light);
+  setLightImpl(directedLight);
 }
 
 void ApplicationShader::setAmbientLight(Color color, float intensity) {

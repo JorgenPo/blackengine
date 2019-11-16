@@ -14,7 +14,9 @@ namespace black {
  */
 class BLACK_EXPORTED SimpleScene : public AbstractScene {
   std::vector<std::shared_ptr<GameObject>> objects;
+  std::shared_ptr<Light> light;
   std::string sceneName;
+
 public:
   explicit SimpleScene(std::string_view name);
 
@@ -31,6 +33,10 @@ public:
   [[nodiscard]] bool hasObject(std::string_view name) const override;
 
   [[nodiscard]] std::string_view getName() const override;
+
+  [[nodiscard]] bool hasLight() const override;
+
+  [[nodiscard]] std::shared_ptr<Light> getLight() const override;
 
 private:
   [[nodiscard]] std::vector<std::shared_ptr<GameObject>>::const_iterator getObjectIterator(std::string_view name) const;

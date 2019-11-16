@@ -22,6 +22,7 @@ class TransformComponent;
 class BLACK_EXPORTED GameObject : public ComponentsContainer, public std::enable_shared_from_this<GameObject> {
   static long long int idCounter;
 
+  long long int id;
   std::string name;
 
 public:
@@ -35,6 +36,8 @@ public:
 
   const std::string &getName() const;
   void setName(const std::string &name);
+
+  bool operator==(const GameObject &another) const noexcept;
 };
 }
 

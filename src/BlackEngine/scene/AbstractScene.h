@@ -13,6 +13,7 @@
 namespace black {
 class GameObject;
 class Camera;
+class Light;
 
 class BLACK_EXPORTED AbstractScene {
   std::shared_ptr<Camera> currentCamera;
@@ -35,6 +36,9 @@ public:
   [[nodiscard]] virtual std::shared_ptr<Camera> getCurrentCamera() const;
 
   [[nodiscard]] virtual bool hasObject(std::string_view name) const = 0;
+
+  [[nodiscard]] virtual bool hasLight() const = 0;
+  virtual std::shared_ptr<Light> getLight() const = 0;
 };
 
 }

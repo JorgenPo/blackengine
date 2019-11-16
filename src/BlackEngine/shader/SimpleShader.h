@@ -22,7 +22,7 @@ public:
 
   void setAmbientLightImpl(Color color, float intensity) override;
 
-  void setLightImpl(const glm::vec3 &position, const std::shared_ptr<LightComponent> &light) override;
+  void setLightImpl(const std::shared_ptr<Light> &light) override;
 
   void setMaterialImpl(const Material &material) override;
 };

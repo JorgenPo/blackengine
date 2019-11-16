@@ -18,6 +18,8 @@ enum class LightType {
   POINT, // Point light is a multidirectional light such as lamp
 };
 
+class TransformComponent;
+
 /**
  * LightComponent - spot, directed and point light
  */
@@ -45,7 +47,7 @@ public:
   void setIntensity(float strength);
   void setDirection(const glm::vec3 &direction);
   void setColor(const Color &color);
-
+  void setTransform(std::shared_ptr<TransformComponent> transform);
   void setSpectacularIntensity(float spectacularIntensity);
 };
 }

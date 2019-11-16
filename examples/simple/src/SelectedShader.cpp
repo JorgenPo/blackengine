@@ -20,7 +20,7 @@ void SelectedShader::setAmbientLightImpl(Color color, float intensity) {
   this->impl->setUniformVariable("ambientLight", color.getRgba());
 }
 
-void SelectedShader::setLightImpl(const glm::vec3 &position, const std::shared_ptr<LightComponent> &light) {
+void SelectedShader::setLightImpl(const std::shared_ptr<Light> &light) {
 }
 
 void SelectedShader::setMaterialImpl(const black::Material &material) {

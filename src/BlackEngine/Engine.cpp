@@ -38,11 +38,16 @@ void Engine::Initialize() {
     Logger::SetLogLevel(LogLevel::TRACE);
   }
 
-  // Main core logger
-  Logger::AddLogger(LogTarget::STDOUT, "Engine");
+  try {
+    // Main core logger
+    Logger::AddLogger(LogTarget::STDOUT, "Engine");
 
-  // Main core error logger
-  Logger::AddLogger(LogTarget::STDERR, "EngineErr");
+    // Main core error logger
+    Logger::AddLogger(LogTarget::STDERR, "EngineErr");
+  } catch (const std::exception &e) {
+    // Just ignore
+  }
+  Logger::Get("Engine")->info("Logger initialized");
 
   // Create an instance of engine. Also loads plugins.
   auto engine = Engine::GetInstance();

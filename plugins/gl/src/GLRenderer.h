@@ -19,6 +19,7 @@ namespace black {
 class ApplicationShader;
 class Logger;
 class ModelPart;
+class Light;
 
 /**
  * OpenGL v4.0 Renderer
@@ -27,6 +28,7 @@ class GLRenderer : public RendererInterface {
   std::shared_ptr<RenderTargetInterface> currentTarget;
   std::shared_ptr<ApplicationShader> defaultShader;
   std::shared_ptr<ApplicationShader> currentShader;
+  std::shared_ptr<Light> currentLight;
   std::shared_ptr<Logger> logger;
 
   glm::mat4 model;
