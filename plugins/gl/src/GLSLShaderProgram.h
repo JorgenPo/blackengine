@@ -27,6 +27,8 @@ public:
   void link() override;
   void use() override;
 
+  std::shared_ptr<ShaderProgram> copy() const override;
+
   void setUniformVariable(const std::string &name, int value) override;
 
   void setUniformVariable(const std::string &name, float value) override;

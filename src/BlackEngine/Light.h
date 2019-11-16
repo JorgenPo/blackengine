@@ -9,22 +9,27 @@
 
 #include <memory>
 #include <glm/vec3.hpp>
+#include <BlackEngine/common/Color.h>
 
 namespace black {
 
 class LightComponent;
 class TransformComponent;
 
-class Light {
+class DirectionLight {
   std::shared_ptr<GameObject> object;
 
 public:
-  explicit Light(std::shared_ptr<GameObject> object);
+  explicit DirectionLight(std::shared_ptr<GameObject> object);
 
   [[nodiscard]] std::shared_ptr<LightComponent> getComponent() const;
   [[nodiscard]] const glm::vec3 &getPosition() const;
+  [[nodiscard]] std::shared_ptr<GameObject> getObject() const;
+};
 
-  std::shared_ptr<GameObject> getObject() const;
+struct AmbientLight {
+  Color color = Color::WHITE;
+  float intensity = 0.1f;
 };
 
 }

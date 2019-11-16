@@ -15,6 +15,14 @@ std::shared_ptr<Camera> AbstractScene::getCurrentCamera() const {
   return currentCamera;
 }
 
+const AmbientLight &AbstractScene::getAmbientLight() const noexcept {
+  return ambientLight;
+}
+
+void AbstractScene::setAmbientLight(AmbientLight light) {
+  ambientLight = light;
+}
+
 AbstractScene::~AbstractScene() = default;
 
 }

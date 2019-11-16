@@ -20,9 +20,9 @@ public:
 
   void setModelMatrixImpl(const glm::mat4 &model) override;
 
-  void setAmbientLightImpl(Color color, float intensity) override;
+  void setAmbientLightImpl(const AmbientLight &light) override;
 
-  void setLightImpl(const std::shared_ptr<Light> &light) override;
+  void setLightImpl(const std::shared_ptr<DirectionLight> &light) override;
 
   void setMaterialImpl(const Material &material) override;
 };

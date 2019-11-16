@@ -15,7 +15,7 @@ namespace black {
 void SimpleScene::addObject(std::shared_ptr<GameObject> object) {
   if (object && !hasObject(object->getName())) {
     if (auto lightComponent = object->get<LightComponent>(); lightComponent != nullptr) {
-      this->light = std::make_shared<Light>(object);
+      this->light = std::make_shared<DirectionLight>(object);
     }
 
     objects.emplace_back(std::move(object));
@@ -71,7 +71,7 @@ bool SimpleScene::hasLight() const {
   return light != nullptr;
 }
 
-std::shared_ptr<Light> SimpleScene::getLight() const {
+std::shared_ptr<DirectionLight> SimpleScene::getLight() const {
   return light;
 }
 

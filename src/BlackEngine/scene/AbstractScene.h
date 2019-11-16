@@ -6,6 +6,8 @@
 #define BLACKENGINE_ABSTRACTSCENE_H
 
 #include "../common/CommonHeaders.h"
+#include <BlackEngine/common/Color.h>
+#include <BlackEngine/Light.h>
 
 #include <memory>
 #include <vector>
@@ -13,10 +15,11 @@
 namespace black {
 class GameObject;
 class Camera;
-class Light;
+class DirectionLight;
 
 class BLACK_EXPORTED AbstractScene {
   std::shared_ptr<Camera> currentCamera;
+  AmbientLight ambientLight;
 
 public:
   virtual ~AbstractScene();
@@ -38,7 +41,10 @@ public:
   [[nodiscard]] virtual bool hasObject(std::string_view name) const = 0;
 
   [[nodiscard]] virtual bool hasLight() const = 0;
-  virtual std::shared_ptr<Light> getLight() const = 0;
+  [[nodiscard]] virtual std::shared_ptr<DirectionLight> getLight() const = 0;
+
+  virtual void setAmbientLight(AmbientLight light);
+  virtual const AmbientLight &getAmbientLight() const noexcept;
 };
 
 }

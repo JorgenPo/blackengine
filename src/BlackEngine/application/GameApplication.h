@@ -13,7 +13,7 @@
 #include "../Image.h"
 #include "../GameObject.h"
 #include "../Camera.h"
-#include "../Light.h"
+#include "BlackEngine/Light.h"
 
 #include <BlackEngine/render/AbstractRenderWindow.h>
 #include <BlackEngine/render/RenderSystemInterface.h>

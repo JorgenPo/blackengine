@@ -16,11 +16,11 @@ void SelectedShader::setModelMatrixImpl(const glm::mat4 &model) {
   this->impl->setUniformVariable("model", model);
 }
 
-void SelectedShader::setAmbientLightImpl(Color color, float intensity) {
-  this->impl->setUniformVariable("ambientLight", color.getRgba());
+void SelectedShader::setAmbientLightImpl(const AmbientLight &light) {
+
 }
 
-void SelectedShader::setLightImpl(const std::shared_ptr<Light> &light) {
+void SelectedShader::setLightImpl(const std::shared_ptr<DirectionLight> &light) {
 }
 
 void SelectedShader::setMaterialImpl(const black::Material &material) {
@@ -29,4 +29,9 @@ void SelectedShader::setMaterialImpl(const black::Material &material) {
 
 SelectedShader::SelectedShader(std::shared_ptr<ApplicationShader> shader) : ApplicationShader(std::move(shader)) {
 
+}
+
+void SelectedShader::setColor(Color color, float intensity) {
+  this->impl->setUniformVariable("color.rgb", color.getRgb());
+  this->impl->setUniformVariable("color.intensity", intensity);
 }

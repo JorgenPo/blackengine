@@ -46,6 +46,12 @@ public:
   virtual void link() = 0;
 
   /**
+   * Get copy of the program
+   * @return Relinks shaders and return a new program
+   */
+  virtual std::shared_ptr<ShaderProgram> copy() const  = 0;
+
+  /**
    * Set program as current for rendering
    */
   virtual void use() = 0;

@@ -26,12 +26,12 @@ void SimpleShader::setModelMatrixImpl(const glm::mat4 &model) {
   this->impl->setUniformVariable("model", model);
 }
 
-void SimpleShader::setAmbientLightImpl(Color color, float intensity) {
-  this->impl->setUniformVariable("ambientLight.intensity", intensity);
-  this->impl->setUniformVariable("ambientLight.color", color.getRgb());
+void SimpleShader::setAmbientLightImpl(const AmbientLight &light) {
+  this->impl->setUniformVariable("ambientLight.intensity", light.intensity);
+  this->impl->setUniformVariable("ambientLight.color", light.color.getRgb());
 }
 
-void SimpleShader::setLightImpl(const std::shared_ptr<Light> &light) {
+void SimpleShader::setLightImpl(const std::shared_ptr<DirectionLight> &light) {
   this->impl->setUniformVariable("light.enabled", light != nullptr);
 
   if (light) {

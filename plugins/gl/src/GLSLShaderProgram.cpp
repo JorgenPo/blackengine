@@ -117,4 +117,8 @@ void GLSLShaderProgram::setUniformVariable(const std::string &name, glm::vec4 ve
   glUniform4f(glGetUniformLocation(this->program, name.c_str()), vector.r, vector.g, vector.b, vector.a);
 }
 
+std::shared_ptr<ShaderProgram> GLSLShaderProgram::copy() const {
+  return std::make_shared<GLSLShaderProgram>(vertexShader, fragmentShader);
+}
+
 }

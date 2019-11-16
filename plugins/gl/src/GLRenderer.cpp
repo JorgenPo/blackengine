@@ -43,7 +43,7 @@ void GLRenderer::render(const std::shared_ptr<AbstractScene> &scene) {
 
   this->defaultShader->use();
   this->defaultShader->setCamera(scene->getCurrentCamera());
-  this->defaultShader->setAmbientLight(Color::WHITE, 0.2f);
+  this->defaultShader->setAmbientLight(scene->getAmbientLight());
 
   currentLight = scene->getLight();
 

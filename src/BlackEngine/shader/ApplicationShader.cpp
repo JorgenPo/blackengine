@@ -10,7 +10,7 @@ namespace black {
 ApplicationShader::~ApplicationShader() = default;
 
 ApplicationShader::ApplicationShader(std::shared_ptr<ShaderProgram> impl)
-  : impl(std::move(impl)), ambientLightColor(Color::WHITE) {
+  : impl(std::move(impl)) {
 
 }
 
@@ -21,17 +21,13 @@ void ApplicationShader::use() {
     setCameraImpl(camera);
   }
 
-  if (directedLight) {
-    setLightImpl(directedLight);
-  }
-
   setModelMatrixImpl(model);
-  setAmbientLightImpl(ambientLightColor, ambientLightIntensity);
   setMaterialImpl(material);
 }
 
 ApplicationShader::ApplicationShader(const std::shared_ptr<ApplicationShader>& shader) {
-  this->impl = shader->impl;
+  this->impl = shader->impl->copy();
+  this->impl->link();
 }
 
 void ApplicationShader::setCamera(const std::shared_ptr<Camera> &newCamera) {
@@ -49,19 +45,12 @@ void ApplicationShader::setMaterial(const Material &newMaterial) {
   setMaterialImpl(newMaterial);
 }
 
-void ApplicationShader::setDirectedLight(std::shared_ptr<Light> light) {
-  directedLight = std::move(light);
-  setLightImpl(directedLight);
+void ApplicationShader::setDirectedLight(std::shared_ptr<DirectionLight> light) {
+  setLightImpl(light);
 }
 
-void ApplicationShader::setAmbientLight(Color color, float intensity) {
-  ambientLightIntensity = intensity;
-  ambientLightColor = color;
-  setAmbientLightImpl(ambientLightColor, ambientLightIntensity);
-}
-
-Color ApplicationShader::getAmbientLightColor() const {
-  return ambientLightColor;
+void ApplicationShader::setAmbientLight(const AmbientLight &light) {
+  setAmbientLightImpl(light);
 }
 
 }
