@@ -1,7 +1,10 @@
 #include "SelectedShader.h"
+#include "SelectableGameObject.h"
 
 #include <application/GameApplication.h>
 #include <tracer/RayTracer.h>
+#include <terrain/Terrain.h>
+#include <terrain/TerrainBuilder.h>
 
 #include <iostream>
 #include <memory>
@@ -11,11 +14,15 @@ using namespace black;
 
 class BlackEngineApplication : public GameApplication {
   std::shared_ptr<AbstractScene> scene;
-  std::shared_ptr<GameObject> selectedObject;
+  SelectableGameObject selected;
   std::shared_ptr<Camera> camera;
+  std::shared_ptr<Terrain> terrain;
   std::shared_ptr<GameObject> light;
+  std::shared_ptr<ApplicationShader> hoveredShader;
   std::shared_ptr<ApplicationShader> selectedShader;
-  RayTracer tracer;
+  std::unique_ptr<RayTracer> tracer;
+  Image cursorHovered;
+  Image cursorNormal;
 
   float cameraRadius = 10.0f;
   float cameraSpeed = 0.1f;
@@ -25,37 +32,77 @@ class BlackEngineApplication : public GameApplication {
 public:
   BlackEngineApplication() :
   GameApplication(std::string("BlackEngineApplication") + Constants::RuntimePlatformString,
-    800, 600, false), tracer(camera), scene(new SimpleScene("Test")) {
+    800, 600, false),
+    scene(new SimpleScene("Test")),
+    cursorHovered("resources/cursor_hovered.png"),
+    cursorNormal("resources/cursor_normal.png")
+    {}
+
+protected:
+  void onKeyReleased(KeyEvent keyEvent) override {
+    switch (keyEvent.key) {
+      case Key::ESCAPE:
+        this->stop();
+        break;
+      default:
+        return;
+    }
+  }
+
+  void onMouseButtonPressed(MouseButtonEvent event) override {
+    switch (event.button) {
+      case MouseButton::LEFT:
+        if (selected.isObjectSelected()) {
+          selected.unselect();
+        } else {
+          selected.select();
+        }
+        break;
+      case MouseButton::RIGHT:
+        break;
+      case MouseButton::MIDDLE:
+        break;
+    }
   }
 
 private:
   void handleInput() {
-
-    if (Input::IsKeyPressed(KEY_LEFT)) {
+    if (Input::IsKeyPressed(Key::LEFT)) {
       this->camera->strafeLeft(0.05f);
     }
-    if (Input::IsKeyPressed(KEY_RIGHT)) {
+    if (Input::IsKeyPressed(Key::RIGHT)) {
       this->camera->strafeRight(0.05f);
     }
-    if (Input::IsKeyPressed(KEY_UP)) {
+    if (Input::IsKeyPressed(Key::UP)) {
       this->camera->moveForward(0.1f);
     }
-    if (Input::IsKeyPressed(KEY_DOWN)) {
+    if (Input::IsKeyPressed(Key::DOWN)) {
       this->camera->moveBackward(0.1f);
     }
 
-    if (Input::IsKeyPressed(KEY_ESCAPE)) {
-      this->stop();
+    if (Input::IsKeyPressed(Key::ENTER)) {
+      if (selected.getObject() && selected.isObjectSelected()) {
+        this->scene->removeObject(selected.getObject()->getName());
+        selected.resetObject();
+      }
+    }
+
+    if (Input::IsKeyPressed(Key::BACKSPACE)) {
+      this->scene->removeObject(light->getName());
     }
   }
 
   std::shared_ptr<GameObject> findSelectedObject(const Ray &ray) {
     for (auto i = scene->getObjects().rbegin(); i != scene->getObjects().rend(); i++) {
       const auto &object = *i;
+
+      if (object == this->terrain) {
+        continue;
+      }
+
       if (auto bounds = object->get<BoundingComponent>(); bounds != nullptr) {
-        if (bounds->isIntersectsWith(ray)) {
-          selectedObject = object;
-          return selectedObject;
+        if (!bounds->getIntersectionsWith(ray).empty()) {
+          return object;
         }
       }
     }
@@ -64,7 +111,7 @@ private:
   }
 
   void update(float dt) override {
-    this->handleInput();
+    handleInput();
 
     auto time = this->timer->getUptime();
 
@@ -76,21 +123,34 @@ private:
       this->light->transform->setPosition({camX, 10.3f, camZ});
     }
 
-    // Reset selected object
-    if (this->selectedObject) {
-      this->selectedObject->get<ModelComponent>()->setShader(nullptr);
-      this->selectedObject = nullptr;
-    }
+    bool wasHovered = selected.getObject() != nullptr;
 
-    auto ray = tracer.calculateRay(Input::GetMouseX(), Input::GetMouseY());
+    auto ray = tracer->calculateRay(Input::GetMouseX(), Input::GetMouseY());
+
+    auto hoveredObject = findSelectedObject(ray);
+    auto hovered = hoveredObject != nullptr;
 
     // Set highlighting shader if some object was selected
-    if (auto selected = findSelectedObject(ray); selected != nullptr) {
-      //logger->debug(fmt::format("Selected object: {}", selectedObject->getName()));
-      selected->get<ModelComponent>()->setShader(selectedShader);
+    if (hoveredObject && !selected.isObjectSelected()) {
+      selected.setObject(hoveredObject);
+    } else if (!hoveredObject && !selected.isObjectSelected()) {
+      selected.resetObject();
+    } else if (selected.getObject() && selected.isObjectSelected()) {
+      auto intersectPoints = this->terrain->getBounding()->getIntersectionsWith(ray);
+      if (!intersectPoints.empty()) {
+        auto point = intersectPoints[0];
+
+        auto position = glm::vec3(point.x, terrain->getTerrain()->getHeightAt(point.x, point.y), point.z);
+        selected.getObject()->transform->setPosition(position);
+      }
     }
 
     this->renderer->render(this->scene);
+
+    if (hovered != wasHovered) {
+      auto cursor = hovered ? "Hovered" : "Normal";
+      Input::SetCursor(cursor);
+    }
   }
 
   void initializeResources() override {
@@ -99,6 +159,15 @@ private:
   }
 
   void initScene() {
+    auto builder = Engine::GetTerrainBuilder("Flat");
+    TerrainBuilder::Data data;
+    data.width = 1000;
+    data.height = 1000;
+    data.lod = 5.0f;
+
+    terrain = builder->build(data);
+    this->scene->addObject(terrain);
+
     auto cottageModel = ModelManager::CreateFromFile("resources/cottage_obj.obj");
     auto cubeModel = ModelManager::CreateFromFile("resources/cube.obj");
 
@@ -120,22 +189,34 @@ private:
         std::make_shared<Sphere>(cube->transform, 1.0f)));
 
     light = std::make_shared<GameObject>("Sun");
-    light->transform->setPosition({10.0f, 200.0f, 0.0f});
     light->add(std::make_shared<LightComponent>(LightType::DIRECTIONAL));
+    light->transform->setPosition({10.0f, 200.0f, 0.0f});
     light->get<LightComponent>()->setColor(Color{1.0f, 0.8f, 0.8f});
 
     scene->addObjects({light, cottage, cube});
 
     this->camera = std::make_shared<Camera>(ProjectionType::PERSPECTIVE);
     this->camera->setPosition({0.0f, 10.0f, 1.0f});
-    tracer.setCamera(camera);
+    this->camera->setLookAt({0.0f, -1.0f, 0.0f});
+
+    this->tracer = std::make_unique<RayTracer>(camera, window);
 
     scene->setCurrentCamera(camera);
+
+    Input::AddCursor("Hovered", cursorHovered);
+    Input::AddCursor("Normal", cursorNormal);
+    Input::SetCursor("Normal");
   }
 
   void loadShaders() {
     this->selectedShader = util::ShaderManager::CreateApplicationShaderFromFile<SelectedShader>(
       "resources/selected_vertex.glsl", "resources/selected_fragment.glsl");
+    this->hoveredShader = std::make_shared<SelectedShader>(this->selectedShader);
+
+    this->hoveredShader->setAmbientLight(Color::RED, 0.1f);
+    this->selectedShader->setAmbientLight(Color::GREEN, 0.1f);
+
+    this->selected = SelectableGameObject(hoveredShader, selectedShader);
   }
 };
 
@@ -144,7 +225,7 @@ int main(int argc, char **argv) {
     BlackEngineApplication application;
     application.start();
   } catch (const std::exception &e) {
-    Logger::Get("Initialization example")->critical("Initialization Example error: ", e.what());
+    Logger::Get("Initialization example")->critical("Initialization Example error: {}", e.what());
     return 1;
   }
 
