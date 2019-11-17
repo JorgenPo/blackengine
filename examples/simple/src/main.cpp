@@ -80,7 +80,7 @@ private:
       this->camera->moveBackward(0.1f);
     }
 
-    if (Input::IsKeyPressed(Key::ENTER)) {
+    if (Input::IsKeyPressed(Key::BACKSPACE)) {
       if (selected.getObject() && selected.isObjectSelected()) {
         this->scene->removeObject(selected.getObject()->getName());
         selected.resetObject();
@@ -192,13 +192,11 @@ private:
       std::make_shared<BoundingComponent>(
         std::make_shared<Sphere>(cube->transform, 1.0f)));
 
-    light = std::make_shared<DirectedLight>(Color::YELLOW, 1.0f, 0.1f,
+    light = std::make_shared<DirectedLight>(Color::RED, 1.0f, 0.1f,
       glm::vec3{0.2f, -1.0f, -1.0f});
 
     auto lightObject = std::make_shared<GameObject>("Sun");
     lightObject->add(light);
-
-    light->setColor(Color{1.0f, 0.8f, 0.8f});
 
     scene->addObjects({lightObject, cottage, cube});
 
