@@ -7,7 +7,6 @@
 
 #include "../Camera.h"
 
-#include <BlackEngine/Light.h>
 #include <BlackEngine/components/TransformComponent.h>
 #include <BlackEngine/components/LightComponent.h>
 #include <BlackEngine/render/Material.h>
@@ -31,19 +30,30 @@ void SimpleShader::setAmbientLightImpl(const AmbientLight &light) {
   this->impl->setUniformVariable("ambientLight.color", light.color.getRgb());
 }
 
-void SimpleShader::setLightImpl(const std::shared_ptr<DirectionLight> &light) {
+void SimpleShader::setMaterialImpl(const Material &material) {
+  this->impl->setUniformVariable("material.color", material.color.getRgb());
+  this->impl->setUniformVariable("material.spectacularFactor", material.spectacularFactor);
+}
+
+void SimpleShader::setDirectedLightImpl(const std::shared_ptr<DirectedLight> &light) {
+  this->impl->setUniformVariable("light.enabled", light != nullptr);
+
+  if (light) {
+    this->impl->setUniformVariable("light.direction", light->getDirection());
+    this->impl->setUniformVariable("light.color", light->getColor().getRgb());
+    this->impl->setUniformVariable("light.diffuseIntensity", light->getIntensity());
+    this->impl->setUniformVariable("light.spectacularIntensity", light->getSpectacularIntensity());
+  }
+}
+
+void SimpleShader::setPointLightImpl(const std::shared_ptr<PointLight> &light) {
   this->impl->setUniformVariable("light.enabled", light != nullptr);
 
   if (light) {
     this->impl->setUniformVariable("light.position", light->getPosition());
-    this->impl->setUniformVariable("light.color", light->getComponent()->getColor().getRgb());
-    this->impl->setUniformVariable("light.diffuseIntensity", light->getComponent()->getIntensity());
-    this->impl->setUniformVariable("light.spectacularIntensity", light->getComponent()->getSpectacularIntensity());
+    this->impl->setUniformVariable("light.color", light->getColor().getRgb());
+    this->impl->setUniformVariable("light.diffuseIntensity", light->getIntensity());
+    this->impl->setUniformVariable("light.spectacularIntensity", light->getSpectacularIntensity());
   }
-}
-
-void SimpleShader::setMaterialImpl(const Material &material) {
-  this->impl->setUniformVariable("material.color", material.color.getRgb());
-  this->impl->setUniformVariable("material.spectacularFactor", material.spectacularFactor);
 }
 }

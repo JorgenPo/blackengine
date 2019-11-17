@@ -9,12 +9,12 @@
 
 #include <BlackEngine/GameObject.h>
 #include <BlackEngine/Camera.h>
-#include <BlackEngine/Light.h>
 
 #include <BlackEngine/render/Mesh.h>
 #include <BlackEngine/render/Material.h>
 #include <BlackEngine/components/ModelComponent.h>
 #include <BlackEngine/components/TransformComponent.h>
+#include <BlackEngine/components/LightComponent.h>
 
 #include <BlackEngine/shader/SimpleShader.h>
 #include <BlackEngine/scene/AbstractScene.h>
@@ -98,7 +98,7 @@ void GLRenderer::renderObject(const std::shared_ptr<GameObject> &object, const s
   }
 
   this->currentShader->setModelMatrix(object->transform->getModelMatrix());
-  this->currentShader->setDirectedLight(this->currentLight);
+  this->currentShader->setLight(this->currentLight);
 
   for (const auto &part : modelComponent->getParts()) {
     renderPart(part);

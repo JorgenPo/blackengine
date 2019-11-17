@@ -5,7 +5,6 @@
 #include "SimpleScene.h"
 
 #include "../GameObject.h"
-#include <BlackEngine/Light.h>
 #include <BlackEngine/components/LightComponent.h>
 
 #include <algorithm>
@@ -15,7 +14,7 @@ namespace black {
 void SimpleScene::addObject(std::shared_ptr<GameObject> object) {
   if (object && !hasObject(object->getName())) {
     if (auto lightComponent = object->get<LightComponent>(); lightComponent != nullptr) {
-      this->light = std::make_shared<DirectionLight>(object);
+      this->light = lightComponent;
     }
 
     objects.emplace_back(std::move(object));
@@ -32,7 +31,7 @@ void SimpleScene::removeObject(std::string_view name) {
   auto itemToDelete = getObjectIterator(name);
 
   if (itemToDelete != objects.end()) {
-    if (*itemToDelete == light->getObject()) {
+    if ((*itemToDelete)->get<LightComponent>() == light) {
       light.reset();
     }
 
@@ -71,7 +70,7 @@ bool SimpleScene::hasLight() const {
   return light != nullptr;
 }
 
-std::shared_ptr<DirectionLight> SimpleScene::getLight() const {
+std::shared_ptr<LightComponent> SimpleScene::getLight() const {
   return light;
 }
 

@@ -41,14 +41,14 @@ vec3 calculateSpectacularColor(vec3 normal, vec3 lightDir) {
 
 void main()
 {
-    vec3 lightDir = normalize(light.position - Position);
+    vec3 toLightDir = -light.direction;
     vec3 normal = normalize(Normal);
 
     vec3 colorSum = ambientLight.color * ambientLight.intensity;
 
     if (light.enabled) {
-        colorSum += calculateDiffuseColor(normal, lightDir);
-        colorSum += calculateSpectacularColor(normal, lightDir);
+        colorSum += calculateDiffuseColor(normal, toLightDir);
+        colorSum += calculateSpectacularColor(normal, toLightDir);
     }
 
     vec4 objectColor = vec4(material.color, 1.0f) + texture(diffuse, TexCoord);

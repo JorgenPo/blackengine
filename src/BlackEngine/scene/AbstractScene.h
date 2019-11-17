@@ -7,7 +7,7 @@
 
 #include "../common/CommonHeaders.h"
 #include <BlackEngine/common/Color.h>
-#include <BlackEngine/Light.h>
+#include <BlackEngine/components/LightComponent.h>
 
 #include <memory>
 #include <vector>
@@ -15,7 +15,6 @@
 namespace black {
 class GameObject;
 class Camera;
-class DirectionLight;
 
 class BLACK_EXPORTED AbstractScene {
   std::shared_ptr<Camera> currentCamera;
@@ -41,10 +40,10 @@ public:
   [[nodiscard]] virtual bool hasObject(std::string_view name) const = 0;
 
   [[nodiscard]] virtual bool hasLight() const = 0;
-  [[nodiscard]] virtual std::shared_ptr<DirectionLight> getLight() const = 0;
+  [[nodiscard]] virtual std::shared_ptr<LightComponent> getLight() const = 0;
 
   virtual void setAmbientLight(AmbientLight light);
-  virtual const AmbientLight &getAmbientLight() const noexcept;
+  [[nodiscard]] virtual const AmbientLight &getAmbientLight() const noexcept;
 };
 
 }

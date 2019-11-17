@@ -12,7 +12,7 @@ using namespace black;
 class SelectedShader : public ApplicationShader {
 public:
   explicit SelectedShader(const std::shared_ptr<ShaderProgram> &impl);
-  SelectedShader(std::shared_ptr<ApplicationShader> shader);
+  explicit SelectedShader(const std::shared_ptr<ApplicationShader>& shader);
 
   void setCameraImpl(const std::shared_ptr<Camera> &camera) override;
 
@@ -22,7 +22,12 @@ public:
 
   void setColor(Color color, float intensity);
 
-  void setLightImpl(const std::shared_ptr<DirectionLight> &light) override;
+private:
+  void setDirectedLightImpl(const std::shared_ptr<DirectedLight> &light) override;
+
+  void setPointLightImpl(const std::shared_ptr<PointLight> &light) override;
+
+public:
 
   void setMaterialImpl(const Material &material) override;
 };

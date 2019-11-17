@@ -3,46 +3,30 @@
 //
 
 #include "LightComponent.h"
+#include "TransformComponent.h"
 
 namespace black {
 
 LightComponent::LightComponent(
-        LightType type,
-        float intensity,
         const Color &color,
-        const glm::vec3 &direction)
+        float intensity,
+        float spectacularIntensity)
 
-  : type(type), intensity(intensity), color(color), direction(direction), spectacularIntensity(1.0f)
+  : color(color), intensity(intensity), spectacularIntensity(spectacularIntensity)
 {
 
-}
-
-LightType LightComponent::getType() const {
-    return type;
 }
 
 float LightComponent::getIntensity() const {
   return intensity;
 }
 
-const glm::vec3 &LightComponent::getDirection() const {
-  return direction;
-}
-
 const Color &LightComponent::getColor() const {
   return color;
 }
 
-void LightComponent::setType(LightType newType) {
-  type = newType;
-}
-
 void LightComponent::setIntensity(float newStrength) {
   intensity = newStrength;
-}
-
-void LightComponent::setDirection(const glm::vec3 &newDirection) {
-  direction = newDirection;
 }
 
 void LightComponent::setColor(const Color &newColor) {
@@ -57,5 +41,44 @@ void LightComponent::setSpectacularIntensity(float newIntensity) {
   spectacularIntensity = newIntensity;
 }
 
+///////////////////////////////////////////////////////////////////////////////////////
 
+DirectedLight::DirectedLight(
+  const Color &color,
+  float intensity,
+  float spectacularIntensity,
+  const glm::vec3 &direction)
+  : LightComponent(color, intensity, spectacularIntensity)
+  , direction(glm::normalize(direction)) {
+
+}
+
+const glm::vec3 &DirectedLight::getDirection() const {
+  return direction;
+}
+
+void DirectedLight::setDirection(const glm::vec3 &newDirection) {
+  direction = glm::normalize(newDirection);
+}
+
+LightType DirectedLight::getType() const {
+  return LightType::DIRECTED;
+}
+
+PointLight::PointLight(
+  const Color &color,
+  float intensity,
+  float spectacularIntensity,
+  std::shared_ptr<TransformComponent> transform)
+  : LightComponent(color, intensity, spectacularIntensity), transform(std::move(transform)) {
+
+}
+
+const glm::vec3 &PointLight::getPosition() const noexcept {
+  return transform->getPosition();
+}
+
+LightType PointLight::getType() const {
+  return LightType::POINT;
+}
 }

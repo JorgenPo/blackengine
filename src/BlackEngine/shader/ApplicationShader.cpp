@@ -5,6 +5,9 @@
 #include "ApplicationShader.h"
 #include "ShaderProgram.h"
 
+#include <BlackEngine/components/LightComponent.h>
+#include <BlackEngine/log/Logger.h>
+
 namespace black {
 
 ApplicationShader::~ApplicationShader() = default;
@@ -45,8 +48,18 @@ void ApplicationShader::setMaterial(const Material &newMaterial) {
   setMaterialImpl(newMaterial);
 }
 
-void ApplicationShader::setDirectedLight(std::shared_ptr<DirectionLight> light) {
-  setLightImpl(light);
+void ApplicationShader::setLight(const std::shared_ptr<LightComponent>& light) {
+  switch (light->getType()) {
+    case LightType::DIRECTED:
+      setDirectedLightImpl(std::dynamic_pointer_cast<DirectedLight>(light));
+      break;
+    case LightType::SPOT:
+      Logger::Get("ApplicationShader")->critical("Spot light is NOT IMPLEMENTED");
+      break;
+    case LightType::POINT:
+      setPointLightImpl(std::dynamic_pointer_cast<PointLight>(light));
+      break;
+  }
 }
 
 void ApplicationShader::setAmbientLight(const AmbientLight &light) {

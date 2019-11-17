@@ -22,7 +22,12 @@ public:
 
   void setAmbientLightImpl(const AmbientLight &light) override;
 
-  void setLightImpl(const std::shared_ptr<DirectionLight> &light) override;
+private:
+  void setDirectedLightImpl(const std::shared_ptr<DirectedLight> &light) override;
+
+  void setPointLightImpl(const std::shared_ptr<PointLight> &light) override;
+
+public:
 
   void setMaterialImpl(const Material &material) override;
 };
