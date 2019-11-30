@@ -32,21 +32,21 @@ void GLMesh::createMesh() {
   glBindBuffer(GL_ARRAY_BUFFER, this->positionVbo);
   glBufferData(GL_ARRAY_BUFFER, this->vertices.size() * sizeof(float), this->vertices.data(), GL_STATIC_DRAW);
 
-  glVertexAttribPointer(0, this->polygonSize, GL_FLOAT, GL_FALSE, this->polygonSize * sizeof(float), nullptr);
+  glVertexAttribPointer(0, this->polygonSize, GL_FLOAT, GL_FALSE, 0, nullptr);
   glEnableVertexAttribArray(0);
 
   // Texture coords
   glBindBuffer(GL_ARRAY_BUFFER, this->textureVbo);
   glBufferData(GL_ARRAY_BUFFER, this->textureCoords.size() * sizeof(float), this->textureCoords.data(), GL_STATIC_DRAW);
 
-  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), nullptr);
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
   glEnableVertexAttribArray(1);
 
   // Normals coords
   glBindBuffer(GL_ARRAY_BUFFER, this->normalVbo);
   glBufferData(GL_ARRAY_BUFFER, this->normals.size() * sizeof(float), this->normals.data(), GL_STATIC_DRAW);
 
-  glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+  glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
   glEnableVertexAttribArray(2);
 }
 
