@@ -49,6 +49,11 @@ void ApplicationShader::setMaterial(const Material &newMaterial) {
 }
 
 void ApplicationShader::setLight(const std::shared_ptr<LightComponent>& light) {
+  if (light == nullptr) {
+    setDirectedLightImpl(nullptr);
+    return;
+  }
+
   switch (light->getType()) {
     case LightType::DIRECTED:
       setDirectedLightImpl(std::dynamic_pointer_cast<DirectedLight>(light));
