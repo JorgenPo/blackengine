@@ -49,7 +49,7 @@ protected:
     }
   }
 
-  void onMouseButtonPressed(MouseButtonEvent event) override {
+  void onMouseButtonPressed(const MouseButtonEvent &event) override {
     switch (event.button) {
       case MouseButton::LEFT:
         if (selected.isObjectSelected()) {
@@ -67,20 +67,20 @@ protected:
 
 private:
   void handleInput() {
-    if (Input::IsKeyPressed(Key::LEFT)) {
+    if (input->isKeyPressed(Key::LEFT)) {
       this->camera->strafeLeft(0.05f);
     }
-    if (Input::IsKeyPressed(Key::RIGHT)) {
+    if (input->isKeyPressed(Key::RIGHT)) {
       this->camera->strafeRight(0.05f);
     }
-    if (Input::IsKeyPressed(Key::UP)) {
+    if (input->isKeyPressed(Key::UP)) {
       this->camera->moveForward(0.1f);
     }
-    if (Input::IsKeyPressed(Key::DOWN)) {
+    if (input->isKeyPressed(Key::DOWN)) {
       this->camera->moveBackward(0.1f);
     }
 
-    if (Input::IsKeyPressed(Key::BACKSPACE)) {
+    if (input->isKeyPressed(Key::BACKSPACE)) {
       if (selected.getObject() && selected.isObjectSelected()) {
         this->scene->removeObject(selected.getObject()->getName());
         selected.resetObject();
@@ -94,9 +94,9 @@ private:
         light->getSpectacularIntensity() * multiplier);
     };
 
-    if (Input::IsKeyPressed(Key::RIGHT_SHIFT)) {
+    if (input->isKeyPressed(Key::RIGHT_SHIFT)) {
       multiplyLightIntensityBy(1.1f);
-    } else if (Input::IsKeyPressed(Key::LEFT_SHIFT)) {
+    } else if (input->isKeyPressed(Key::LEFT_SHIFT)) {
       multiplyLightIntensityBy(0.9f);
     }
   }
@@ -129,7 +129,7 @@ private:
 
     bool wasHovered = selected.getObject() != nullptr;
 
-    auto ray = tracer->calculateRay(Input::GetMouseX(), Input::GetMouseY());
+    auto ray = tracer->calculateRay(input->getMouseX(), input->getMouseY());
 
     auto hoveredObject = findSelectedObject(ray);
     auto hovered = hoveredObject != nullptr;
@@ -153,7 +153,7 @@ private:
 
     if (hovered != wasHovered) {
       auto cursor = hovered ? "Hovered" : "Normal";
-      Input::SetCursor(cursor);
+      input->setCursor(cursor);
     }
   }
 
@@ -200,17 +200,22 @@ private:
 
     scene->addObjects({lightObject, cottage, cube});
 
-    this->camera = std::make_shared<Camera>(ProjectionType::PERSPECTIVE);
-    this->camera->setPosition({0.0f, 10.0f, 1.0f});
-    this->camera->setLookAt({0.0f, -1.0f, 0.0f});
+    Camera::Data cameraData{
+      window,
+      ProjectionType::PERSPECTIVE,
+      {0.0f, 10.0f, 1.0f}};
+    cameraData.lookAt = {0.0f, -1.0f, 0.0f};
+
+    this->camera = std::make_shared<Camera>(std::move(cameraData));
+    this->camera->getRenderTarget()->subscribe(camera);
 
     this->tracer = std::make_unique<RayTracer>(camera, window);
 
     scene->setCurrentCamera(camera);
 
-    Input::AddCursor("Hovered", cursorHovered);
-    Input::AddCursor("Normal", cursorNormal);
-    Input::SetCursor("Normal");
+    input->addCursor("Hovered", cursorHovered);
+    input->addCursor("Normal", cursorNormal);
+    input->setCursor("Normal");
   }
 
   void loadShaders() {
@@ -230,8 +235,8 @@ private:
 
 int main(int argc, char **argv) {
   try {
-    BlackEngineApplication application;
-    application.start();
+    auto application = std::make_shared<BlackEngineApplication>();
+    application->start();
   } catch (const std::exception &e) {
     Logger::Get("Initialization example")->critical("Initialization Example error: {}", e.what());
     return 1;

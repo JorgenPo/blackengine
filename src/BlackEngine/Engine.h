@@ -43,9 +43,6 @@ private:
   std::shared_ptr<RenderSystemInterface> currentRenderSystem;
   std::shared_ptr<SystemInterface> currentSystemInterface;
 
-  std::shared_ptr<KeyboardEventEmitter> keyboard;
-  std::shared_ptr<MouseEventEmitter> mouse;
-
   /**
    * This method is private. Use appropriate static methods.
    *

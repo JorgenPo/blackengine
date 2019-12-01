@@ -10,6 +10,10 @@
 #include "../common/CommonHeaders.h"
 #include "../exceptions/Exception.h"
 
+#include <BlackEngine/input/MouseEventPublisher.h>
+#include <BlackEngine/input/KeyboardEventPublisher.h>
+#include <BlackEngine/input/InputSystemInterface.h>
+
 namespace black {
 
 class InputSystemInterface;
@@ -36,7 +40,10 @@ struct WindowData {
 /**
  * Interface for render window.
  */
-class BLACK_EXPORTED AbstractRenderWindow : public RenderTargetInterface {
+class BLACK_EXPORTED AbstractRenderWindow :
+  public RenderTargetInterface,
+  public InputSystemInterface {
+
 protected:
   WindowData data;
 

@@ -22,4 +22,8 @@ struct MouseButtonEvent {
   int modifiers; // see KEY_MODIFIER_ enum in Keyboard.h
 };
 
+struct MouseMovedEvent {
+  float x, y;
+};
+
 #endif //BLACKENGINE_MOUSE_H

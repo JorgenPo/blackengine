@@ -11,7 +11,7 @@
 #include <BlackEngine/input/InputSystemInterface.h>
 
 namespace black {
-class GLFWWindow : public AbstractRenderWindow, public InputSystemInterface {
+class GLFWWindow : public AbstractRenderWindow {
   using Cursor = std::unique_ptr<GLFWcursor, void (*)(GLFWcursor *)>;
 
   std::unique_ptr<GLFWwindow, void (*)(GLFWwindow *)> window;
@@ -62,6 +62,10 @@ public:
   void addCursor(std::string name, const Image &image) override;
 
   void setCursor(std::string name) override;
+
+  float getMouseX() const noexcept override;
+
+  float getMouseY() const noexcept override;
 
 private:
   void initializeContext();

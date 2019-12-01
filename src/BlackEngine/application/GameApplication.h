@@ -32,7 +32,6 @@
 #include <BlackEngine/performance/PerformanceCounter.h>
 
 #include <BlackEngine/util/ModelManager.h>
-#include <BlackEngine/util/Input.h>
 #include <BlackEngine/util/ShaderManager.h>
 
 namespace black {
@@ -40,7 +39,9 @@ namespace black {
 /**
  * Single window and real time updating application.
  */
-class BLACK_EXPORTED GameApplication : public AbstractApplication {
+class BLACK_EXPORTED GameApplication :
+  public AbstractApplication,
+  public std::enable_shared_from_this<GameApplication> {
 protected:
   std::shared_ptr<AbstractRenderWindow> window;
   std::shared_ptr<InputSystemInterface> input;

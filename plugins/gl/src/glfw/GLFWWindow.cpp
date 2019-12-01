@@ -10,7 +10,6 @@
 #include <BlackEngine/render/RenderSystemInterface.h>
 #include <BlackEngine/SystemInterface.h>
 
-#include <BlackEngine/util/Input.h>
 #include <BlackEngine/log/Logger.h>
 
 namespace black {
@@ -157,24 +156,42 @@ void GLFWWindow::initializeWindowAndContext() {
     throw RenderWindowInitializationException("Failed to initialize glfw window");
   }
 
+  glfwSetWindowUserPointer(glfwWindow, this);
+
   this->window = std::unique_ptr<GLFWwindow, void (*)(GLFWwindow *)>(glfwWindow, glfwDestroyWindow);
 
-  glfwSetFramebufferSizeCallback(this->window.get(), [](GLFWwindow */*window*/, int width, int height) {
+  glfwSetFramebufferSizeCallback(this->window.get(), [](GLFWwindow *win, int width, int height) {
     glViewport(0, 0, width, height);
+    auto that = (GLFWWindow *)(glfwGetWindowUserPointer(win));
+
+    that->data.width = width;
+    that->data.height = height;
+
+    dynamic_cast<RenderTargetInterface*>(that)->publish((float) width, (float) height);
   });
 
   glfwSetCursorPosCallback(this->window.get(), [](GLFWwindow *win, double x, double y) {
-    Input::OnMousePositionChanged(x, y);
+    auto that = (GLFWWindow*)(glfwGetWindowUserPointer(win));
+    that->mouseX = x;
+    that->mouseY = y;
+
+    that->publishMouseMovedEvent(MouseMovedEvent{
+      static_cast<float>(x), static_cast<float>(y)
+    });
   });
 
   glfwSetKeyCallback(this->window.get(), [](GLFWwindow *win, int key, int scanCode, int action, int modifiers) {
     KeyEvent event{Key{key}, scanCode, KeyAction{action}, modifiers};
-    Engine::GetKeyboard()->emitKeyPressedEvent(event);
+    auto that = (GLFWWindow*)(glfwGetWindowUserPointer(win));
+
+    that->publishKeyEvent(event);
   });
 
   glfwSetMouseButtonCallback(this->window.get(), [](GLFWwindow *win, int button, int action, int modifiers) {
     MouseButtonEvent event{MouseButton{button}, MouseButtonAction{action}, modifiers};
-    Engine::GetMouse()->emitMouseButtonEvent(event);
+    auto that = (GLFWWindow*)(glfwGetWindowUserPointer(win));
+
+    that->publishMouseButtonEvent(event);
   });
 
   setRenderTargetCurrent();
@@ -184,6 +201,14 @@ void GLFWWindow::initializeWindowAndContext() {
     glfwTerminate();
     throw RenderWindowInitializationException("Failed to initialize OpenGL Context");
   }
+}
+
+float GLFWWindow::getMouseX() const noexcept {
+  return static_cast<float>(mouseX);
+}
+
+float GLFWWindow::getMouseY() const noexcept {
+  return static_cast<float>(mouseY);
 }
 
 }

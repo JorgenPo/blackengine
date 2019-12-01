@@ -9,7 +9,7 @@
 
 #include <BlackEngine/render/AbstractRenderWindow.h>
 #include <BlackEngine/performance/PerformanceCounter.h>
-#include <BlackEngine/util/Screen.h>
+#include <BlackEngine/input/InputSystemInterface.h>
 
 
 namespace black {
@@ -61,8 +61,8 @@ void GameApplication::init() {
 
     this->renderer = renderSystem->createRenderer(window);
 
-    Input::Initialize(this->input);
-    Screen::Initialize(this->renderer);
+    this->window->subscribeForKeyboardEvents(shared_from_this());
+    this->window->subscribeForMouseButtonEvent(shared_from_this());
   } catch (const Exception &e) {
     throw ApplicationInitializationException(e.getMessage());
   }

@@ -10,8 +10,8 @@
 #include <BlackEngine/exceptions/Exception.h>
 #include <BlackEngine/log/Logger.h>
 
-#include <BlackEngine/input/KeyboardEventListener.h>
-#include <BlackEngine/input/MouseEventListener.h>
+#include <BlackEngine/input/KeyboardEventSubscriber.h>
+#include <BlackEngine/input/MouseEventSubscriber.h>
 
 namespace black {
 
@@ -24,13 +24,15 @@ public:
  * Abstract engine application.
  * Concrete subclasses must define some special application loop and window counts.
  */
-class BLACK_EXPORTED AbstractApplication : protected KeyboardEventListener, protected MouseEventListener {
+class BLACK_EXPORTED AbstractApplication : public KeyboardEventSubscriber, public MouseEventSubscriber {
 protected:
   std::string name;
   std::shared_ptr<Logger> logger;
   int windowWidth;
   int windowHeight;
   bool isWindowFullScreen;
+  float mouseX;
+  float mouseY;
 
 public:
   explicit AbstractApplication(const std::string &name, int windowWidth, int windowHeight, bool isFullScreen);
@@ -71,9 +73,12 @@ protected:
   void onKeyReleased(KeyEvent keyEvent) override;
   void onKeyRepeat(KeyEvent keyEvent) override;
 
-  void onMouseButtonEvent(MouseButtonEvent event) override;
-  void onMouseButtonPressed(MouseButtonEvent event) override;
-  void onMouseButtonReleased(MouseButtonEvent event) override;
+  void onMouseButtonEvent(const MouseButtonEvent &event) override;
+  void onMouseButtonPressed(const MouseButtonEvent &event) override;
+  void onMouseButtonReleased(const MouseButtonEvent &event) override;
+
+public:
+  void onMouseMoved(const MouseMovedEvent &event) override;
 
 private:
   /**

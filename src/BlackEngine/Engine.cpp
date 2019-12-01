@@ -1,11 +1,8 @@
 #include "Engine.h"
 #include "common/Config.h"
 #include "SystemInterface.h"
-#include "common/Config.h"
 
 #include "log/Logger.h"
-#include "input/KeyboardEventEmitter.h"
-#include "input/MouseEventEmitter.h"
 #include "plugins/PluginInterface.h"
 #include "plugins/PluginManager.h"
 #include "render/RenderSystemInterface.h"
@@ -17,9 +14,7 @@ namespace black {
 
 Engine::Engine() :
 pluginManager(),
-renderSystems(),
-keyboard(std::make_shared<KeyboardEventEmitter>()),
-mouse(std::make_shared<MouseEventEmitter>()) {
+renderSystems() {
 
   this->logger = Logger::Get("Engine");
 
@@ -192,14 +187,6 @@ void Engine::setDefaultSystemInterface() {
   this->currentSystemInterface = this->systemInterfaces.begin()->second;
 
   logger->info("Using '{0}' system interface as default", this->currentSystemInterface->getName());
-}
-
-std::shared_ptr<KeyboardEventEmitter> Engine::GetKeyboard() noexcept {
-  return Engine::GetInstance()->keyboard;
-}
-
-std::shared_ptr<MouseEventEmitter> Engine::GetMouse() noexcept {
-  return Engine::GetInstance()->mouse;
 }
 
 

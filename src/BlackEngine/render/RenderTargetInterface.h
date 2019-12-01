@@ -7,14 +7,23 @@
 
 #include "../common/CommonHeaders.h"
 
+#include <BlackEngine/common/events/EventPublisher.h>
+
 namespace black {
+
+struct RenderTargetSizeChanged {
+  float width;
+  float height;
+};
 
 /**
  * Represents an object on which render can render.
  */
-class RenderTargetInterface {
+class RenderTargetInterface : public EventPublisher<RenderTargetSizeChanged> {
 
 public:
+  using EventPublisher<RenderTargetSizeChanged>::publish;
+
   /**
    * Updates a renderer target.
    */

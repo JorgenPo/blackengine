@@ -5,8 +5,6 @@
 #include "AbstractApplication.h"
 #include "../Engine.h"
 
-#include <BlackEngine/util/Input.h>
-
 namespace black {
 
 AbstractApplication::AbstractApplication(const std::string &name, int windowWidth, int windowHeight, bool isFullScreen)
@@ -83,15 +81,15 @@ void AbstractApplication::onKeyRepeat(KeyEvent keyEvent) {
 
 }
 
-void AbstractApplication::onMouseButtonEvent(MouseButtonEvent event) {
+void AbstractApplication::onMouseButtonEvent(const MouseButtonEvent &event) {
 
 }
 
-void AbstractApplication::onMouseButtonPressed(MouseButtonEvent event) {
+void AbstractApplication::onMouseButtonPressed(const MouseButtonEvent &event) {
 
 }
 
-void AbstractApplication::onMouseButtonReleased(MouseButtonEvent event) {
+void AbstractApplication::onMouseButtonReleased(const MouseButtonEvent &event) {
 
 }
 
@@ -101,9 +99,11 @@ void AbstractApplication::initEngine() {
   Engine::Initialize();
 
   this->logger->info("Initializing application resources");
+}
 
-  Engine::GetKeyboard()->listenForKeyboardEvents(this);
-  Engine::GetMouse()->listenForMouseEvents(this);
+void AbstractApplication::onMouseMoved(const MouseMovedEvent &event) {
+  mouseX = event.x;
+  mouseY = event.y;
 }
 
 ApplicationInitializationException::ApplicationInitializationException(const std::string &message)
