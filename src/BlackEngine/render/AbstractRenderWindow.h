@@ -41,8 +41,7 @@ struct WindowData {
  * Interface for render window.
  */
 class BLACK_EXPORTED AbstractRenderWindow :
-  public RenderTargetInterface,
-  public InputSystemInterface {
+  public RenderTargetInterface {
 
 protected:
   WindowData data;

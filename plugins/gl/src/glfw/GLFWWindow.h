@@ -11,7 +11,7 @@
 #include <BlackEngine/input/InputSystemInterface.h>
 
 namespace black {
-class GLFWWindow : public AbstractRenderWindow {
+class GLFWWindow : public AbstractRenderWindow, public InputSystemInterface {
   using Cursor = std::unique_ptr<GLFWcursor, void (*)(GLFWcursor *)>;
 
   std::unique_ptr<GLFWwindow, void (*)(GLFWwindow *)> window;
