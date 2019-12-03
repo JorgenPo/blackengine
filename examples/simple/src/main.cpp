@@ -102,21 +102,7 @@ private:
   }
 
   std::shared_ptr<GameObject> findSelectedObject(const Ray &ray) {
-    for (auto i = scene->getObjects().rbegin(); i != scene->getObjects().rend(); i++) {
-      const auto &object = *i;
-
-      if (object == this->terrain) {
-        continue;
-      }
-
-      if (auto bounds = object->get<BoundingComponent>(); bounds != nullptr) {
-        if (!bounds->getIntersectionsWith(ray).empty()) {
-          return object;
-        }
-      }
-    }
-
-    return nullptr;
+    return this->scene->getIntersectingObject(ray);
   }
 
   void update(float dt) override {

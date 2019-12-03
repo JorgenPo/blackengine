@@ -15,6 +15,7 @@
 namespace black {
 class GameObject;
 class Camera;
+class Ray;
 
 class BLACK_EXPORTED AbstractScene {
   std::shared_ptr<Camera> currentCamera;
@@ -44,6 +45,9 @@ public:
 
   virtual void setAmbientLight(AmbientLight light);
   [[nodiscard]] virtual const AmbientLight &getAmbientLight() const noexcept;
+
+  virtual std::vector<std::shared_ptr<GameObject>> getIntersectingObjects(const Ray &ray, size_t count) const;
+  virtual std::shared_ptr<GameObject> getIntersectingObject(const Ray &ray) const;
 };
 
 }
