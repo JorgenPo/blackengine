@@ -17,6 +17,7 @@ namespace black {
  */
 class BoundingComponent : public Component {
   std::shared_ptr<BoundingShape> shape;
+  bool intersectionEnabled;
 
 public:
   static constexpr const char *GetName() { return "BoundingComponent"; }
@@ -24,6 +25,9 @@ public:
 
   [[nodiscard]] const std::shared_ptr<BoundingShape> &getShape() const;
   void setShape(std::shared_ptr<BoundingShape> shape);
+
+  [[nodiscard]] bool isIntersectionEnabled() const;
+  void setIntersectionEnabled(bool enableIntersection);
 
   std::vector<Point3D> getIntersectionsWith(const Ray &ray);
 };

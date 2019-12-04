@@ -6,7 +6,10 @@
 
 namespace black {
 
-BoundingComponent::BoundingComponent(std::shared_ptr<BoundingShape> shape) : shape(std::move(shape)) {
+BoundingComponent::BoundingComponent(std::shared_ptr<BoundingShape> shape)
+: shape(std::move(shape))
+, intersectionEnabled(true)
+{
 
 }
 
@@ -20,6 +23,14 @@ void BoundingComponent::setShape(std::shared_ptr<BoundingShape> newShape) {
 
 std::vector<Point3D> BoundingComponent::getIntersectionsWith(const Ray &ray) {
   return shape->getIntersectionsWith(ray);
+}
+
+bool BoundingComponent::isIntersectionEnabled() const {
+  return intersectionEnabled;
+}
+
+void BoundingComponent::setIntersectionEnabled(bool newEnableIntersection) {
+  intersectionEnabled = newEnableIntersection;
 }
 
 

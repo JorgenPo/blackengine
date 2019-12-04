@@ -34,7 +34,7 @@ AbstractScene::getIntersectingObjects(const Ray &ray, size_t count) const {
     const auto &object = *i;
 
     if (auto bounds = object->get<BoundingComponent>(); bounds != nullptr) {
-      if (!bounds->getIntersectionsWith(ray).empty()) {
+      if (bounds->isIntersectionEnabled() && !bounds->getIntersectionsWith(ray).empty()) {
         objects.push_back(object);
 
         if (count-- == 0) {
