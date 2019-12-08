@@ -16,8 +16,9 @@ class PluginManager;
 class Logger;
 class PluginInterface;
 class TerrainBuilder;
-class KeyboardEventEmitter;
-class MouseEventEmitter;
+class Camera;
+class CameraData;
+class CameraFactory;
 
 class BLACK_EXPORTED EngineInitializationException : public Exception {
 public:
@@ -29,6 +30,7 @@ private:
   using RenderSystemMap = std::unordered_map<std::string, std::shared_ptr<RenderSystemInterface>>;
   using SystemInterfaceMap = std::unordered_map<std::string, std::shared_ptr<SystemInterface>>;
   using TerrainBuilderMap = std::unordered_map<std::string, std::shared_ptr<TerrainBuilder>>;
+  using CameraFactoryMap = std::unordered_map<std::string, std::shared_ptr<CameraFactory>>;
 
   static constexpr const char *GL_RENDERER_PLUGIN_NAME = "glPlugin";
   static constexpr const char *MODEL_PARSERS_PLUGIN_NAME = "modelParsersPlugin";
@@ -39,6 +41,7 @@ private:
   RenderSystemMap renderSystems;
   TerrainBuilderMap terrainBuilders;
   SystemInterfaceMap systemInterfaces;
+  CameraFactoryMap cameraFactories;
 
   std::shared_ptr<RenderSystemInterface> currentRenderSystem;
   std::shared_ptr<SystemInterface> currentSystemInterface;
@@ -110,12 +113,25 @@ public:
 
   static std::shared_ptr<SystemInterface> GetCurrentSystemInterface();
 
-  static std::shared_ptr<KeyboardEventEmitter> GetKeyboard() noexcept;
-  static std::shared_ptr<MouseEventEmitter> GetMouse() noexcept;
-
   static TerrainBuilderMap &GetTerrainBuilders();
   static std::shared_ptr<TerrainBuilder> GetTerrainBuilder(std::string_view name);
   static void RegisterTerrainBuilder(std::string_view name, std::shared_ptr<TerrainBuilder> builder);
+
+  // Camera functions
+  static void RegisterCameraFactory(std::string_view name, std::shared_ptr<CameraFactory> factory);
+
+  /**
+   * Create a camera. CameraType type should have inner public class Factory representing
+   * camera factory. Factory inner class should have GetName static method returning
+   * a string with the name of the Camera class created by the Factory.
+   *
+   * @param data Data to create the camera from
+   * @return Camera created in the factory
+   *
+   * @throws FactoryNotFoundException If a factory with the given name not found
+   */
+  template<typename CameraType>
+  static std::shared_ptr<CameraType> CreateCamera(const CameraData &data);
 private:
   /**
    * Initialize engine. Load plugins.
@@ -138,6 +154,19 @@ private:
 
   static void SetTerminationHandler();
 };
+
+template<typename CameraType>
+std::shared_ptr<CameraType> Engine::CreateCamera(const CameraData &data) {
+  auto name = CameraType::Factory::GetName();
+
+  try {
+    return std::dynamic_pointer_cast<CameraType>(
+      Engine::GetInstance()->cameraFactories.at(name)->create(data));
+  } catch (const std::out_of_range &e) {
+    throw FactoryNotFoundException(name);
+  }
+}
+
 }
 
 #endif

@@ -5,17 +5,18 @@
 #include <tracer/RayTracer.h>
 #include <terrain/Terrain.h>
 #include <terrain/TerrainBuilder.h>
+#include <terrain/FlatTerrainBuilder.h>
+#include <camera/RTSCamera.h>
 
 #include <iostream>
 #include <memory>
-
 
 using namespace black;
 
 class BlackEngineApplication : public GameApplication {
   std::shared_ptr<AbstractScene> scene;
   SelectableGameObject selected;
-  std::shared_ptr<Camera> camera;
+  std::shared_ptr<RTSCamera> camera;
   std::shared_ptr<Terrain> terrain;
   std::shared_ptr<DirectedLight> light;
   std::shared_ptr<SelectedShader> hoveredShader;
@@ -25,10 +26,8 @@ class BlackEngineApplication : public GameApplication {
   Image cursorNormal;
 
   float cameraRadius = 10.0f;
-  float cameraSpeed = 0.1f;
   float cameraOffsetX = 0.0f;
 
-  bool rotating = true;
 public:
   BlackEngineApplication() :
   GameApplication(std::string("BlackEngineApplication") + Constants::RuntimePlatformString,
@@ -67,19 +66,6 @@ protected:
 
 private:
   void handleInput() {
-    if (input->isKeyPressed(Key::LEFT)) {
-      this->camera->strafeLeft(0.05f);
-    }
-    if (input->isKeyPressed(Key::RIGHT)) {
-      this->camera->strafeRight(0.05f);
-    }
-    if (input->isKeyPressed(Key::UP)) {
-      this->camera->moveForward(0.1f);
-    }
-    if (input->isKeyPressed(Key::DOWN)) {
-      this->camera->moveBackward(0.1f);
-    }
-
     if (input->isKeyPressed(Key::BACKSPACE)) {
       if (selected.getObject() && selected.isObjectSelected()) {
         this->scene->removeObject(selected.getObject()->getName());
@@ -94,9 +80,9 @@ private:
         light->getSpectacularIntensity() * multiplier);
     };
 
-    if (input->isKeyPressed(Key::RIGHT_SHIFT)) {
+    if (input->isKeyPressed(Key::RIGHT_ALT)) {
       multiplyLightIntensityBy(1.1f);
-    } else if (input->isKeyPressed(Key::LEFT_SHIFT)) {
+    } else if (input->isKeyPressed(Key::LEFT_ALT)) {
       multiplyLightIntensityBy(0.9f);
     }
   }
@@ -106,6 +92,7 @@ private:
   }
 
   void update(float dt) override {
+    this->camera->update();
     handleInput();
 
     auto time = this->timer->getUptime();
@@ -149,7 +136,7 @@ private:
   }
 
   void initScene() {
-    auto builder = Engine::GetTerrainBuilder("Flat");
+    auto builder = Engine::GetTerrainBuilder(FlatTerrainBuilder::GetName());
     TerrainBuilder::Data data;
     data.width = 1000;
     data.height = 1000;
@@ -186,13 +173,15 @@ private:
 
     scene->addObjects({lightObject, cottage, cube});
 
-    Camera::Data cameraData{
+    CameraData cameraData{
       window,
+      input,
       ProjectionType::PERSPECTIVE,
-      {0.0f, 10.0f, 1.0f}};
-    cameraData.lookAt = {0.0f, -1.0f, 0.0f};
+      {0.0f, 10.0f, 1.0f},
+      {0.0f, -1.0f, 0.0f},
+      {1.0f, 0.0f, 0.0f}};
 
-    this->camera = std::make_shared<Camera>(std::move(cameraData));
+    this->camera = Engine::CreateCamera<RTSCamera>(cameraData);
     this->camera->getRenderTarget()->subscribe(camera);
 
     this->tracer = std::make_unique<RayTracer>(camera, window);

@@ -7,6 +7,8 @@
 #include "plugins/PluginManager.h"
 #include "render/RenderSystemInterface.h"
 #include "terrain/FlatTerrainBuilder.h"
+#include "camera/CameraFactory.h"
+#include "camera/RTSCamera.h"
 
 #include <memory>
 
@@ -54,7 +56,8 @@ void Engine::Initialize() {
   // Initialize render system
   engine->currentRenderSystem->initialize();
 
-  RegisterTerrainBuilder("Flat", std::make_shared<FlatTerrainBuilder>());
+  RegisterTerrainBuilder(FlatTerrainBuilder::GetName(), std::make_shared<FlatTerrainBuilder>());
+  RegisterCameraFactory(RTSCamera::Factory::GetName(), std::make_shared<RTSCamera::Factory>());
 }
 
 void Engine::UnregisterPlugin(const std::shared_ptr<PluginInterface>& plugin) {
@@ -189,6 +192,10 @@ void Engine::setDefaultSystemInterface() {
   logger->info("Using '{0}' system interface as default", this->currentSystemInterface->getName());
 }
 
+void Engine::RegisterCameraFactory(std::string_view name, std::shared_ptr<CameraFactory> factory) {
+  Logger::Get("Engine")->info("Registering camera factory '{}'", name);
+  Engine::GetInstance()->cameraFactories[name.data()] = std::move(factory);
+}
 
 EngineInitializationException::EngineInitializationException(const std::string &message) : Exception(message) {}
 }

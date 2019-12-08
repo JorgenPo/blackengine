@@ -5,7 +5,7 @@
 #include "SimpleShader.h"
 #include "ShaderProgram.h"
 
-#include "../Camera.h"
+#include "BlackEngine/camera/Camera.h"
 
 #include <BlackEngine/components/TransformComponent.h>
 #include <BlackEngine/components/LightComponent.h>

@@ -3,7 +3,7 @@
 //
 
 #include "AbstractScene.h"
-#include "../Camera.h"
+#include "BlackEngine/camera/Camera.h"
 
 #include <BlackEngine/GameObject.h>
 #include <BlackEngine/components/BoundingComponent.h>

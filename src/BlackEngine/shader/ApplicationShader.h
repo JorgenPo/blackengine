@@ -6,7 +6,7 @@
 #define BLACKENGINE_APPLICATIONSHADER_H
 
 #include "ShaderProgram.h"
-#include "../Camera.h"
+#include "BlackEngine/camera/Camera.h"
 #include <BlackEngine/render/Material.h>
 
 #include <glm/glm.hpp>

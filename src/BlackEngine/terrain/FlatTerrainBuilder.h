@@ -14,7 +14,8 @@ namespace black {
  */
 class FlatTerrainBuilder : public TerrainBuilder {
 public:
-  std::shared_ptr<Terrain> build(const Data &data) const override;
+  static constexpr const char *GetName() { return "FlatTerrain"; }
+  [[nodiscard]] std::shared_ptr<Terrain> build(const Data &data) const override;
 };
 
 }

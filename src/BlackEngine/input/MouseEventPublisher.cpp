@@ -7,7 +7,7 @@
 
 using namespace black;
 
-void MouseEventPublisher::subscribeForMouseButtonEvent(std::shared_ptr<MouseEventSubscriber> subscriber) {
+void MouseEventPublisher::subscribeForMouseEvents(std::shared_ptr<MouseEventSubscriber> subscriber) {
   EventPublisher<MouseButtonEvent>::subscribe(std::move(subscriber));
   EventPublisher<MouseMovedEvent>::subscribe(std::move(subscriber));
 }

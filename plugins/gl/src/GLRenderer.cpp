@@ -8,7 +8,7 @@
 #include "OpenGLRenderSystem.h"
 
 #include <BlackEngine/GameObject.h>
-#include <BlackEngine/Camera.h>
+#include <BlackEngine/camera/Camera.h>
 
 #include <BlackEngine/render/Mesh.h>
 #include <BlackEngine/render/Material.h>

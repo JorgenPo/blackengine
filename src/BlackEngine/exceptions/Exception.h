@@ -89,6 +89,12 @@ public:
   }
 };
 
+class FactoryNotFoundException : public NotFoundException {
+public:
+  explicit FactoryNotFoundException(std::string_view factoryName)
+    : NotFoundException(fmt::format("Factory with a name '{}' not found", factoryName)) {}
+};
+
 class FatalError : public Exception {
 public:
   explicit FatalError(std::string_view message)

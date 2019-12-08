@@ -62,7 +62,7 @@ void GameApplication::init() {
     this->renderer = renderSystem->createRenderer(window);
 
     this->input->subscribeForKeyboardEvents(shared_from_this());
-    this->input->subscribeForMouseButtonEvent(shared_from_this());
+    this->input->subscribeForMouseEvents(shared_from_this());
   } catch (const Exception &e) {
     throw ApplicationInitializationException(e.getMessage());
   }

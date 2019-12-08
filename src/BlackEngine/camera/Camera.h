@@ -5,7 +5,7 @@
 #ifndef BLACKENGINE_CAMERA_H
 #define BLACKENGINE_CAMERA_H
 
-#include "common/CommonHeaders.h"
+#include "BlackEngine/common/CommonHeaders.h"
 
 #include <BlackEngine/render/RenderTargetInterface.h>
 
@@ -15,9 +15,29 @@
 
 namespace black {
 
+class InputSystemInterface;
+
 enum class ProjectionType {
   PERSPECTIVE,
   ORTHOGRAPHIC
+};
+
+struct CameraData {
+  CameraData(
+    std::shared_ptr<RenderTargetInterface> renderTarget,
+    std::shared_ptr<InputSystemInterface> inputSystem,
+    ProjectionType projection,
+    glm::vec3 position,
+    glm::vec3 lookAt,
+    glm::vec3 right);
+
+  std::shared_ptr<InputSystemInterface> input;
+  std::shared_ptr<RenderTargetInterface> renderTarget;
+  ProjectionType projectionType;
+  glm::vec3 position;
+  glm::vec3 right;
+  glm::vec3 lookAt;
+  glm::vec3 up;
 };
 
 /**
@@ -27,51 +47,39 @@ class BLACK_EXPORTED Camera :
   public EventSubscriber<RenderTargetSizeChanged>,
   public std::enable_shared_from_this<Camera> {
 
-public:
-  struct Data {
-    Data(std::shared_ptr<RenderTargetInterface> renderTarget, ProjectionType projection, glm::vec3 position);
-
-    std::shared_ptr<RenderTargetInterface> renderTarget;
-    ProjectionType projectionType;
-    glm::vec3 position;
-    glm::vec3 lookAt = position + glm::vec3{0.0f, 0.0f, -1.0f};
-    glm::vec3 up = {0.0f, 1.0f, 0.0f};
-  };
+protected:
+  CameraData data;
 
 private:
-  Data data;
-
   glm::mat4 viewMatrix{};
   glm::mat4 projectionMatrix{};
 
 public:
 
-  explicit Camera(Data data);
+  explicit Camera(CameraData data);
+
+  virtual void update() noexcept = 0;
 
   [[nodiscard]] const glm::mat4 &getViewMatrix() const;
   [[nodiscard]] const glm::mat4 &getProjectionMatrix() const;
   [[nodiscard]] const glm::vec3 &getPosition() const;
   [[nodiscard]] const glm::vec3 &getLookAt() const;
   [[nodiscard]] const glm::vec3 &getUpVector() const;
+  [[nodiscard]] const glm::vec3 &getRightVector() const;
   [[nodiscard]] const ProjectionType &getProjectionType() const;
   [[nodiscard]] std::shared_ptr<RenderTargetInterface> getRenderTarget() const;
 
   void setPosition(const glm::vec3 &newPosition);
-  void setLookAt(const glm::vec3 &newLookAt);
+  void setLookAtVector(const glm::vec3 &newLookAt);
   void setUpVector(const glm::vec3 &newUp);
-
-  void strafeRight(float value);
-  void strafeLeft(float value);
-  void moveForward(float value);
-  void moveBackward(float value);
+  void setRightVector(const glm::vec3 &right);
 
   void setProjection(ProjectionType projection);
+
+protected:
   void updateProjectionMatrix();
-
-  void onEvent(const RenderTargetSizeChanged &event) override;
-
-private:
   void updateViewMatrix();
+  void onEvent(const RenderTargetSizeChanged &event) override;
 };
 }
 

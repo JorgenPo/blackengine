@@ -4,7 +4,7 @@
 #include "RayTracer.h"
 
 #include "../Engine.h"
-#include "../Camera.h"
+#include "BlackEngine/camera/Camera.h"
 #include <BlackEngine/render/RenderSystemInterface.h>
 #include <BlackEngine/render/AbstractRenderWindow.h>
 #include <BlackEngine/log/Logger.h>
