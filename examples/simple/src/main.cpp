@@ -174,15 +174,9 @@ private:
 
     scene->addObjects({lightObject, cottage, cube});
 
-    CameraData cameraData{
-      window,
-      input,
-      ProjectionType::PERSPECTIVE,
-      {0.0f, 10.0f, 1.0f},
-      {0.0f, -1.0f, 0.0f},
-      {1.0f, 0.0f, 0.0f}};
-
-    this->camera = Engine::CreateCamera<RTSCamera>(cameraData);
+    this->camera = Engine::CreateCamera<RTSCamera>(
+      window, input, ProjectionType::PERSPECTIVE, {0.0f, 10.0f, 0.0f}
+      );
     this->camera->getRenderTarget()->subscribe(camera);
 
     this->tracer = std::make_unique<RayTracer>(camera, window);

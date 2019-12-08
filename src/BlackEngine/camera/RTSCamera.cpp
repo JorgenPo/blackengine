@@ -75,10 +75,34 @@ void RTSCamera::handleMouseEvents() {
   if (auto scrollY = data.input->getScrollY(); scrollY != 0) {
     strafe(getLookAt(), zoomSpeed * scrollY);
   }
+
+  // X strafe
+  if ((data.renderTarget->getRenderTargetWidth() - data.input->getMouseX()) < borderWidth) {
+    strafeRight(speed);
+  } else if (data.input->getMouseX() < borderWidth) {
+    strafeLeft(speed);
+  }
+
+  if ((data.renderTarget->getRenderTargetHeight() - data.input->getMouseY()) < borderWidth) {
+    strafeBottom(speed);
+  } else if (data.input->getMouseY() < borderWidth) {
+    strafeTop(speed);
+  }
 }
 
-std::shared_ptr<Camera> RTSCamera::Factory::create(const CameraData &data) const {
-  auto camera = std::make_shared<RTSCamera>(data);
+std::shared_ptr<Camera> RTSCamera::Factory::create(std::shared_ptr<RenderTargetInterface> renderTarget,
+                                                   std::shared_ptr<InputSystemInterface> input,
+                                                   ProjectionType projectionType,
+                                                   const glm::vec3 &position) const {
+  CameraData data;
+  data.renderTarget = std::move(renderTarget);
+  data.input = std::move(input);
+  data.position = position;
+  data.lookAt = {0.0f, -1.0f, 0.0f};
+  data.up = {0.0f, 0.0f, 1.0f};
+  data.right = {1.0f, 0.0f, 0.0f};
+  data.projectionType = projectionType;
 
+  auto camera = std::make_shared<RTSCamera>(std::move(data));
   return camera;
 }

@@ -16,6 +16,7 @@ namespace black {
 class RTSCamera : public Camera {
   float speed = 0.05f;
   float zoomSpeed = 0.2f;
+  float borderWidth = 30.0f;
 
 public:
   class Factory : public CameraFactory {
@@ -24,7 +25,10 @@ public:
       return "RTSCamera";
     }
 
-    [[nodiscard]] std::shared_ptr<Camera> create(const CameraData &data) const override;
+    [[nodiscard]] std::shared_ptr<Camera> create(std::shared_ptr<RenderTargetInterface> renderTarget,
+                                                 std::shared_ptr<InputSystemInterface> input,
+                                                 ProjectionType projectionType,
+                                                 const glm::vec3 &position) const override;
   };
 
   using Camera::Camera;

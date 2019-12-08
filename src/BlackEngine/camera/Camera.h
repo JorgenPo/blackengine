@@ -23,14 +23,6 @@ enum class ProjectionType {
 };
 
 struct CameraData {
-  CameraData(
-    std::shared_ptr<RenderTargetInterface> renderTarget,
-    std::shared_ptr<InputSystemInterface> inputSystem,
-    ProjectionType projection,
-    glm::vec3 position,
-    glm::vec3 lookAt,
-    glm::vec3 right);
-
   std::shared_ptr<InputSystemInterface> input;
   std::shared_ptr<RenderTargetInterface> renderTarget;
   ProjectionType projectionType;

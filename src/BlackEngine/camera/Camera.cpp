@@ -97,21 +97,4 @@ void Camera::setRightVector(const glm::vec3 &right) {
   updateViewMatrix();
 }
 
-CameraData::CameraData(
-  std::shared_ptr<RenderTargetInterface> renderTarget,
-  std::shared_ptr<InputSystemInterface> input,
-  ProjectionType projection,
-  glm::vec3 position,
-  glm::vec3 lookAt,
-  glm::vec3 right)
-  : renderTarget(std::move(renderTarget))
-  , input(std::move(input))
-  , projectionType(projection)
-  , position(position)
-  , lookAt(glm::normalize(lookAt))
-  , right(glm::normalize(right))
-  , up(glm::normalize(glm::cross(lookAt, right))) {
-
-}
-
 }

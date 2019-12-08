@@ -4,8 +4,13 @@
 #include "common/CommonHeaders.h"
 #include "exceptions/Exception.h"
 
+#include <BlackEngine/render/RenderTargetInterface.h>
+#include <BlackEngine/camera/Camera.h>
+
 #include <memory>
 #include <unordered_map>
+
+#include <glm/glm.hpp>
 
 namespace black {
 
@@ -16,8 +21,6 @@ class PluginManager;
 class Logger;
 class PluginInterface;
 class TerrainBuilder;
-class Camera;
-class CameraData;
 class CameraFactory;
 
 class BLACK_EXPORTED EngineInitializationException : public Exception {
@@ -131,7 +134,10 @@ public:
    * @throws FactoryNotFoundException If a factory with the given name not found
    */
   template<typename CameraType>
-  static std::shared_ptr<CameraType> CreateCamera(const CameraData &data);
+  static std::shared_ptr<CameraType> CreateCamera(std::shared_ptr<RenderTargetInterface> renderTarget,
+                                                  std::shared_ptr<InputSystemInterface> input,
+                                                  ProjectionType projectionType,
+                                                  const glm::vec3 &position);
 private:
   /**
    * Initialize engine. Load plugins.
@@ -156,12 +162,16 @@ private:
 };
 
 template<typename CameraType>
-std::shared_ptr<CameraType> Engine::CreateCamera(const CameraData &data) {
+std::shared_ptr<CameraType> Engine::CreateCamera(std::shared_ptr<RenderTargetInterface> renderTarget,
+                                                 std::shared_ptr<InputSystemInterface> input,
+                                                 ProjectionType projectionType,
+                                                 const glm::vec3 &position) {
   auto name = CameraType::Factory::GetName();
 
   try {
     return std::dynamic_pointer_cast<CameraType>(
-      Engine::GetInstance()->cameraFactories.at(name)->create(data));
+      Engine::GetInstance()->cameraFactories.at(name)->create(
+        std::move(renderTarget), std::move(input), projectionType, position));
   } catch (const std::out_of_range &e) {
     throw FactoryNotFoundException(name);
   }
