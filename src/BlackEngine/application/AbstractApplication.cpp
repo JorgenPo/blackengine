@@ -106,6 +106,18 @@ void AbstractApplication::onMouseMoved(const MouseMovedEvent &event) {
   mouseY = event.y;
 }
 
+void AbstractApplication::onScroll(float offsetX, float offsetY) {
+
+}
+
+void AbstractApplication::onScrollY(float dY) {
+
+}
+
+void AbstractApplication::onScrollX(float dX) {
+
+}
+
 ApplicationInitializationException::ApplicationInitializationException(const std::string &message)
     : Exception(message) {}
 }

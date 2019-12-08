@@ -11,13 +11,15 @@ class MouseEventSubscriber;
 
 class MouseEventPublisher :
   private EventPublisher<MouseButtonEvent>,
-  private EventPublisher<MouseMovedEvent> {
+  private EventPublisher<MouseMovedEvent>,
+  private EventPublisher<ScrollEvent> {
 
 public:
   void subscribeForMouseEvents(std::shared_ptr<MouseEventSubscriber> subscriber);
 
   void publishMouseButtonEvent(const MouseButtonEvent &event);
   void publishMouseMovedEvent(const MouseMovedEvent &event);
+  void publishScrollEvent(const ScrollEvent &event);
 };
 
 }

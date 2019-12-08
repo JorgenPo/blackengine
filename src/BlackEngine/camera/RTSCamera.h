@@ -15,6 +15,7 @@ namespace black {
 
 class RTSCamera : public Camera {
   float speed = 0.05f;
+  float zoomSpeed = 0.2f;
 
 public:
   class Factory : public CameraFactory {
@@ -44,6 +45,7 @@ protected:
 
 private:
   void handleKeyEvents();
+  void handleMouseEvents();
   void strafe(const glm::vec3 &vector, float value);
 };
 

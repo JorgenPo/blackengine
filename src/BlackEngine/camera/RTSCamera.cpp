@@ -5,6 +5,7 @@
 #include "RTSCamera.h"
 
 #include <BlackEngine/input/InputSystemInterface.h>
+#include <BlackEngine/log/Logger.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -40,13 +41,6 @@ void RTSCamera::handleKeyEvents() {
   if (data.input->isKeyPressed(Key::DOWN)) {
     this->strafeBottom(speed);
   }
-  if (data.input->isKeyPressed(Key::SPACE)) {
-    if (data.input->isKeyPressed(Key::LEFT_SHIFT)) {
-      this->zoomIn(speed);
-    } else {
-      this->zoomOut(speed);
-    }
-  }
 }
 
 float RTSCamera::getSpeed() const {
@@ -59,6 +53,7 @@ void RTSCamera::setSpeed(float newSpeed) {
 
 void RTSCamera::update() noexcept {
   handleKeyEvents();
+  handleMouseEvents();
 }
 
 void RTSCamera::strafeTop(float value) {
@@ -74,6 +69,12 @@ void RTSCamera::strafe(const glm::vec3 &vector, float value) {
   setPosition(translate * glm::vec4{getPosition(), 1.0f});
   updateViewMatrix();
 
+}
+
+void RTSCamera::handleMouseEvents() {
+  if (auto scrollY = data.input->getScrollY(); scrollY != 0) {
+    strafe(getLookAt(), zoomSpeed * scrollY);
+  }
 }
 
 std::shared_ptr<Camera> RTSCamera::Factory::create(const CameraData &data) const {

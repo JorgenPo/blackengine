@@ -20,6 +20,7 @@ class GLFWWindow : public AbstractRenderWindow, public InputSystemInterface {
 
   bool isWindowShown;
   double mouseX, mouseY;
+  double scrollX, scrollY;
 
   std::string currentCursorName;
 public:
@@ -64,8 +65,10 @@ public:
   void setCursor(std::string name) override;
 
   float getMouseX() const noexcept override;
-
   float getMouseY() const noexcept override;
+
+  float getScrollX() const override;
+  float getScrollY() const override;
 
 private:
   void initializeContext();

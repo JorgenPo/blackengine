@@ -78,6 +78,13 @@ protected:
   void onMouseButtonReleased(const MouseButtonEvent &event) override;
 
 public:
+  void onScroll(float offsetX, float offsetY) override;
+
+  void onScrollY(float dY) override;
+
+  void onScrollX(float dX) override;
+
+public:
   void onMouseMoved(const MouseMovedEvent &event) override;
 
 private:

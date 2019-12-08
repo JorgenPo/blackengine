@@ -62,6 +62,8 @@ bool GLFWWindow::shouldClose() {
 }
 
 void GLFWWindow::pollEvents() {
+  scrollX = 0;
+  scrollY = 0;
   glfwPollEvents();
 }
 
@@ -194,6 +196,13 @@ void GLFWWindow::initializeWindowAndContext() {
     that->publishMouseButtonEvent(event);
   });
 
+  glfwSetScrollCallback(this->window.get(), [](GLFWwindow *win, double xOffset, double yOffset) {
+    auto that = (GLFWWindow*)(glfwGetWindowUserPointer(win));
+    that->publishScrollEvent(ScrollEvent{static_cast<float>(xOffset), static_cast<float>(yOffset)});
+    that->scrollX = xOffset;
+    that->scrollY = yOffset;
+  });
+
   setRenderTargetCurrent();
 
   // Init GLAD
@@ -209,6 +218,14 @@ float GLFWWindow::getMouseX() const noexcept {
 
 float GLFWWindow::getMouseY() const noexcept {
   return static_cast<float>(mouseY);
+}
+
+float GLFWWindow::getScrollX() const {
+  return static_cast<float>(scrollX);
+}
+
+float GLFWWindow::getScrollY() const {
+  return static_cast<float>(scrollY);
 }
 
 }

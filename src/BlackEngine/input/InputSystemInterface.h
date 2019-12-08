@@ -26,8 +26,10 @@ public:
   virtual bool isKeyReleased(int key) = 0;
   virtual void setCursorMode(CursorMode mode) = 0;
   virtual void setMouseAccelerated(bool accelerated) = 0;
-  virtual float getMouseX() const noexcept = 0;
-  virtual float getMouseY() const noexcept = 0;
+  [[nodiscard]] virtual float getMouseX() const noexcept = 0;
+  [[nodiscard]] virtual float getMouseY() const noexcept = 0;
+  [[nodiscard]] virtual float getScrollX() const = 0;
+  [[nodiscard]] virtual float getScrollY() const = 0;
 
   virtual void addCursor(std::string name, const Image &image) = 0;
   virtual void setCursor(std::string name) = 0;

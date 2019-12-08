@@ -87,6 +87,7 @@ private:
     }
   }
 
+
   std::shared_ptr<GameObject> findSelectedObject(const Ray &ray) {
     return this->scene->getIntersectingObject(ray);
   }

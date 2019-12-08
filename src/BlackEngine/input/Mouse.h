@@ -26,4 +26,8 @@ struct MouseMovedEvent {
   float x, y;
 };
 
+struct ScrollEvent {
+  float offsetX, offsetY;
+};
+
 #endif //BLACKENGINE_MOUSE_H

@@ -19,3 +19,7 @@ void MouseEventPublisher::publishMouseButtonEvent(const MouseButtonEvent &event)
 void MouseEventPublisher::publishMouseMovedEvent(const MouseMovedEvent &event) {
   EventPublisher<MouseMovedEvent>::publish(event);
 }
+
+void MouseEventPublisher::publishScrollEvent(const ScrollEvent &event) {
+  EventPublisher<ScrollEvent>::publish(event);
+}
