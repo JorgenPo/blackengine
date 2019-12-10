@@ -19,6 +19,7 @@ class GLFWWindow : public AbstractRenderWindow, public InputSystemInterface {
   std::unordered_map<std::string, Cursor> cursors;
 
   bool isWindowShown;
+  bool isCursorDisabled = false;
   double mouseX, mouseY;
   double scrollX, scrollY;
 
@@ -35,8 +36,8 @@ public:
   // RenderTargetInterface
   void updateRenderTarget() override;
   void setRenderTargetCurrent() override;
-  float getRenderTargetWidth() override;
-  float getRenderTargetHeight() override;
+  float getRenderTargetWidth() const override;
+  float getRenderTargetHeight() const override;
   float getRenderTargetAspectRatio() override;
 
   // AbstractRenderWindow Interface

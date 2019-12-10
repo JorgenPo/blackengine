@@ -39,14 +39,14 @@ public:
    *
    * @return Width of the render target
    */
-  virtual float getRenderTargetWidth() = 0;
+  virtual float getRenderTargetWidth() const = 0;
 
   /**
    * Returns a height of the render target
    *
    * @return Width of the render target
    */
-  virtual float getRenderTargetHeight() = 0;
+  virtual float getRenderTargetHeight() const = 0;
 
   /**
    * Returns a width of the render target

@@ -67,8 +67,6 @@ void RTSCamera::strafeBottom(float value) {
 void RTSCamera::strafe(const glm::vec3 &vector, float value) {
   auto translate = glm::translate(glm::mat4(1.0f), vector * value);
   setPosition(translate * glm::vec4{getPosition(), 1.0f});
-  updateViewMatrix();
-
 }
 
 void RTSCamera::handleMouseEvents() {
@@ -76,6 +74,34 @@ void RTSCamera::handleMouseEvents() {
     strafe(getLookAt(), zoomSpeed * scrollY);
   }
 
+  switch (state) {
+    case State::NORMAL:
+      handleNormalMouseEvents();
+      break;
+    case State::CAMERA_MOVING:
+      handleMovingMouseEvents();
+      break;
+    case State::CAMERA_ROTATING:
+      handleRotatingMouseEvents();
+      break;
+  }
+}
+
+void RTSCamera::onMouseButtonPressed(const MouseButtonEvent &event) {
+  anchorPoint = {data.input->getMouseX(), data.input->getMouseY()};
+
+  if (event.button == MouseButton::RIGHT) {
+    state = State::CAMERA_ROTATING;
+  } else if (event.button == MouseButton::LEFT) {
+    state = State::CAMERA_MOVING;
+  }
+}
+
+void RTSCamera::onMouseButtonReleased(const MouseButtonEvent &event) {
+  state = State::NORMAL;
+}
+
+void RTSCamera::handleNormalMouseEvents() {
   // X strafe
   if ((data.renderTarget->getRenderTargetWidth() - data.input->getMouseX()) < borderWidth) {
     strafeRight(speed);
@@ -88,6 +114,19 @@ void RTSCamera::handleMouseEvents() {
   } else if (data.input->getMouseY() < borderWidth) {
     strafeTop(speed);
   }
+}
+
+void RTSCamera::handleRotatingMouseEvents() {
+
+}
+
+void RTSCamera::handleMovingMouseEvents() {
+  glm::vec2 currentPosition = {data.input->getMouseX(), data.input->getMouseY()};
+  auto difference = anchorPoint - currentPosition;
+
+  difference = difference * speed / 8.0f;
+  setPosition(data.position - glm::vec3{difference.x, 0.0f, difference.y});
+  anchorPoint = currentPosition;
 }
 
 std::shared_ptr<Camera> RTSCamera::Factory::create(std::shared_ptr<RenderTargetInterface> renderTarget,
@@ -104,5 +143,7 @@ std::shared_ptr<Camera> RTSCamera::Factory::create(std::shared_ptr<RenderTargetI
   data.projectionType = projectionType;
 
   auto camera = std::make_shared<RTSCamera>(std::move(data));
+
+  camera->data.input->subscribeForMouseEvents(camera);
   return camera;
 }

@@ -12,8 +12,8 @@ enum class MouseButton {
 };
 
 enum class MouseButtonAction {
+  RELEASED,
   PRESSED,
-  RELEASED
 };
 
 struct MouseButtonEvent {

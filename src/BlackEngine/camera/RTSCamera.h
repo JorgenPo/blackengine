@@ -13,11 +13,20 @@
 
 namespace black {
 
-class RTSCamera : public Camera {
-  float speed = 0.05f;
-  float zoomSpeed = 0.2f;
-  float borderWidth = 30.0f;
+class RTSCamera : public Camera, public MouseEventSubscriber {
+  float speed = 0.2f;
+  float zoomSpeed = 0.5f;
+  float borderWidth = 50.0f;
 
+  enum class State {
+    NORMAL,
+    CAMERA_ROTATING,
+    CAMERA_MOVING,
+  };
+
+  State state = State::NORMAL;
+  glm::vec2 anchorPoint;        // This point is set to the mouse coords when ROTATING or MOVING state is
+                                // triggered
 public:
   class Factory : public CameraFactory {
   public:
@@ -47,9 +56,17 @@ protected:
   void zoomIn(float value);
   void zoomOut(float value);
 
+public:
+  void onMouseButtonPressed(const MouseButtonEvent &event) override;
+
+  void onMouseButtonReleased(const MouseButtonEvent &event) override;
+
 private:
   void handleKeyEvents();
   void handleMouseEvents();
+  void handleNormalMouseEvents();
+  void handleRotatingMouseEvents();
+  void handleMovingMouseEvents();
   void strafe(const glm::vec3 &vector, float value);
 };
 

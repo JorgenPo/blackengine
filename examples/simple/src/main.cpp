@@ -186,6 +186,7 @@ private:
     input->addCursor("Hovered", cursorHovered);
     input->addCursor("Normal", cursorNormal);
     input->setCursor("Normal");
+    input->setCursorMode(CursorMode::VISIBLE);
   }
 
   void loadShaders() {

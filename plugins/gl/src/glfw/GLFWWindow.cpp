@@ -31,11 +31,11 @@ void GLFWWindow::setRenderTargetCurrent() {
   glfwMakeContextCurrent(this->window.get());
 }
 
-float GLFWWindow::getRenderTargetWidth() {
+float GLFWWindow::getRenderTargetWidth() const {
   return static_cast<float>(data.width);
 }
 
-float GLFWWindow::getRenderTargetHeight() {
+float GLFWWindow::getRenderTargetHeight() const {
   return static_cast<float>(data.height);
 }
 
@@ -82,9 +82,12 @@ void GLFWWindow::setMouseAccelerated(bool accelerated) {
 }
 
 void GLFWWindow::setCursorMode(CursorMode mode) {
+  isCursorDisabled = false;
+
   switch (mode) {
     case CursorMode::CAPTURED:
       glfwSetInputMode(window.get(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+      isCursorDisabled = true;
       break;
     case CursorMode::VISIBLE:
       glfwSetInputMode(window.get(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
