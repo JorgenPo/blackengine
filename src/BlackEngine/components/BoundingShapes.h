@@ -5,8 +5,6 @@
 #ifndef BLACKENGINE_BOUNDINGSHAPES_H
 #define BLACKENGINE_BOUNDINGSHAPES_H
 
-#include "../common/Vector.h"
-
 #include <memory>
 #include <vector>
 
@@ -28,7 +26,7 @@ public:
 
   explicit BoundingShape(std::shared_ptr<TransformComponent> transform);
 
-  virtual std::vector<Point3D> getIntersectionsWith(const Ray &ray) = 0;
+  virtual std::vector<glm::vec3> getIntersectionsWith(const Ray &ray) = 0;
 };
 
 class Sphere : public BoundingShape {
@@ -38,7 +36,7 @@ public:
   Sphere(std::shared_ptr<TransformComponent> transform, float radius);
 
 private:
-  std::vector<Point3D> getIntersectionsWith(const Ray &ray) override;
+  std::vector<glm::vec3> getIntersectionsWith(const Ray &ray) override;
 };
 
 class Plane : public BoundingShape {
@@ -48,7 +46,7 @@ class Plane : public BoundingShape {
 public:
   Plane(std::shared_ptr<TransformComponent> transform, glm::vec3 normal, float distanceFromOrigin);
 
-  std::vector<Point3D> getIntersectionsWith(const Ray &ray) override;
+  std::vector<glm::vec3> getIntersectionsWith(const Ray &ray) override;
 };
 
 }

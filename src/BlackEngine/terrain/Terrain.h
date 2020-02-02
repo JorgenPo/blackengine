@@ -16,6 +16,9 @@ class BoundingComponent;
 class Material;
 
 class BLACK_EXPORTED Terrain : public GameObject {
+public:
+  static constexpr const char *TERRAIN_OBJECT_NAME = "Terrain";
+
 private:
   std::shared_ptr<ModelComponent> model;
   std::shared_ptr<TerrainComponent> terrain;

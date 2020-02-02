@@ -17,11 +17,7 @@ public:
    * @param data Camera parameters
    * @return A fresh camera
    */
-  [[nodiscard]] virtual std::shared_ptr<Camera> create(
-    std::shared_ptr<RenderTargetInterface> renderTarget,
-    std::shared_ptr<InputSystemInterface> input,
-    ProjectionType projectionType,
-    const glm::vec3 &position) const = 0;
+  [[nodiscard]] virtual std::shared_ptr<Camera> create(const CameraData &data) const = 0;
 };
 
 }

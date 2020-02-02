@@ -21,7 +21,7 @@ void BoundingComponent::setShape(std::shared_ptr<BoundingShape> newShape) {
   shape = std::move(newShape);
 }
 
-std::vector<Point3D> BoundingComponent::getIntersectionsWith(const Ray &ray) {
+std::vector<glm::vec3> BoundingComponent::getIntersectionsWith(const Ray &ray) {
   return shape->getIntersectionsWith(ray);
 }
 

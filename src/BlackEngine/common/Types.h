@@ -9,6 +9,7 @@
 #include "Config.h"
 #include <glm/vec3.hpp>
 #include <fmt/format.h>
+#include <glm/vec2.hpp>
 
 #if defined(BLACK_PLATFORM_WINDOWS)
 #include <plugins/windows/WindowsSharedLibrary.h>
@@ -41,6 +42,12 @@ enum class DrawMode {
   QUADS,
   POLYGON
 };
+
+using Vector3D = glm::vec3;
+using Vector2D = glm::vec2;
+using Point2D = glm::vec2;
+using Point3D = glm::vec3;
+
 }
 
 #endif //BLACKENGINE_TYPES_H

@@ -31,7 +31,7 @@ void Terrain::setTerrain(const std::shared_ptr<TerrainComponent> &newTerrain) {
 }
 
 Terrain::Terrain(std::shared_ptr<ModelComponent> model, std::shared_ptr<TerrainComponent> terrain)
-  : model(std::move(model)), terrain(std::move(terrain)) {
+  : GameObject(TERRAIN_OBJECT_NAME), model(std::move(model)), terrain(std::move(terrain)) {
   auto planeShape = std::make_shared<Plane>(transform, glm::vec3{0.0f, 1.0f, 0.0f}, 0.0f);
   bounding = std::make_shared<BoundingComponent>(std::move(planeShape));
 

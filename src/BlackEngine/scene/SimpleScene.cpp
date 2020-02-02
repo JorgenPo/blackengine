@@ -5,6 +5,8 @@
 #include "SimpleScene.h"
 
 #include "../GameObject.h"
+
+#include <BlackEngine/log/Logger.h>
 #include <BlackEngine/components/LightComponent.h>
 
 #include <algorithm>

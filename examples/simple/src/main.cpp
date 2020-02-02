@@ -96,6 +96,8 @@ private:
     this->camera->update();
     handleInput();
 
+    this->logger->debug("Look at vector: {}", this->camera->getDirection());
+
     auto time = this->timer->getUptime();
 
     float camX = static_cast<float>(sin(time / 1000.0)) * this->cameraRadius + this->cameraOffsetX;
@@ -144,6 +146,8 @@ private:
     data.lod = 5.0f;
 
     terrain = builder->build(data);
+    terrain->get<BoundingComponent>()->setIntersectionEnabled(false);
+
     this->scene->addObject(terrain);
 
     auto cottageModel = ModelManager::CreateFromFile("resources/cottage_obj.obj");
@@ -166,7 +170,7 @@ private:
       std::make_shared<BoundingComponent>(
         std::make_shared<Sphere>(cube->transform, 1.0f)));
 
-    light = std::make_shared<DirectedLight>(Color::RED, 1.0f, 0.1f,
+    light = std::make_shared<DirectedLight>(Color::WHITE, 1.0f, 0.3f,
       glm::vec3{0.2f, -1.0f, -1.0f});
 
     auto lightObject = std::make_shared<GameObject>("Sun");
@@ -174,9 +178,12 @@ private:
 
     scene->addObjects({lightObject, cottage, cube});
 
-    this->camera = Engine::CreateCamera<RTSCamera>(
-      window, input, ProjectionType::PERSPECTIVE, {0.0f, 10.0f, 0.0f}
-      );
+    CameraData cameraData{
+      input, window, scene,
+      ProjectionType::PERSPECTIVE, {0.0f, 10.0f, 0.0f}
+    };
+
+    this->camera = Engine::CreateCamera<RTSCamera>(cameraData);
     this->camera->getRenderTarget()->subscribe(camera);
 
     this->tracer = std::make_unique<RayTracer>(camera, window);

@@ -6,7 +6,7 @@
 #include "../Engine.h"
 #include "BlackEngine/camera/Camera.h"
 #include <BlackEngine/render/RenderSystemInterface.h>
-#include <BlackEngine/render/AbstractRenderWindow.h>
+#include <BlackEngine/render/RenderTargetInterface.h>
 #include <BlackEngine/log/Logger.h>
 
 #include <glm/vec2.hpp>
@@ -15,7 +15,7 @@
 
 namespace black {
 
-RayTracer::RayTracer(std::shared_ptr<Camera> camera, std::shared_ptr<AbstractRenderWindow> window) :
+RayTracer::RayTracer(std::shared_ptr<Camera> camera, std::shared_ptr<RenderTargetInterface> window) :
 camera(std::move(camera)),
 window(std::move(window))
 {

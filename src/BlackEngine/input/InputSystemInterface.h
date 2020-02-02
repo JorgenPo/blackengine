@@ -30,6 +30,7 @@ public:
   [[nodiscard]] virtual float getMouseY() const noexcept = 0;
   [[nodiscard]] virtual float getScrollX() const = 0;
   [[nodiscard]] virtual float getScrollY() const = 0;
+  virtual bool isMouseButtonPressed(MouseButton button) const = 0;
 
   virtual void addCursor(std::string name, const Image &image) = 0;
   virtual void setCursor(std::string name) = 0;

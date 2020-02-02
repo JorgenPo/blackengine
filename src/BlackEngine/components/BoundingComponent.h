@@ -29,7 +29,7 @@ public:
   [[nodiscard]] bool isIntersectionEnabled() const;
   void setIntersectionEnabled(bool enableIntersection);
 
-  std::vector<Point3D> getIntersectionsWith(const Ray &ray);
+  std::vector<glm::vec3> getIntersectionsWith(const Ray &ray);
 };
 
 }

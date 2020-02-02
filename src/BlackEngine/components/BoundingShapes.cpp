@@ -12,7 +12,7 @@
 #include <cmath>
 
 
-std::vector<Point3D> black::Sphere::getIntersectionsWith(const Ray &ray) {
+std::vector<glm::vec3> black::Sphere::getIntersectionsWith(const Ray &ray) {
   // http://kylehalladay.com/blog/tutorial/math/2013/12/24/Ray-Sphere-Intersection.html
   auto center = transform->getPosition();
   auto L = center - ray.origin;
@@ -26,7 +26,7 @@ std::vector<Point3D> black::Sphere::getIntersectionsWith(const Ray &ray) {
   }
 
   auto lengthOfL = glm::length(L);
-  std::vector<Point3D> result;
+  std::vector<glm::vec3> result;
 
   auto d = std::sqrt(lengthOfL*lengthOfL - tc * tc);
 
@@ -39,9 +39,9 @@ std::vector<Point3D> black::Sphere::getIntersectionsWith(const Ray &ray) {
   auto p1 = ray.origin + (tc - t1c) * ray.direction;
   auto p2 = ray.origin + (tc + t1c) * ray.direction;
 
-  result.push_back(Point3D{p1.x, p1.y, p1.z});
+  result.push_back(glm::vec3{p1.x, p1.y, p1.z});
   if (d < radiusScaled) {
-    result.push_back(Point3D{p2.x, p2.y, p2.z});
+    result.push_back(glm::vec3{p2.x, p2.y, p2.z});
   }
 
   return result;
@@ -59,7 +59,7 @@ black::Plane::Plane(std::shared_ptr<TransformComponent> transform, glm::vec3 nor
 
 }
 
-std::vector<Point3D> black::Plane::getIntersectionsWith(const black::Ray &ray) {
+std::vector<glm::vec3> black::Plane::getIntersectionsWith(const black::Ray &ray) {
   auto normal4D = glm::vec4(normal, 0.0f) * transform->getModelMatrix();
   auto normal3D = glm::vec3(normal4D);
 
@@ -73,5 +73,5 @@ std::vector<Point3D> black::Plane::getIntersectionsWith(const black::Ray &ray) {
   float t = nominator / denominator;
 
   auto intersectionPoint = ray.origin + ray.direction * t;
-  return {Point3D{intersectionPoint.x, intersectionPoint.y, intersectionPoint.z}};
+  return {glm::vec3{intersectionPoint.x, intersectionPoint.y, intersectionPoint.z}};
 }
