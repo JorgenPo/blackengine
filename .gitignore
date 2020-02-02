@@ -4,3 +4,5 @@ bin/*
 venv/
 src/BlackEngine/common/Config.h
 src/BlackEngine/common/Exported.h
+/out/build/x64-Debug
+/.vs
