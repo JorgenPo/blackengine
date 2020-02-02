@@ -9,7 +9,7 @@
 
 #include "../common/CommonHeaders.h"
 
-#include <map>
+#include <unordered_map>
 #include <memory>
 
 namespace black {
@@ -18,7 +18,7 @@ namespace black {
  * Container for components
  */
 class ComponentsContainer {
-  std::map<std::string, std::shared_ptr<Component>> components;
+  std::unordered_map<std::string, std::shared_ptr<Component>> components;
 
 public:
   /**

@@ -7,14 +7,27 @@
 
 #include "../common/Color.h"
 
-#include <fmt/format.h>
 #include <glm/glm.hpp>
+
+#include <ostream>
 #include <string>
 
-namespace black {
-std::string toString(const glm::vec4 &vec);
-std::string toString(const glm::vec3 &vec);
-std::string toString(const glm::vec2 &vec);
+namespace glm {
+template<typename Stream>
+Stream &operator<<(Stream &stream, const glm::vec<3, float, glm::defaultp> &vec) {
+  return stream << fmt::format("[{},{},{}]", vec.x, vec.y, vec.z);
 }
+
+template<typename Stream>
+Stream &operator<<(Stream &stream, const glm::vec<4, float, glm::defaultp> &vec) {
+  return stream << fmt::format("[{},{},{},{}]", vec.x, vec.y, vec.z, vec.w);
+}
+
+template<typename Stream>
+Stream &operator<<(Stream &stream, const glm::vec<2, float, glm::defaultp> &vec) {
+  return stream << fmt::format("[{},{}]", vec.x, vec.y);
+}
+}
+
 
 #endif //BLACKENGINE_FORMATTERS_H

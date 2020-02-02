@@ -47,8 +47,8 @@ public:
  * Contains all loaded plugins.
  */
 class BLACK_EXPORTED PluginManager {
-  using PluginsLibriesMap = std::map<std::string, std::shared_ptr<AbstractSharedLibrary>>;
-  using PluginsMap = std::map<std::string, std::shared_ptr<PluginInterface>>;
+  using PluginsLibriesMap = std::unordered_map<std::string, std::shared_ptr<AbstractSharedLibrary>>;
+  using PluginsMap = std::unordered_map<std::string, std::shared_ptr<PluginInterface>>;
 
   const std::string PLUGIN_ENTRY_POINT = "BlackPluginInstall";
   const std::string PLUGIN_EXIT_POINT = "BlackPluginUninstall";

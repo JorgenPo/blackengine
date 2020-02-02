@@ -16,6 +16,7 @@
 namespace black {
 
 class InputSystemInterface;
+class AbstractScene;
 
 enum class ProjectionType {
   PERSPECTIVE,
@@ -23,8 +24,16 @@ enum class ProjectionType {
 };
 
 struct CameraData {
+  CameraData(
+    std::shared_ptr<InputSystemInterface> input,
+    std::shared_ptr<RenderTargetInterface> renderTarget,
+    std::shared_ptr<AbstractScene> scene,
+    ProjectionType projectionType,
+    glm::vec3 position);
+
   std::shared_ptr<InputSystemInterface> input;
   std::shared_ptr<RenderTargetInterface> renderTarget;
+  std::shared_ptr<AbstractScene> scene;
   ProjectionType projectionType;
   glm::vec3 position;
   glm::vec3 right;
@@ -58,11 +67,13 @@ public:
   [[nodiscard]] const glm::vec3 &getLookAt() const;
   [[nodiscard]] const glm::vec3 &getUpVector() const;
   [[nodiscard]] const glm::vec3 &getRightVector() const;
+  [[nodiscard]] glm::vec3 getDirection() const;
+
   [[nodiscard]] const ProjectionType &getProjectionType() const;
   [[nodiscard]] std::shared_ptr<RenderTargetInterface> getRenderTarget() const;
 
   void setPosition(const glm::vec3 &newPosition);
-  void setLookAtVector(const glm::vec3 &newLookAt);
+  void setLookAt(const glm::vec3 &newLookAt);
   void setUpVector(const glm::vec3 &newUp);
   void setRightVector(const glm::vec3 &right);
 

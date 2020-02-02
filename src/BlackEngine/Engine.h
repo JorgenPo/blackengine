@@ -134,10 +134,7 @@ public:
    * @throws FactoryNotFoundException If a factory with the given name not found
    */
   template<typename CameraType>
-  static std::shared_ptr<CameraType> CreateCamera(std::shared_ptr<RenderTargetInterface> renderTarget,
-                                                  std::shared_ptr<InputSystemInterface> input,
-                                                  ProjectionType projectionType,
-                                                  const glm::vec3 &position);
+  static std::shared_ptr<CameraType> CreateCamera(const CameraData &data);
 private:
   /**
    * Initialize engine. Load plugins.
@@ -162,16 +159,12 @@ private:
 };
 
 template<typename CameraType>
-std::shared_ptr<CameraType> Engine::CreateCamera(std::shared_ptr<RenderTargetInterface> renderTarget,
-                                                 std::shared_ptr<InputSystemInterface> input,
-                                                 ProjectionType projectionType,
-                                                 const glm::vec3 &position) {
+std::shared_ptr<CameraType> Engine::CreateCamera(const CameraData &data) {
   auto name = CameraType::Factory::GetName();
 
   try {
     return std::dynamic_pointer_cast<CameraType>(
-      Engine::GetInstance()->cameraFactories.at(name)->create(
-        std::move(renderTarget), std::move(input), projectionType, position));
+      Engine::GetInstance()->cameraFactories.at(name)->create(data));
   } catch (const std::out_of_range &e) {
     throw FactoryNotFoundException(name);
   }

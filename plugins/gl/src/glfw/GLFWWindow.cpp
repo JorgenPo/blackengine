@@ -231,4 +231,8 @@ float GLFWWindow::getScrollY() const {
   return static_cast<float>(scrollY);
 }
 
+bool GLFWWindow::isMouseButtonPressed(MouseButton button) const {
+  return glfwGetMouseButton(window.get(), static_cast<int>(button)) == GLFW_PRESS;
+}
+
 }

@@ -7,10 +7,11 @@
 
 #include "../common/Exported.h"
 
-#include "Formatters.h"
-
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/fmt/ostr.h>
+
+#include "Formatters.h"
 
 namespace black {
 enum class LogTarget {

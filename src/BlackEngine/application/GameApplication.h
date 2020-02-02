@@ -20,7 +20,6 @@
 #include <BlackEngine/render/Material.h>
 
 #include <BlackEngine/shader/ApplicationShader.h>
-#include <BlackEngine/log/Formatters.h>
 #include <BlackEngine/scene/SimpleScene.h>
 
 #include "BlackEngine/components/ModelComponent.h"

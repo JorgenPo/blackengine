@@ -39,7 +39,8 @@ const glm::vec3 &Camera::getUpVector() const {
 }
 
 void Camera::updateViewMatrix() {
-  this->viewMatrix = glm::lookAt(getPosition(), getPosition() + getLookAt(), getUpVector());
+  this->viewMatrix = glm::lookAt(
+    this->data.position, this->data.position + this->data.lookAt, this->data.up);
 }
 
 void Camera::setPosition(const glm::vec3 &newPosition) {
@@ -47,8 +48,8 @@ void Camera::setPosition(const glm::vec3 &newPosition) {
   this->updateViewMatrix();
 }
 
-void Camera::setLookAtVector(const glm::vec3 &newLookAt) {
-  this->data.lookAt = glm::normalize(newLookAt);
+void Camera::setLookAt(const glm::vec3 &newLookAt) {
+  this->data.lookAt = newLookAt;
   this->updateViewMatrix();
 }
 
@@ -97,4 +98,21 @@ void Camera::setRightVector(const glm::vec3 &right) {
   updateViewMatrix();
 }
 
+glm::vec3 Camera::getDirection() const {
+  return data.lookAt - data.position;
+}
+
+CameraData::CameraData(
+  std::shared_ptr<InputSystemInterface> input,
+  std::shared_ptr<RenderTargetInterface> renderTarget,
+  std::shared_ptr<AbstractScene> scene,
+  ProjectionType projectionType,
+  glm::vec3 position)
+  : input(std::move(input))
+  , renderTarget(std::move(renderTarget))
+  , scene(std::move(scene))
+  , projectionType(projectionType)
+  , position(position) {
+
+}
 }

@@ -44,13 +44,16 @@ list(FILTER HEADERS EXCLUDE REGEX "(.*)\\.c")
 
 message(INFO " Linking with libs: ${LINKLIBS_LIBRARIES}")
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
-target_link_libraries(${PROJECT_NAME} PRIVATE ${LINKLIBS_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} PUBLIC ${LINKLIBS_LIBRARIES})
 
 # Examples
 add_subdirectory(examples)
 
 # Plugins
 add_subdirectory(plugins)
+
+# editor
+add_subdirectory(editor)
 
 message(STATUS "Plugins: ${BlackEngine_PLUGINS}")
 

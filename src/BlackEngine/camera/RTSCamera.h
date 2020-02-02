@@ -13,10 +13,14 @@
 
 namespace black {
 
+class RayTracer;
+class BoundingComponent;
+
 class RTSCamera : public Camera, public MouseEventSubscriber {
   float speed = 0.2f;
   float zoomSpeed = 0.5f;
   float borderWidth = 50.0f;
+  float rotationRadius = 6.0f;
 
   enum class State {
     NORMAL,
@@ -24,9 +28,14 @@ class RTSCamera : public Camera, public MouseEventSubscriber {
     CAMERA_MOVING,
   };
 
+  std::shared_ptr<RayTracer> tracer;
+  std::shared_ptr<BoundingComponent> terrain;
+
   State state = State::NORMAL;
-  glm::vec2 anchorPoint;        // This point is set to the mouse coords when ROTATING or MOVING state is
-                                // triggered
+  glm::vec2 anchorPoint;        // This point is set to the mouse coords when ROTATING or MOVING state is triggered
+  glm::vec3 terrainAnchorPoint; // Same point but projected on to terrain (used when ROTATING)
+  glm::vec3 rotationStartPosition;
+
 public:
   class Factory : public CameraFactory {
   public:
@@ -34,13 +43,10 @@ public:
       return "RTSCamera";
     }
 
-    [[nodiscard]] std::shared_ptr<Camera> create(std::shared_ptr<RenderTargetInterface> renderTarget,
-                                                 std::shared_ptr<InputSystemInterface> input,
-                                                 ProjectionType projectionType,
-                                                 const glm::vec3 &position) const override;
+    [[nodiscard]] std::shared_ptr<Camera> create(const CameraData &data) const override;
   };
 
-  using Camera::Camera;
+  explicit RTSCamera(const CameraData &data);
 
   void update() noexcept override;
 
@@ -68,6 +74,7 @@ private:
   void handleRotatingMouseEvents();
   void handleMovingMouseEvents();
   void strafe(const glm::vec3 &vector, float value);
+  void calculateTerrainAnchor();
 };
 
 }
