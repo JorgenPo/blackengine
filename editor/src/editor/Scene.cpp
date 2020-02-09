@@ -203,3 +203,24 @@ void Scene::keyPressEvent(QKeyEvent *event) {
     break;
   }
 }
+
+Color fromQt(const QColor &color) {
+  return Color(color.redF(), color.greenF(), color.blueF(), color.alphaF());
+}
+
+void Scene::onLightColorChanged(const QColor &color, LightType type) {
+  switch (type) {
+  case LightType::DIRECTED:
+    mainLight->get<DirectedLight>()->setColor(fromQt(color));
+    break;
+  case LightType::AMBIENT: {
+    AmbientLight light(scene->getAmbientLight());
+    light.color = fromQt(color);
+
+    scene->setAmbientLight(light);
+    break;
+  }
+  default:
+    return;
+  }
+}

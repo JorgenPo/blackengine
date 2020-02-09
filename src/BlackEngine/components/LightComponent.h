@@ -16,6 +16,7 @@ enum class LightType {
   DIRECTED, // Direction light without brightness dependency to distance from light
   SPOT, // Same as directional light but with limited area and brightness depends on distance from light source
   POINT, // Point light is a multidirectional light such as lamp
+  AMBIENT,
 };
 
 class TransformComponent;
@@ -75,6 +76,8 @@ struct AmbientLight {
   Color color = Color::WHITE;
   float intensity = 0.1f;
 };
+
+std::ostream &operator<<(std::ostream &s, LightType type);
 
 }
 

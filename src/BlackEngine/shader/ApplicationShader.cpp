@@ -64,6 +64,8 @@ void ApplicationShader::setLight(const std::shared_ptr<LightComponent>& light) {
     case LightType::POINT:
       setPointLightImpl(std::dynamic_pointer_cast<PointLight>(light));
       break;
+  case LightType::AMBIENT:
+      setAmbientLight(AmbientLight{light->getColor(), light->getIntensity()});
   }
 }
 

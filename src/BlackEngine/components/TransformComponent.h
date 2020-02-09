@@ -13,6 +13,7 @@
 
 
 #include "Component.h"
+#include "LightComponent.h"
 
 namespace black {
 /**

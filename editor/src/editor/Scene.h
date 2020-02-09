@@ -54,6 +54,7 @@ public:
 public slots:
   void onLightIntensityChanged(double newIntensity);
   void onAmbientIntensityChanged(double newIntensity);
+  void onLightColorChanged(const QColor &color, LightType type);
   void setLightEnabled(int state);
 
   void mousePressEvent(QMouseEvent *event);

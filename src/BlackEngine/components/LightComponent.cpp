@@ -81,4 +81,16 @@ const glm::vec3 &PointLight::getPosition() const noexcept {
 LightType PointLight::getType() const {
   return LightType::POINT;
 }
+
+std::ostream &operator<<(std::ostream &s, LightType type) {
+  switch (type) {
+  case LightType::DIRECTED: s << "Directed";
+  case LightType::SPOT: s << "Spot";
+  case LightType::POINT: s << "Point";
+  case LightType::AMBIENT: s << "Ambient";
+  }
+
+  return s;
+}
+
 }

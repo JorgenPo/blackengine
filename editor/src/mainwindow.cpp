@@ -6,6 +6,7 @@
 #include <BlackEngine/Engine.h>
 
 #include <QTimer>
+#include <QtWidgets/QColorDialog>
 #include <QtWidgets/QMessageBox>
 
 using namespace black;
@@ -54,6 +55,14 @@ MainWindow::MainWindow(std::shared_ptr<RenderWindow> window)
     });
 
     connect(ui->actionContextVersion, &QAction::triggered, this, &MainWindow::showContextInfo);
+
+    connect(ui->btAmbientColor, &QPushButton::clicked, this, [this]() {
+      lightColorChanged(LightType::AMBIENT);
+    });
+
+    connect(ui->btLightColor, &QPushButton::clicked, this, [this]() {
+      lightColorChanged(LightType::DIRECTED);
+    });
 }
 
 MainWindow::~MainWindow()
@@ -190,4 +199,37 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
         MouseButtonAction::PRESSED,
         0
       });
+}
+
+void MainWindow::lightColorChanged(black::LightType lightType) {
+  QPushButton *button;
+
+  switch (lightType) {
+  case LightType::DIRECTED:
+    button = ui->btLightColor;
+    break;
+  case LightType::AMBIENT:
+    button = ui->btAmbientColor;
+    break;
+  default:
+    this->logger->warning("MainWindow::lightColorChanged failed to change light color lightType={}", lightType);
+    return;
+  }
+
+  const auto &palette = button->palette();
+  const auto &oldColor = palette.color(QPalette::Button);
+  auto newColor = QColorDialog::getColor(
+      palette.color(QPalette::Button),
+      this,
+      "Choose new light color");
+
+  if (newColor == oldColor) {
+    return;
+  }
+
+  QPalette newPalette(palette);
+  newPalette.setColor(QPalette::Button, newColor);
+  button->setPalette(newPalette);
+
+  renderWindow->getScene()->onLightColorChanged(newColor, lightType);
 }

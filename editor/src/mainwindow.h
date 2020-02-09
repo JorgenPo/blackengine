@@ -29,7 +29,6 @@ Q_OBJECT
   std::unique_ptr<ContextInfoWidget> contextInfoWidget;
 
   QPointF cursorPosition;
-
 public:
   explicit MainWindow(std::shared_ptr<RenderWindow> renderWindow);
   ~MainWindow() override;
@@ -63,6 +62,7 @@ private:
 public slots:
   void onUpdateTime();
   void showContextInfo();
+  void lightColorChanged(black::LightType lightType);
 
   //void onLightIntensityChanged(double newIntensity);
 };
