@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>300</height>
+    <height>271</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -63,6 +63,12 @@
    </item>
    <item row="2" column="1">
     <widget class="QLabel" name="lGlslVersion">
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
      <property name="text">
       <string/>
      </property>

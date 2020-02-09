@@ -21,6 +21,7 @@ ContextInfoWidget::ContextInfoWidget(QWidget *parent, std::shared_ptr<blackedito
 , ui(std::make_shared<Ui::ContextInfo>()) {
   ui->setupUi(this);
 
+  renderWindow->setRenderTargetCurrent();
   ui->lContextVersion->setText(renderWindow->getOpenGLVersionString().c_str());
   ui->lGlslVersion->setText(renderWindow->getGLSLVersionString().c_str());
   ui->lContextProfile->setText(renderWindow->getProfileString().c_str());

@@ -12,6 +12,7 @@
 #include <BlackEngine/camera/Camera.h>
 
 #include <QMouseEvent>
+#include <utility>
 
 using namespace black;
 using namespace blackeditor;
@@ -24,13 +25,13 @@ RenderWindow::RenderWindow(QWidget *parent) :
     , scene(nullptr)
 {
     QSurfaceFormat contextInfo;
-    contextInfo.setVersion(4, 3);
+    contextInfo.setVersion(getContextVersion().major, getContextVersion().minor);
     contextInfo.setProfile(QSurfaceFormat::CoreProfile);
     this->setFormat(contextInfo);
 }
 
 void RenderWindow::setInput(std::shared_ptr<black::InputSystemInterface> input) {
-  this->input = input;
+  this->input = std::move(input);
 }
 
 void RenderWindow::initializeGL()
@@ -118,7 +119,7 @@ std::shared_ptr<Scene> RenderWindow::getScene() const noexcept {
 }
 
 std::string RenderWindow::getOpenGLVersionString() const {
-  return reinterpret_cast<const char*>(glGetString(GL_VERSION));
+  return fmt::format("{}.{}", format().majorVersion(), format().minorVersion());
 }
 
 std::string RenderWindow::getGLSLVersionString() const {

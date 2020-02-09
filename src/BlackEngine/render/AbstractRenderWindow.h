@@ -105,6 +105,10 @@ public:
   void setFullScreen(bool isFullScreen) {
     data.isFullScreen = isFullScreen;
   }
+
+  [[nodiscard]] ContextVersion getContextVersion() const noexcept {
+    return data.contextVersion;
+  }
 };
 }
 
