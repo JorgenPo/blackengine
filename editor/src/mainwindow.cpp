@@ -7,9 +7,9 @@
 
 #include <QTimer>
 #include <QDockWidget>
-#include <QtWidgets/QColorDialog>
-#include <QtWidgets/QMessageBox>
-
+#include <QColorDialog>
+#include <QMessageBox>
+#include <QMenuBar>
 
 using namespace black;
 using namespace blackeditor;
@@ -33,12 +33,12 @@ MainWindow::MainWindow(std::shared_ptr<RenderWindow> window)
     Logger::SetLogLevel(LogLevel::TRACE);
 
     setUpDocks();
-    setUpSignals();
     setUpMenus();
+    setUpSignals();
 }
 
 void MainWindow::setUpSignals() {
-//    connect(ui->actionContextVersion, &QAction::triggered, this, &MainWindow::showContextInfo);
+
 }
 
 void MainWindow::setUpDocks() {
@@ -49,10 +49,16 @@ void MainWindow::setUpDocks() {
 
   lightDock->setWidget(lightSettings);
   addDockWidget(Qt::RightDockWidgetArea, lightDock);
+
+  menuBar()->addMenu(tr("View"))->addAction(lightDock->toggleViewAction());
 }
 
 void MainWindow::setUpMenus() {
+  auto menu = menuBar();
+  auto about = menu->addMenu(tr("About"));
+  auto contextInfoAction = about->addAction(tr("Context Info"));
 
+  connect(contextInfoAction, &QAction::triggered, this, &MainWindow::showContextInfo);
 }
 
 MainWindow::~MainWindow() {
