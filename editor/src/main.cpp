@@ -32,6 +32,7 @@ public:
     {
         auto renderWindow = std::make_shared<RenderWindow>(nullptr);
         mainWindow = std::make_shared<MainWindow>(renderWindow);
+        renderWindow->setMainWindow(mainWindow);
         renderWindow->setInput(mainWindow);
         systemInterface = std::make_shared<QtSystemInterface>(mainWindow, std::move(renderWindow));
     }

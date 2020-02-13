@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "renderwindow.h"
 #include "widgets/LightSettingsWidget.h"
+#include "widgets/ContextInfoWidget.h"
 
 #include <BlackEngine/Engine.h>
 
@@ -37,33 +38,16 @@ MainWindow::MainWindow(std::shared_ptr<RenderWindow> window)
 }
 
 void MainWindow::setUpSignals() {
-//    connect(ui->hsLightIntensity, &QSlider::valueChanged,this,[=](int value) {
-//      renderWindow->getScene()->onLightIntensityChanged(static_cast<float>(value) / 100);
-//    });
-//
-//    connect(ui->hsAmbientIntensity,  &QSlider::valueChanged, this, [=](int value) {
-//      renderWindow->getScene()->onAmbientIntensityChanged(static_cast<float>(value) / 100);
-//    });
-//
-//    connect(ui->cbDisableLight, &QCheckBox::clicked, this, [=]() {
-//      renderWindow->getScene()->setLightEnabled(!ui->cbDisableLight->checkState());
-//    });
-//
 //    connect(ui->actionContextVersion, &QAction::triggered, this, &MainWindow::showContextInfo);
-//
-//    connect(ui->btAmbientColor, &QPushButton::clicked, this, [this]() {
-//      lightColorChanged(LightType::AMBIENT);
-//    });
-//
-//    connect(ui->btLightColor, &QPushButton::clicked, this, [this]() {
-//      lightColorChanged(LightType::DIRECTED);
-//    });
 }
+
 void MainWindow::setUpDocks() {
   auto lightDock = new QDockWidget(tr("Light settings"), this);
   lightDock->setAllowedAreas(Qt::RightDockWidgetArea | Qt::LeftDockWidgetArea);
-  lightDock->setWidget(new LightSettingsWidget(renderWindow));
 
+  lightSettings = new LightSettingsWidget(renderWindow);
+
+  lightDock->setWidget(lightSettings);
   addDockWidget(Qt::RightDockWidgetArea, lightDock);
 }
 
@@ -126,11 +110,11 @@ void MainWindow::init()
 
 void MainWindow::initializeResources()
 {
-
 }
 
 void MainWindow::run()
 {
+
 }
 
 void MainWindow::onUpdateTime()
@@ -204,35 +188,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
       });
 }
 
-void MainWindow::lightColorChanged(black::LightType lightType) {
-//  QPushButton *button;
-//
-//  switch (lightType) {
-//  case LightType::DIRECTED:
-//    button = ui->btLightColor;
-//    break;
-//  case LightType::AMBIENT:
-//    button = ui->btAmbientColor;
-//    break;
-//  default:
-//    this->logger->warning("MainWindow::lightColorChanged failed to change light color lightType={}", lightType);
-//    return;
-//  }
-//
-//  const auto &palette = button->palette();
-//  const auto &oldColor = palette.color(QPalette::Button);
-//  auto newColor = QColorDialog::getColor(
-//      palette.color(QPalette::Button),
-//      this,
-//      "Choose new light color");
-//
-//  if (newColor == oldColor) {
-//    return;
-//  }
-//
-//  QPalette newPalette(palette);
-//  newPalette.setColor(QPalette::Button, newColor);
-//  button->setPalette(newPalette);
-//
-//  renderWindow->getScene()->onLightColorChanged(newColor, lightType);
+void MainWindow::onSceneInitialized() {
+  lightSettings->setLightIntensity(LightType::AMBIENT, 40);
+  lightSettings->setLightIntensity(LightType::DIRECTED, 40);
 }

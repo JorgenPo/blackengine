@@ -8,16 +8,17 @@
 #include <BlackEngine/SystemInterface.h>
 #include <BlackEngine/input/Keyboard.h>
 
-#include "widgets/ContextInfoWidget.h"
-
 namespace blackeditor {
 class RenderWindow;
+class LightSettingsWidget;
+class ContextInfoWidget;
 
 class MainWindow : public QMainWindow, public black::AbstractApplication, public black::InputSystemInterface {
 Q_OBJECT
 
   std::shared_ptr<RenderWindow> renderWindow;
   std::shared_ptr<black::PerformanceCounter> timer;
+  LightSettingsWidget *lightSettings;
 
   std::unique_ptr<QTimer> updateTimer;
 
@@ -50,6 +51,7 @@ protected:
   void init() override;
   void keyPressEvent(QKeyEvent *event) override;
   void mousePressEvent(QMouseEvent *event) override;
+
 private:
   void initializeResources() override;
   void run() override;
@@ -57,10 +59,10 @@ private:
 public slots:
   void onUpdateTime();
   void showContextInfo();
-  void lightColorChanged(black::LightType lightType);
   void setUpSignals();
   void setUpDocks();
   void setUpMenus();
+  void onSceneInitialized();
 
   //void onLightIntensityChanged(double newIntensity);
 };

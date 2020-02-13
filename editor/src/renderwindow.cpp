@@ -1,5 +1,6 @@
 #include <glad/glad.h>
 #include "renderwindow.h"
+#include "mainwindow.h"
 
 #include <BlackEngine/Engine.h>
 #include <BlackEngine/log/Logger.h>
@@ -17,12 +18,13 @@
 using namespace black;
 using namespace blackeditor;
 
-RenderWindow::RenderWindow(QWidget *parent) :
-    QOpenGLWidget(parent)
+RenderWindow::RenderWindow(std::shared_ptr<MainWindow> mainWindow) :
+    QOpenGLWidget(mainWindow.get())
     , AbstractRenderWindow(black::WindowData{
       "BlackEngine",this->width(), this->height(),
       false, {4, 3}})
     , scene(nullptr)
+    , mainWindow(std::move(mainWindow))
 {
     QSurfaceFormat contextInfo;
     contextInfo.setVersion(getContextVersion().major, getContextVersion().minor);
@@ -30,8 +32,8 @@ RenderWindow::RenderWindow(QWidget *parent) :
     this->setFormat(contextInfo);
 }
 
-void RenderWindow::setInput(std::shared_ptr<black::InputSystemInterface> input) {
-  this->input = std::move(input);
+void RenderWindow::setInput(std::shared_ptr<black::InputSystemInterface> newInput) {
+  this->input = std::move(newInput);
 }
 
 void RenderWindow::initializeGL()
@@ -45,6 +47,7 @@ void RenderWindow::initializeGL()
 
     scene = std::make_shared<Scene>(shared_from_this(), input);
     scene->initialize();
+    mainWindow->onSceneInitialized();
 }
 
 void RenderWindow::resizeGL(int w, int h)
@@ -149,4 +152,8 @@ void RenderWindow::enterEvent(QEvent *event) {
 
 void RenderWindow::leaveEvent(QEvent *event) {
   isFocused = false;
+}
+
+void RenderWindow::setMainWindow(std::shared_ptr<MainWindow> newMainWindow) {
+  mainWindow = std::move(newMainWindow);
 }

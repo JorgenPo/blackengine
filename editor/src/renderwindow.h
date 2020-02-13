@@ -14,6 +14,8 @@
 
 namespace blackeditor {
 
+class MainWindow;
+
 class RenderWindow :
     public QOpenGLWidget,
     public black::AbstractRenderWindow,
@@ -22,12 +24,14 @@ class RenderWindow :
   std::shared_ptr<black::RendererInterface> renderer;
   std::shared_ptr<Scene> scene;
   std::shared_ptr<black::InputSystemInterface> input;
+  std::shared_ptr<MainWindow> mainWindow;
   bool isFocused = false;
 
 public:
-  explicit RenderWindow(QWidget *parent);
+  explicit RenderWindow(std::shared_ptr<MainWindow> mainWindow);
 
   void setInput(std::shared_ptr<black::InputSystemInterface> input);
+  void setMainWindow(std::shared_ptr<MainWindow> mainWindow);
 
   std::string getOpenGLVersionString() const;
   std::string getGLSLVersionString() const;
