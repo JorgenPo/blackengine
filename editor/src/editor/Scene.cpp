@@ -21,6 +21,7 @@
 
 #include <memory>
 #include <BlackEngine/util/ShaderManager.h>
+#include <mainwindow.h>
 
 using namespace blackeditor;
 using namespace black;
@@ -115,6 +116,9 @@ void Scene::updateSelection() {
   auto ray = tracer->calculateRay(input->getMouseX(), input->getMouseY());
   auto hoveredObject = this->scene->getIntersectingObject(ray);
 
+  bool wasHovered = selected->getObject() != nullptr;
+  bool hovered = hoveredObject != nullptr;
+
   // Set highlighting shader if some object was selected
   if (hoveredObject && !selected->isObjectSelected()) {
     selected->setObject(hoveredObject);
@@ -128,6 +132,11 @@ void Scene::updateSelection() {
       auto position = glm::vec3(point.x, terrain->getTerrain()->getHeightAt(point.x, point.y), point.z);
       selected->getObject()->transform->setPosition(position);
     }
+  }
+
+  if (!selected->isObjectSelected() && hovered != wasHovered) {
+    auto cursor = hovered ? MainWindow::CURSOR_HAND : MainWindow::CURSOR_NORMAL;
+    input->setCursor(cursor);
   }
 }
 
@@ -180,8 +189,10 @@ void Scene::initializeModels() {
 void Scene::mousePressEvent(QMouseEvent *event) {
   if (event->button() == Qt::LeftButton) {
     if (selected->isObjectSelected()) {
+      input->setCursor(MainWindow::CURSOR_HAND);
       selected->unselect();
     } else {
+      input->setCursor(MainWindow::CURSOR_CLOSED_HAND);
       selected->select();
     }
   }

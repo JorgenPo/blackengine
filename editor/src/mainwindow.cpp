@@ -35,6 +35,10 @@ MainWindow::MainWindow(std::shared_ptr<RenderWindow> window)
     setUpDocks();
     setUpMenus();
     setUpSignals();
+
+    cursors[CURSOR_HAND] = QCursor(Qt::CursorShape::OpenHandCursor);
+    cursors[CURSOR_NORMAL] = QCursor(Qt::CursorShape::ArrowCursor);
+    cursors[CURSOR_CLOSED_HAND] = QCursor(Qt::CursorShape::ClosedHandCursor);
 }
 
 void MainWindow::setUpSignals() {
@@ -97,10 +101,16 @@ void MainWindow::setMouseAccelerated(bool accelerated)
 
 void MainWindow::addCursor(std::string name, const black::Image &image)
 {
+  logger->info("Add cursor name={}", name);
 }
 
 void MainWindow::setCursor(std::string name)
 {
+  if (auto cursor = cursors.find(name); cursor != cursors.end()) {
+    QWidget::setCursor(cursor->second);
+  } else {
+    logger->warning("Failed to set cursor: name={}", name);
+  }
 }
 
 void MainWindow::update(float dt)
@@ -127,6 +137,7 @@ void MainWindow::onUpdateTime()
 {
     this->update(0);
     renderWindow->updateRenderTarget();
+    scrollDelta = {};
 }
 
 float MainWindow::getMouseX() const noexcept {
@@ -156,10 +167,10 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
 }
 
 float MainWindow::getScrollX() const {
-  return 0;
+  return scrollDelta.x();
 }
 float MainWindow::getScrollY() const {
-  return 0;
+  return scrollDelta.y();
 }
 
 bool MainWindow::isMouseButtonPressed(MouseButton button) const {
@@ -197,4 +208,9 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
 void MainWindow::onSceneInitialized() {
   lightSettings->setLightIntensity(LightType::AMBIENT, 40);
   lightSettings->setLightIntensity(LightType::DIRECTED, 40);
+}
+
+void MainWindow::wheelEvent(QWheelEvent *event) {
+  scrollDelta.setX((float) event->angleDelta().x() * scrollSpeed);
+  scrollDelta.setY((float) event->angleDelta().y() * scrollSpeed);
 }

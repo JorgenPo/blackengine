@@ -25,7 +25,16 @@ Q_OBJECT
   std::unique_ptr<ContextInfoWidget> contextInfoWidget;
 
   QPointF cursorPosition;
+  QPointF scrollDelta;
+  float scrollSpeed = 0.05f;
+
+  std::unordered_map<std::string, QCursor> cursors;
+
 public:
+  static constexpr const char *CURSOR_HAND = "Hand";
+  static constexpr const char *CURSOR_CLOSED_HAND = "ClosedHand";
+  static constexpr const char *CURSOR_NORMAL = "Normal";
+
   explicit MainWindow(std::shared_ptr<RenderWindow> renderWindow);
   ~MainWindow() override;
 
@@ -51,6 +60,7 @@ protected:
   void init() override;
   void keyPressEvent(QKeyEvent *event) override;
   void mousePressEvent(QMouseEvent *event) override;
+  void wheelEvent(QWheelEvent *event) override;
 
 private:
   void initializeResources() override;

@@ -4,12 +4,7 @@
 
 #include <BlackEngine/Engine.h>
 #include <BlackEngine/log/Logger.h>
-#include <BlackEngine/render/RenderSystemInterface.h>
-#include <BlackEngine/util/ModelManager.h>
-#include <BlackEngine/GameObject.h>
 #include <BlackEngine/components/BoundingComponent.h>
-#include <BlackEngine/components/TransformComponent.h>
-#include <BlackEngine/components/ModelComponent.h>
 #include <BlackEngine/camera/Camera.h>
 
 #include <QMouseEvent>
