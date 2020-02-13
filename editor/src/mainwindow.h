@@ -10,10 +10,6 @@
 
 #include "widgets/ContextInfoWidget.h"
 
-QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
-QT_END_NAMESPACE
-
 namespace blackeditor {
 class RenderWindow;
 
@@ -24,7 +20,6 @@ Q_OBJECT
   std::shared_ptr<black::PerformanceCounter> timer;
 
   std::unique_ptr<QTimer> updateTimer;
-  Ui::MainWindow *ui;
 
   std::unique_ptr<ContextInfoWidget> contextInfoWidget;
 
@@ -63,6 +58,9 @@ public slots:
   void onUpdateTime();
   void showContextInfo();
   void lightColorChanged(black::LightType lightType);
+  void setUpSignals();
+  void setUpDocks();
+  void setUpMenus();
 
   //void onLightIntensityChanged(double newIntensity);
 };

@@ -16,13 +16,16 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class ContextInfo; }
 QT_END_NAMESPACE
 
+namespace blackeditor {
 class ContextInfoWidget : public QWidget {
-  Q_OBJECT;
+Q_OBJECT;
 
   std::shared_ptr<Ui::ContextInfo> ui;
 
 public:
   ContextInfoWidget(QWidget *parent, std::shared_ptr<blackeditor::RenderWindow> renderWindow);
 };
+
+}
 
 #endif //BLACKENGINE_EDITOR_SRC_WIDGETS_CONTEXTINFOWIDGET_H

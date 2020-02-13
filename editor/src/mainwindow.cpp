@@ -1,39 +1,28 @@
 #include "mainwindow.h"
 #include "renderwindow.h"
-
-#include "./ui_mainwindow.h"
+#include "widgets/LightSettingsWidget.h"
 
 #include <BlackEngine/Engine.h>
 
 #include <QTimer>
+#include <QDockWidget>
 #include <QtWidgets/QColorDialog>
 #include <QtWidgets/QMessageBox>
+
 
 using namespace black;
 using namespace blackeditor;
 
 MainWindow::MainWindow(std::shared_ptr<RenderWindow> window)
     : QMainWindow(nullptr)
-    , AbstractApplication("BlackEngine", this->width(), this->height(), false)
+    , AbstractApplication("BlackEngine", 800, 600, false)
     , renderWindow(std::move(window))
     , updateTimer(std::make_unique<QTimer>(this))
-    , ui(new Ui::MainWindow)
     , contextInfoWidget(nullptr)
 {
-    ui->setupUi(this);
-
-    // Substitute OpenGL widget with render window
-    QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    sizePolicy.setHorizontalStretch(0);
-    sizePolicy.setVerticalStretch(0);
-    sizePolicy.setHeightForWidth(renderWindow->sizePolicy().hasHeightForWidth());
-    renderWindow->setSizePolicy(sizePolicy);
-
-//    ui->gridLayout->setColumnStretch(0, 2);
-//    ui->gridLayout->setColumnStretch(1, 1);
-
-    ui->gridLayout->removeItem(ui->verticalSpacer);
-    ui->gridLayout->addWidget(renderWindow.get(), 0, 0);
+    setCentralWidget(renderWindow.get());
+    setFixedWidth(800);
+    setFixedHeight(600);
 
     // Setup update timer
     auto timerPtr = updateTimer.get();
@@ -42,37 +31,51 @@ MainWindow::MainWindow(std::shared_ptr<RenderWindow> window)
 
     Logger::SetLogLevel(LogLevel::TRACE);
 
-    connect(ui->hsLightIntensity, &QSlider::valueChanged,this,[=](int value) {
-      renderWindow->getScene()->onLightIntensityChanged(static_cast<float>(value) / 100);
-    });
-
-    connect(ui->hsAmbientIntensity,  &QSlider::valueChanged, this, [=](int value) {
-      renderWindow->getScene()->onAmbientIntensityChanged(static_cast<float>(value) / 100);
-    });
-
-    connect(ui->cbDisableLight, &QCheckBox::clicked, this, [=]() {
-      renderWindow->getScene()->setLightEnabled(!ui->cbDisableLight->checkState());
-    });
-
-    connect(ui->actionContextVersion, &QAction::triggered, this, &MainWindow::showContextInfo);
-
-    connect(ui->btAmbientColor, &QPushButton::clicked, this, [this]() {
-      lightColorChanged(LightType::AMBIENT);
-    });
-
-    connect(ui->btLightColor, &QPushButton::clicked, this, [this]() {
-      lightColorChanged(LightType::DIRECTED);
-    });
+    setUpDocks();
+    setUpSignals();
+    setUpMenus();
 }
 
-MainWindow::~MainWindow()
-{
-    delete ui;
+void MainWindow::setUpSignals() {
+//    connect(ui->hsLightIntensity, &QSlider::valueChanged,this,[=](int value) {
+//      renderWindow->getScene()->onLightIntensityChanged(static_cast<float>(value) / 100);
+//    });
+//
+//    connect(ui->hsAmbientIntensity,  &QSlider::valueChanged, this, [=](int value) {
+//      renderWindow->getScene()->onAmbientIntensityChanged(static_cast<float>(value) / 100);
+//    });
+//
+//    connect(ui->cbDisableLight, &QCheckBox::clicked, this, [=]() {
+//      renderWindow->getScene()->setLightEnabled(!ui->cbDisableLight->checkState());
+//    });
+//
+//    connect(ui->actionContextVersion, &QAction::triggered, this, &MainWindow::showContextInfo);
+//
+//    connect(ui->btAmbientColor, &QPushButton::clicked, this, [this]() {
+//      lightColorChanged(LightType::AMBIENT);
+//    });
+//
+//    connect(ui->btLightColor, &QPushButton::clicked, this, [this]() {
+//      lightColorChanged(LightType::DIRECTED);
+//    });
+}
+void MainWindow::setUpDocks() {
+  auto lightDock = new QDockWidget(tr("Light settings"), this);
+  lightDock->setAllowedAreas(Qt::RightDockWidgetArea | Qt::LeftDockWidgetArea);
+  lightDock->setWidget(new LightSettingsWidget(renderWindow));
+
+  addDockWidget(Qt::RightDockWidgetArea, lightDock);
 }
 
-//void MainWindow::onLightIntensityChanged(double newIntensity) {
-//  Logger::Get("editor")->trace("New intensity: {}", newIntensity);
-//}
+void MainWindow::setUpMenus() {
+
+}
+
+MainWindow::~MainWindow() {
+  setCentralWidget(nullptr);
+  Logger::Get("MainWindow")->info("Render window ptr = {}", (uint64_t)renderWindow.get());
+  Logger::Get("MainWindow")->info("Render window ptr counter = {}", renderWindow.use_count());
+};
 
 bool MainWindow::isKeyPressed(black::Key key)
 {
@@ -202,34 +205,34 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
 }
 
 void MainWindow::lightColorChanged(black::LightType lightType) {
-  QPushButton *button;
-
-  switch (lightType) {
-  case LightType::DIRECTED:
-    button = ui->btLightColor;
-    break;
-  case LightType::AMBIENT:
-    button = ui->btAmbientColor;
-    break;
-  default:
-    this->logger->warning("MainWindow::lightColorChanged failed to change light color lightType={}", lightType);
-    return;
-  }
-
-  const auto &palette = button->palette();
-  const auto &oldColor = palette.color(QPalette::Button);
-  auto newColor = QColorDialog::getColor(
-      palette.color(QPalette::Button),
-      this,
-      "Choose new light color");
-
-  if (newColor == oldColor) {
-    return;
-  }
-
-  QPalette newPalette(palette);
-  newPalette.setColor(QPalette::Button, newColor);
-  button->setPalette(newPalette);
-
-  renderWindow->getScene()->onLightColorChanged(newColor, lightType);
+//  QPushButton *button;
+//
+//  switch (lightType) {
+//  case LightType::DIRECTED:
+//    button = ui->btLightColor;
+//    break;
+//  case LightType::AMBIENT:
+//    button = ui->btAmbientColor;
+//    break;
+//  default:
+//    this->logger->warning("MainWindow::lightColorChanged failed to change light color lightType={}", lightType);
+//    return;
+//  }
+//
+//  const auto &palette = button->palette();
+//  const auto &oldColor = palette.color(QPalette::Button);
+//  auto newColor = QColorDialog::getColor(
+//      palette.color(QPalette::Button),
+//      this,
+//      "Choose new light color");
+//
+//  if (newColor == oldColor) {
+//    return;
+//  }
+//
+//  QPalette newPalette(palette);
+//  newPalette.setColor(QPalette::Button, newColor);
+//  button->setPalette(newPalette);
+//
+//  renderWindow->getScene()->onLightColorChanged(newColor, lightType);
 }

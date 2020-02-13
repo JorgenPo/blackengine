@@ -3,6 +3,8 @@
 
 #include <memory>
 
+using namespace blackeditor;
+
 constexpr const char *to_string(QSurfaceFormat::OpenGLContextProfile profile) {
   switch (profile) {
   case QSurfaceFormat::OpenGLContextProfile::CompatibilityProfile:
