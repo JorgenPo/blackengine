@@ -21,6 +21,7 @@ Q_OBJECT
   std::shared_ptr<black::PerformanceCounter> timer;
   LightSettingsWidget *lightSettings;
   ObjectInfoWidget *objectInfo;
+  QDockWidget *objectInfoDock;
 
   std::unique_ptr<QTimer> updateTimer;
 
@@ -76,6 +77,8 @@ public slots:
   void setUpMenus();
   void onSceneInitialized();
 
+private slots:
+  void objectSelected(std::shared_ptr<black::GameObject> object);
   //void onLightIntensityChanged(double newIntensity);
 };
 

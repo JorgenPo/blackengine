@@ -13,6 +13,7 @@
 #include <QMenuBar>
 #include <QSize>
 #include <QResizeEvent>
+#include <QStatusBar>
 
 using namespace black;
 using namespace blackeditor;
@@ -55,11 +56,12 @@ void MainWindow::setUpDocks() {
   lightDock->setWidget(lightSettings);
   addDockWidget(Qt::RightDockWidgetArea, lightDock);
 
-  auto objectInfoDock = new QDockWidget(tr("Object info"), this);
+  objectInfoDock = new QDockWidget(tr("Object info"), this);
   objectInfoDock->setAllowedAreas(Qt::RightDockWidgetArea | Qt::LeftDockWidgetArea);
 
   objectInfo = new ObjectInfoWidget();
   objectInfoDock->setWidget(objectInfo);
+  objectInfoDock->hide();
   addDockWidget(Qt::LeftDockWidgetArea, objectInfoDock);
 
   auto viewMenu = menuBar()->addMenu(tr("View"));
@@ -73,6 +75,8 @@ void MainWindow::setUpMenus() {
   auto contextInfoAction = about->addAction(tr("Context Info"));
 
   connect(contextInfoAction, &QAction::triggered, this, &MainWindow::showContextInfo);
+
+  statusBar()->showMessage(tr("Ready"));
 }
 
 MainWindow::~MainWindow() {
@@ -219,7 +223,7 @@ void MainWindow::onSceneInitialized() {
   lightSettings->setLightIntensity(LightType::AMBIENT, 40);
   lightSettings->setLightIntensity(LightType::DIRECTED, 40);
 
-  connect(renderWindow->getScene().get(), &Scene::objectSelected, objectInfo, &ObjectInfoWidget::setObject);
+  connect(renderWindow->getScene().get(), &Scene::objectSelected, this, &MainWindow::objectSelected);
   connect(renderWindow->getScene().get(), &Scene::selectedObjectMoved, objectInfo, &ObjectInfoWidget::onPositionChanged);
 }
 
@@ -230,8 +234,18 @@ void MainWindow::wheelEvent(QWheelEvent *event) {
 
 void MainWindow::resizeEvent(QResizeEvent *event) {
   QWidget::resizeEvent(event);
+}
 
-//  const auto &size = event->size();
-//  setWindowWidth(size.width());
-//  setWindowWidth(size.height());
+void MainWindow::objectSelected(std::shared_ptr<black::GameObject> object) {
+  objectInfoDock->hide();
+
+  if (object == nullptr) {
+    statusBar()->showMessage(tr("Ready"));
+    return;
+  }
+
+  objectInfoDock->show();
+
+  statusBar()->showMessage(tr("Working with") + " " + object->getName().data());
+  objectInfo->setObject(std::move(object));
 }

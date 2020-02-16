@@ -81,10 +81,20 @@ QLayout *ObjectInfoWidget::renderComponent(const std::shared_ptr<black::Transfor
   auto layout = new QVBoxLayout();
   m_position = new Vector3DEditWidget(toQtVector(component->getPosition()));
   connect(m_position, &Vector3DEditWidget::vectorChanged, this, &ObjectInfoWidget::onPositionChanged);
+  layout->addWidget(new QLabel(QObject::tr("Position")));
   layout->addWidget(m_position);
 
+  m_rotation = new Vector3DEditWidget(toQtVector(component->getRotation()));
+  connect(m_rotation, &Vector3DEditWidget::vectorChanged, this, &ObjectInfoWidget::onRotationChanged);
+  layout->addWidget(new QLabel(QObject::tr("Rotation")));
+  layout->addWidget(m_rotation);
+
+  m_scale = new Vector3DEditWidget(toQtVector(component->getScale()));
+  connect(m_scale, &Vector3DEditWidget::vectorChanged, this, &ObjectInfoWidget::onScaleChanged);
+  layout->addWidget(new QLabel(QObject::tr("Scale")));
+  layout->addWidget(m_scale);
+
   auto componentLayout = new QVBoxLayout();
-  componentLayout->addWidget(new QLabel(QObject::tr("Position")));
   componentLayout->addLayout(layout);
   return componentLayout;
 }
@@ -123,5 +133,17 @@ void ObjectInfoWidget::updateObjectInfo() {
 void ObjectInfoWidget::onPositionChanged(const QVector3D &position) {
   if (m_object) {
     m_object->transform->setPosition(fromQtVector(position));
+  }
+}
+
+void ObjectInfoWidget::onRotationChanged(const QVector3D &rotation) {
+  if (m_object) {
+    m_object->transform->setRotation(fromQtVector(rotation));
+  }
+}
+
+void ObjectInfoWidget::onScaleChanged(const QVector3D &scale) {
+  if (m_object) {
+    m_object->transform->setScale(fromQtVector(scale));
   }
 }

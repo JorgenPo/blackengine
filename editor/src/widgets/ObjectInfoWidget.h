@@ -38,6 +38,8 @@ public slots:
   void setObject(std::shared_ptr<black::GameObject> object);
   void updateObjectInfo();
   void onPositionChanged(const QVector3D &position);
+  void onRotationChanged(const QVector3D &rotation);
+  void onScaleChanged(const QVector3D &scale);
 
 private:
   void setUpLayout();

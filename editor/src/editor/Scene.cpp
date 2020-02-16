@@ -124,7 +124,7 @@ void Scene::updateSelection() {
   if (hoveredObject && !selected->isObjectSelected()) {
     selected->setObject(hoveredObject);
     input->setCursor(MainWindow::CURSOR_HAND);
-  } else if (!hoveredObject && !selected->isObjectSelected()) {
+  } else if (selected->getObject() != nullptr && !hoveredObject && !selected->isObjectSelected()) {
     selected->resetObject();
     emit objectSelected(nullptr);
   } else if (!hoveredObject) {
