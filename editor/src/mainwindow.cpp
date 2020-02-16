@@ -3,17 +3,18 @@
 #include "widgets/LightSettingsWidget.h"
 #include "widgets/ContextInfoWidget.h"
 #include "widgets/ObjectInfoWidget.h"
+#include "widgets/PerformanceInfoWidget.h"
 
 #include <BlackEngine/Engine.h>
+#include <BlackEngine/performance/PerformanceCounter.h>
 
 #include <QTimer>
 #include <QDockWidget>
-#include <QColorDialog>
-#include <QMessageBox>
 #include <QMenuBar>
 #include <QSize>
 #include <QResizeEvent>
 #include <QStatusBar>
+#include <QtCore/QCoreApplication>
 
 using namespace black;
 using namespace blackeditor;
@@ -22,22 +23,30 @@ MainWindow::MainWindow(std::shared_ptr<RenderWindow> window)
     : QMainWindow(nullptr)
     , AbstractApplication("BlackEngine", 1280, 1024, false)
     , renderWindow(std::move(window))
+    , timer(std::make_shared<PerformanceCounter>())
     , updateTimer(std::make_unique<QTimer>(this))
+    , guiUpdateTimer(std::make_unique<QTimer>(this))
     , contextInfoWidget(nullptr)
 {
     setCentralWidget(renderWindow.get());
     setMinimumWidth(this->getWindowWidth());
     setMinimumHeight(this->getWindowHeight());
+    setFullScreen(true);
 
     // Setup update timer
     auto timerPtr = updateTimer.get();
     connect(timerPtr, SIGNAL(timeout()), this, SLOT(onUpdateTime()));
+    timerPtr->setInterval(1000 / 30); // 30fps
     timerPtr->start();
+
+    connect(guiUpdateTimer.get(), SIGNAL(timeout()), this, SLOT(onUpdateGuiTime()));
+    guiUpdateTimer->setInterval(1000 / 4); // 4 fps
+    guiUpdateTimer->start();
 
     Logger::SetLogLevel(LogLevel::TRACE);
 
-    setUpDocks();
     setUpMenus();
+    setUpDocks();
     setUpSignals();
 
     cursors[CURSOR_HAND] = QCursor(Qt::CursorShape::OpenHandCursor);
@@ -71,12 +80,22 @@ void MainWindow::setUpDocks() {
 
 void MainWindow::setUpMenus() {
   auto menu = menuBar();
+
+  auto file = menu->addMenu(tr("File"));
+  auto exitAction = file->addAction(tr("Exit"));
+  exitAction->setShortcut(QKeySequence::Quit);
+  connect(exitAction, &QAction::triggered, this, [](){
+    QCoreApplication::exit(0);
+  });
+
   auto about = menu->addMenu(tr("About"));
   auto contextInfoAction = about->addAction(tr("Context Info"));
-
   connect(contextInfoAction, &QAction::triggered, this, &MainWindow::showContextInfo);
 
   statusBar()->showMessage(tr("Ready"));
+
+  performanceInfo = new PerformanceInfoWidget(timer);
+  statusBar()->addPermanentWidget(performanceInfo);
 }
 
 MainWindow::~MainWindow() {
@@ -135,7 +154,6 @@ void MainWindow::update(float dt)
 void MainWindow::init()
 {
     auto renderSystem = Engine::GetCurrentRenderSystem();
-    timer = std::make_shared<PerformanceCounter>();
 }
 
 void MainWindow::initializeResources()
@@ -149,9 +167,11 @@ void MainWindow::run()
 
 void MainWindow::onUpdateTime()
 {
+    this->timer->update();
     this->update(0);
     renderWindow->updateRenderTarget();
     scrollDelta = {};
+    this->timer->update();
 }
 
 float MainWindow::getMouseX() const noexcept {
@@ -248,4 +268,8 @@ void MainWindow::objectSelected(std::shared_ptr<black::GameObject> object) {
 
   statusBar()->showMessage(tr("Working with") + " " + object->getName().data());
   objectInfo->setObject(std::move(object));
+}
+
+void MainWindow::onUpdateGuiTime() {
+  performanceInfo->updateInfo();
 }

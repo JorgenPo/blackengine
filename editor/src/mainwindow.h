@@ -3,16 +3,22 @@
 
 #include <QMainWindow>
 
-#include <BlackEngine/application/GameApplication.h>
+#include <BlackEngine/application/AbstractApplication.h>
 #include <BlackEngine/input/InputSystemInterface.h>
 #include <BlackEngine/SystemInterface.h>
 #include <BlackEngine/input/Keyboard.h>
+
+namespace black {
+class PerformanceCounter;
+class GameObject;
+}
 
 namespace blackeditor {
 class RenderWindow;
 class LightSettingsWidget;
 class ContextInfoWidget;
 class ObjectInfoWidget;
+class PerformanceInfoWidget;
 
 class MainWindow : public QMainWindow, public black::AbstractApplication, public black::InputSystemInterface {
 Q_OBJECT
@@ -22,8 +28,10 @@ Q_OBJECT
   LightSettingsWidget *lightSettings;
   ObjectInfoWidget *objectInfo;
   QDockWidget *objectInfoDock;
+  PerformanceInfoWidget *performanceInfo;
 
   std::unique_ptr<QTimer> updateTimer;
+  std::unique_ptr<QTimer> guiUpdateTimer;
 
   std::unique_ptr<ContextInfoWidget> contextInfoWidget;
 
@@ -32,7 +40,6 @@ Q_OBJECT
   float scrollSpeed = 0.05f;
 
   std::unordered_map<std::string, QCursor> cursors;
-
 public:
   static constexpr const char *CURSOR_HAND = "Hand";
   static constexpr const char *CURSOR_CLOSED_HAND = "ClosedHand";
@@ -71,6 +78,7 @@ private:
 
 public slots:
   void onUpdateTime();
+  void onUpdateGuiTime();
   void showContextInfo();
   void setUpSignals();
   void setUpDocks();

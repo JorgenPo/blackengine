@@ -2,6 +2,7 @@
 #include "renderwindow.h"
 
 #include <QApplication>
+#include <BlackEngine/Engine.h>
 #include <BlackEngine/SystemInterface.h>
 
 using namespace blackeditor;
@@ -50,7 +51,7 @@ public:
 
   void start() {
         mainWindow->start();
-        mainWindow->show();
+        mainWindow->showFullScreen();
     }
 };
 

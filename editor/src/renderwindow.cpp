@@ -6,6 +6,7 @@
 #include <BlackEngine/log/Logger.h>
 #include <BlackEngine/components/BoundingComponent.h>
 #include <BlackEngine/camera/Camera.h>
+#include <BlackEngine/render/RenderSystemInterface.h>
 
 #include <QMouseEvent>
 #include <utility>
