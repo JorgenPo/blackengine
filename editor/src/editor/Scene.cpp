@@ -4,6 +4,7 @@
 
 #include "Scene.h"
 #include "SelectedShader.h"
+#include "common/Util.h"
 
 #include <renderwindow.h>
 
@@ -122,15 +123,20 @@ void Scene::updateSelection() {
   // Set highlighting shader if some object was selected
   if (hoveredObject && !selected->isObjectSelected()) {
     selected->setObject(hoveredObject);
+    input->setCursor(MainWindow::CURSOR_HAND);
   } else if (!hoveredObject && !selected->isObjectSelected()) {
     selected->resetObject();
-  } else if (selected->getObject() && selected->isObjectSelected()) {
+    emit objectSelected(nullptr);
+  } else if (!hoveredObject) {
+    input->setCursor(MainWindow::CURSOR_NORMAL);
+  } else if (selected->getObject() && selected->isObjectSelected() && mode == Mode::TRANSLATE) {
     auto intersectPoints = this->terrain->getBounding()->getIntersectionsWith(ray);
     if (!intersectPoints.empty()) {
       auto point = intersectPoints[0];
 
       auto position = glm::vec3(point.x, terrain->getTerrain()->getHeightAt(point.x, point.y), point.z);
       selected->getObject()->transform->setPosition(position);
+      emit selectedObjectMoved(toQtVector(selected->getObject()->transform->getPosition()));
     }
   }
 
@@ -189,12 +195,10 @@ void Scene::initializeModels() {
 void Scene::mousePressEvent(QMouseEvent *event) {
   if (event->button() == Qt::LeftButton) {
     if (selected->isObjectSelected()) {
-      input->setCursor(MainWindow::CURSOR_HAND);
       selected->unselect();
     } else {
-      input->setCursor(MainWindow::CURSOR_CLOSED_HAND);
       selected->select();
-      emit onObjectSelected(selected->getObject());
+      emit objectSelected(selected->getObject());
     }
   }
 }
@@ -236,4 +240,3 @@ void Scene::onLightColorChanged(const QColor &color, LightType type) {
     return;
   }
 }
-

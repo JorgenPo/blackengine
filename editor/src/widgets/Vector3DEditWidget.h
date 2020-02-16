@@ -7,6 +7,7 @@
 
 #include <QWidget>
 #include <QVector3D>
+#include <QDoubleSpinBox>
 
 namespace blackeditor {
 
@@ -15,14 +16,26 @@ class Vector3DEditWidget : public QWidget {
 
   QVector3D m_vector;
 
+  QDoubleSpinBox *m_xSpin;
+  QDoubleSpinBox *m_ySpin;
+  QDoubleSpinBox *m_zSpin;
 public:
   explicit Vector3DEditWidget(QVector3D vector, QWidget *parent = nullptr);
 
   [[nodiscard]] const QVector3D &getVector() const;
   void setVector(const QVector3D &Vector);
 
+signals:
+  void vectorChanged(const QVector3D &vector);
+
 private:
   void setUpLayout();
+  void setUpSignals();
+
+private slots:
+  void onXChanged(double x);
+  void onYChanged(double y);
+  void onZChanged(double z);
 };
 
 }

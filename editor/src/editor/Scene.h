@@ -39,6 +39,14 @@ class Scene : public QObject {
 
   using BlackScene = std::shared_ptr<black::SimpleScene>;
 
+  enum class Mode {
+    VIEW,
+    TRANSLATE,
+    SCALE,
+    ROTATE,
+  };
+
+  Mode mode = Mode::VIEW;
 public:
   Scene(
       std::shared_ptr<RenderWindow> window,
@@ -52,7 +60,8 @@ public:
   [[nodiscard]] BlackScene get() const noexcept;
 
 signals:
-  void onObjectSelected(std::shared_ptr<black::GameObject> object);
+  void objectSelected(std::shared_ptr<black::GameObject> object);
+  void selectedObjectMoved(const QVector3D &newPosition);
 
 public slots:
   void onLightIntensityChanged(double newIntensity);

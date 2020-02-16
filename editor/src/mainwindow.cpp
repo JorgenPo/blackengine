@@ -219,7 +219,8 @@ void MainWindow::onSceneInitialized() {
   lightSettings->setLightIntensity(LightType::AMBIENT, 40);
   lightSettings->setLightIntensity(LightType::DIRECTED, 40);
 
-  connect(renderWindow->getScene().get(), &Scene::onObjectSelected, objectInfo, &ObjectInfoWidget::setObject);
+  connect(renderWindow->getScene().get(), &Scene::objectSelected, objectInfo, &ObjectInfoWidget::setObject);
+  connect(renderWindow->getScene().get(), &Scene::selectedObjectMoved, objectInfo, &ObjectInfoWidget::onPositionChanged);
 }
 
 void MainWindow::wheelEvent(QWheelEvent *event) {

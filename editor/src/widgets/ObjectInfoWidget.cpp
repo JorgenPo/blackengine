@@ -3,6 +3,7 @@
 //
 #include "ObjectInfoWidget.h"
 #include "Vector3DEditWidget.h"
+#include "common/Util.h"
 
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QGroupBox>
@@ -76,13 +77,11 @@ void ObjectInfoWidget::renderObjectInfo() {
   m_componentsGB->setLayout(componentsLayout);
 }
 
-QVector3D toQtVector(const glm::vec3 &position) {
-  return QVector3D{position.x, position.y, position.z};
-}
-
-QLayout *renderComponent(const std::shared_ptr<black::TransformComponent>& component) {
+QLayout *ObjectInfoWidget::renderComponent(const std::shared_ptr<black::TransformComponent>& component) {
   auto layout = new QVBoxLayout();
-  layout->addWidget(new Vector3DEditWidget(toQtVector(component->getPosition())));
+  m_position = new Vector3DEditWidget(toQtVector(component->getPosition()));
+  connect(m_position, &Vector3DEditWidget::vectorChanged, this, &ObjectInfoWidget::onPositionChanged);
+  layout->addWidget(m_position);
 
   auto componentLayout = new QVBoxLayout();
   componentLayout->addWidget(new QLabel(QObject::tr("Position")));
@@ -111,4 +110,18 @@ QGroupBox *ObjectInfoWidget::renderComponentInfo(std::string_view name, std::sha
 
   componentGB->setLayout(componentLayout);
   return componentGB;
+}
+
+void ObjectInfoWidget::updateObjectInfo() {
+  if (m_object == nullptr) {
+    return;
+  }
+
+  auto transform = m_object->get<TransformComponent>();
+}
+
+void ObjectInfoWidget::onPositionChanged(const QVector3D &position) {
+  if (m_object) {
+    m_object->transform->setPosition(fromQtVector(position));
+  }
 }

@@ -13,9 +13,11 @@
 namespace black {
 class GameObject;
 class Component;
+class TransformComponent;
 }
 
 namespace blackeditor {
+class Vector3DEditWidget;
 
 class ObjectInfoWidget : public QWidget {
 Q_OBJECT;
@@ -25,16 +27,23 @@ Q_OBJECT;
   QLabel *m_objectName{};
   QVBoxLayout *m_mainLayout{};
   QGroupBox *m_componentsGB{};
+  Vector3DEditWidget *m_position;
+  Vector3DEditWidget *m_rotation;
+  Vector3DEditWidget *m_scale;
+
 public:
   explicit ObjectInfoWidget(QWidget *parent = nullptr);
 
 public slots:
   void setObject(std::shared_ptr<black::GameObject> object);
+  void updateObjectInfo();
+  void onPositionChanged(const QVector3D &position);
 
 private:
   void setUpLayout();
   void renderObjectInfo();
   QGroupBox *renderComponentInfo(std::string_view name, std::shared_ptr<black::Component> component);
+  QLayout *renderComponent(const std::shared_ptr<black::TransformComponent>& component);
 };
 
 }
