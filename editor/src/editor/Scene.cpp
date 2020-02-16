@@ -194,6 +194,7 @@ void Scene::mousePressEvent(QMouseEvent *event) {
     } else {
       input->setCursor(MainWindow::CURSOR_CLOSED_HAND);
       selected->select();
+      emit onObjectSelected(selected->getObject());
     }
   }
 }
@@ -235,3 +236,4 @@ void Scene::onLightColorChanged(const QColor &color, LightType type) {
     return;
   }
 }
+

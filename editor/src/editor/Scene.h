@@ -51,6 +51,9 @@ public:
 
   [[nodiscard]] BlackScene get() const noexcept;
 
+signals:
+  void onObjectSelected(std::shared_ptr<black::GameObject> object);
+
 public slots:
   void onLightIntensityChanged(double newIntensity);
   void onAmbientIntensityChanged(double newIntensity);

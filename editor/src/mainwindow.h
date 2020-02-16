@@ -12,6 +12,7 @@ namespace blackeditor {
 class RenderWindow;
 class LightSettingsWidget;
 class ContextInfoWidget;
+class ObjectInfoWidget;
 
 class MainWindow : public QMainWindow, public black::AbstractApplication, public black::InputSystemInterface {
 Q_OBJECT
@@ -19,6 +20,7 @@ Q_OBJECT
   std::shared_ptr<RenderWindow> renderWindow;
   std::shared_ptr<black::PerformanceCounter> timer;
   LightSettingsWidget *lightSettings;
+  ObjectInfoWidget *objectInfo;
 
   std::unique_ptr<QTimer> updateTimer;
 
@@ -61,7 +63,7 @@ protected:
   void keyPressEvent(QKeyEvent *event) override;
   void mousePressEvent(QMouseEvent *event) override;
   void wheelEvent(QWheelEvent *event) override;
-
+  void resizeEvent(QResizeEvent *event) override;
 private:
   void initializeResources() override;
   void run() override;

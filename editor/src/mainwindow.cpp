@@ -2,6 +2,7 @@
 #include "renderwindow.h"
 #include "widgets/LightSettingsWidget.h"
 #include "widgets/ContextInfoWidget.h"
+#include "widgets/ObjectInfoWidget.h"
 
 #include <BlackEngine/Engine.h>
 
@@ -10,20 +11,22 @@
 #include <QColorDialog>
 #include <QMessageBox>
 #include <QMenuBar>
+#include <QSize>
+#include <QResizeEvent>
 
 using namespace black;
 using namespace blackeditor;
 
 MainWindow::MainWindow(std::shared_ptr<RenderWindow> window)
     : QMainWindow(nullptr)
-    , AbstractApplication("BlackEngine", 800, 600, false)
+    , AbstractApplication("BlackEngine", 1280, 1024, false)
     , renderWindow(std::move(window))
     , updateTimer(std::make_unique<QTimer>(this))
     , contextInfoWidget(nullptr)
 {
     setCentralWidget(renderWindow.get());
-    setFixedWidth(800);
-    setFixedHeight(600);
+    setMinimumWidth(this->getWindowWidth());
+    setMinimumHeight(this->getWindowHeight());
 
     // Setup update timer
     auto timerPtr = updateTimer.get();
@@ -42,7 +45,6 @@ MainWindow::MainWindow(std::shared_ptr<RenderWindow> window)
 }
 
 void MainWindow::setUpSignals() {
-
 }
 
 void MainWindow::setUpDocks() {
@@ -50,11 +52,19 @@ void MainWindow::setUpDocks() {
   lightDock->setAllowedAreas(Qt::RightDockWidgetArea | Qt::LeftDockWidgetArea);
 
   lightSettings = new LightSettingsWidget(renderWindow);
-
   lightDock->setWidget(lightSettings);
   addDockWidget(Qt::RightDockWidgetArea, lightDock);
 
-  menuBar()->addMenu(tr("View"))->addAction(lightDock->toggleViewAction());
+  auto objectInfoDock = new QDockWidget(tr("Object info"), this);
+  objectInfoDock->setAllowedAreas(Qt::RightDockWidgetArea | Qt::LeftDockWidgetArea);
+
+  objectInfo = new ObjectInfoWidget();
+  objectInfoDock->setWidget(objectInfo);
+  addDockWidget(Qt::LeftDockWidgetArea, objectInfoDock);
+
+  auto viewMenu = menuBar()->addMenu(tr("View"));
+  viewMenu->addAction(lightDock->toggleViewAction());
+  viewMenu->addAction(objectInfoDock->toggleViewAction());
 }
 
 void MainWindow::setUpMenus() {
@@ -208,9 +218,19 @@ void MainWindow::mousePressEvent(QMouseEvent *event) {
 void MainWindow::onSceneInitialized() {
   lightSettings->setLightIntensity(LightType::AMBIENT, 40);
   lightSettings->setLightIntensity(LightType::DIRECTED, 40);
+
+  connect(renderWindow->getScene().get(), &Scene::onObjectSelected, objectInfo, &ObjectInfoWidget::setObject);
 }
 
 void MainWindow::wheelEvent(QWheelEvent *event) {
   scrollDelta.setX((float) event->angleDelta().x() * scrollSpeed);
   scrollDelta.setY((float) event->angleDelta().y() * scrollSpeed);
+}
+
+void MainWindow::resizeEvent(QResizeEvent *event) {
+  QWidget::resizeEvent(event);
+
+//  const auto &size = event->size();
+//  setWindowWidth(size.width());
+//  setWindowWidth(size.height());
 }

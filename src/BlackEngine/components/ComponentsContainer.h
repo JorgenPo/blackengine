@@ -36,6 +36,13 @@ public:
   std::shared_ptr<T> get();
 
   /**
+   * Return all components.
+   *
+   * @return Map of components
+   */
+  const std::unordered_map<std::string, std::shared_ptr<Component>> &getComponents() const;
+
+  /**
    * Add the component to container
    * @param name A name of component
    * @param component Component
