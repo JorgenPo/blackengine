@@ -73,4 +73,9 @@ long long int PerformanceCounter::getUptime() const {
   return std::chrono::duration_cast<std::chrono::milliseconds>
       (now - this->startTime).count();
 }
+
+float PerformanceCounter::getFPS() const {
+  return 1000.0f / getTimeSinceLastUpdate();
+}
+
 }

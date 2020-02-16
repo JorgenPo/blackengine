@@ -46,6 +46,7 @@ public:
   [[nodiscard]] long long int getUptime() const;
 
   [[nodiscard]] float getTimeSinceLastUpdate() const;
+  [[nodiscard]] float getFPS() const;
 };
 }
 
