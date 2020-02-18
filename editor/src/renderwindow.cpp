@@ -134,8 +134,12 @@ std::string RenderWindow::getProfileString() const {
 }
 
 void RenderWindow::mousePressEvent(QMouseEvent *event) {
-  scene->mousePressEvent(event);
+  scene->mousePressedEvent(event);
   this->setFocus();
+}
+
+void RenderWindow::mouseReleaseEvent(QMouseEvent *event) {
+  scene->mouseReleasedEvent(event);
 }
 
 void RenderWindow::keyPressEvent(QKeyEvent *event) {

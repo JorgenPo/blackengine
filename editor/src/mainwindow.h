@@ -59,8 +59,8 @@ public:
   void setCursor(std::string name) override;
   float getMouseX() const noexcept override;
   float getMouseY() const noexcept override;
-  bool isMouseButtonPressed(MouseButton button) const override;
-  void onEvent(const MouseButtonEvent &event) override;
+  bool isMouseButtonPressed(black::MouseButton button) const override;
+  void onEvent(const black::MouseButtonEvent &event) override;
   float getScrollX() const override;
   float getScrollY() const override;
 

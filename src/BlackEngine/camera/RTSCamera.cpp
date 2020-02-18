@@ -80,7 +80,7 @@ void RTSCamera::strafe(const glm::vec3 &vector, float value) {
 
 void RTSCamera::handleMouseEvents() {
   if (auto scrollY = data.input->getScrollY(); scrollY != 0) {
-    strafe(getLookAt(), zoomSpeed * scrollY);
+    zoomIn(zoomSpeed * scrollY);
   }
 
   switch (state) {
@@ -161,6 +161,7 @@ void RTSCamera::handleMovingMouseEvents() {
 
   difference = difference * speed / 8.0f;
   anchorPoint = currentPosition;
+  setPosition(getPosition() + glm::vec3{difference.x, 0.0f, difference.y});
 }
 
 RTSCamera::RTSCamera(const CameraData &data) : Camera(data), tracer(nullptr) {

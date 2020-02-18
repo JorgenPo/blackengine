@@ -19,6 +19,7 @@
 #include <BlackEngine/components/LightComponent.h>
 #include <BlackEngine/terrain/TerrainBuilder.h>
 #include <BlackEngine/camera/RTSCamera.h>
+#include <BlackEngine/tracer/RayTracer.h>
 
 #include <memory>
 #include <BlackEngine/util/ShaderManager.h>
@@ -192,7 +193,7 @@ void Scene::initializeModels() {
   scene->addObjects({std::move(cottage), std::move(spider), std::move(dog)});
 }
 
-void Scene::mousePressEvent(QMouseEvent *event) {
+void Scene::mousePressedEvent(QMouseEvent *event) {
   if (event->button() == Qt::LeftButton) {
     if (selected->isObjectSelected()) {
       selected->unselect();
@@ -200,6 +201,19 @@ void Scene::mousePressEvent(QMouseEvent *event) {
       selected->select();
       emit objectSelected(selected->getObject());
     }
+  }
+
+  auto blackEvent = toBlackengineMouseButtonEvent(event);
+  if (blackEvent) {
+    camera->onMouseButtonPressed(blackEvent.value());
+  }
+}
+
+
+void Scene::mouseReleasedEvent(QMouseEvent *event) {
+  auto blackEvent = toBlackengineMouseButtonEvent(event);
+  if (blackEvent) {
+    camera->onMouseButtonReleased(blackEvent.value());
   }
 }
 

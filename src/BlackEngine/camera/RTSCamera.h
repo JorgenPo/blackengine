@@ -64,7 +64,6 @@ protected:
 
 public:
   void onMouseButtonPressed(const MouseButtonEvent &event) override;
-
   void onMouseButtonReleased(const MouseButtonEvent &event) override;
 
 private:

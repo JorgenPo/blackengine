@@ -7,15 +7,18 @@
 
 #include "SelectableGameObject.h"
 
-#include <BlackEngine/scene/SimpleScene.h>
-#include <BlackEngine/terrain/Terrain.h>
-#include <BlackEngine/render/RenderTargetInterface.h>
-#include <BlackEngine/render/AbstractRenderWindow.h>
-#include <BlackEngine/input/InputSystemInterface.h>
-#include <BlackEngine/tracer/RayTracer.h>
+#include <BlackEngine/components/LightComponent.h>
 
 #include <QObject>
 #include <QtGui/QMouseEvent>
+
+namespace black {
+class RTSCamera;
+class SimpleScene;
+class Terrain;
+class AbstractRenderWindow;
+class RayTracer;
+}
 
 namespace blackeditor {
 
@@ -28,7 +31,7 @@ class Scene : public QObject {
   Q_OBJECT;
 
   std::shared_ptr<black::SimpleScene> scene;
-  std::shared_ptr<black::Camera> camera;
+  std::shared_ptr<black::RTSCamera> camera;
   std::shared_ptr<black::Terrain> terrain;
   std::shared_ptr<black::GameObject> mainLight;
   std::shared_ptr<black::AbstractRenderWindow> window;
@@ -69,7 +72,9 @@ public slots:
   void onLightColorChanged(const QColor &color, LightType type);
   void setLightEnabled(int state);
 
-  void mousePressEvent(QMouseEvent *event);
+  void mousePressedEvent(QMouseEvent *event);
+  void mouseReleasedEvent(QMouseEvent *event);
+
   void keyPressEvent(QKeyEvent *event);
 
 private:

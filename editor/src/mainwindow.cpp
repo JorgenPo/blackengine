@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "renderwindow.h"
+#include "common/Util.h"
 #include "widgets/LightSettingsWidget.h"
 #include "widgets/ContextInfoWidget.h"
 #include "widgets/ObjectInfoWidget.h"
@@ -211,32 +212,11 @@ bool MainWindow::isMouseButtonPressed(MouseButton button) const {
   return false;
 }
 
-std::optional<MouseButton> toBlackengineButton(Qt::MouseButton button) {
-  switch (button) {
-  case Qt::MouseButton::LeftButton:
-    return MouseButton::LEFT;
-  case Qt::MouseButton::RightButton:
-    return MouseButton::RIGHT;
-  case Qt::MouseButton::MiddleButton:
-    return MouseButton::MIDDLE;
-  default:
-      return {};
-  }
-}
-
 void MainWindow::mousePressEvent(QMouseEvent *event) {
-  auto button = toBlackengineButton(event->button());
-  if (!button.has_value()) {
-    this->logger->warning("Unsupported mouse button event. Mouse button {} pressed.", event->button());
-    return;
+  auto blackEvent = toBlackengineMouseButtonEvent(event);
+  if (blackEvent) {
+    this->publishMouseButtonEvent(blackEvent.value());
   }
-
-  this->publishMouseButtonEvent(
-      MouseButtonEvent{
-        button.value(),
-        MouseButtonAction::PRESSED,
-        0
-      });
 }
 
 void MainWindow::onSceneInitialized() {

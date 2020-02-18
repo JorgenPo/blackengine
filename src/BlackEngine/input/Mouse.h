@@ -5,6 +5,7 @@
 #ifndef BLACKENGINE_MOUSE_H
 #define BLACKENGINE_MOUSE_H
 
+namespace black {
 enum class MouseButton {
   LEFT,
   RIGHT,
@@ -29,5 +30,7 @@ struct MouseMovedEvent {
 struct ScrollEvent {
   float offsetX, offsetY;
 };
+
+}
 
 #endif //BLACKENGINE_MOUSE_H
