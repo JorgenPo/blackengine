@@ -15,12 +15,14 @@ class Vector3DEditWidget : public QWidget {
   Q_OBJECT;
 
   QVector3D m_vector;
+  float m_step;
+  bool m_enableNegative;
 
   QDoubleSpinBox *m_xSpin;
   QDoubleSpinBox *m_ySpin;
   QDoubleSpinBox *m_zSpin;
 public:
-  explicit Vector3DEditWidget(QVector3D vector, QWidget *parent = nullptr);
+  explicit Vector3DEditWidget(QVector3D vector, float step, bool enableNegative = true, QWidget *parent = nullptr);
 
   [[nodiscard]] const QVector3D &getVector() const;
   void setVector(const QVector3D &Vector);

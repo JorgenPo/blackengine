@@ -5,7 +5,6 @@
 #include "PerformanceInfoWidget.h"
 
 #include <BlackEngine/performance/PerformanceCounter.h>
-#include <BlackEngine/log/Logger.h>
 
 using namespace blackeditor;
 

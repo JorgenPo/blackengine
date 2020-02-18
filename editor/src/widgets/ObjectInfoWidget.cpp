@@ -79,17 +79,17 @@ void ObjectInfoWidget::renderObjectInfo() {
 
 QLayout *ObjectInfoWidget::renderComponent(const std::shared_ptr<black::TransformComponent>& component) {
   auto layout = new QVBoxLayout();
-  m_position = new Vector3DEditWidget(toQtVector(component->getPosition()));
+  m_position = new Vector3DEditWidget(toQtVector(component->getPosition()), 0.1f);
   connect(m_position, &Vector3DEditWidget::vectorChanged, this, &ObjectInfoWidget::onPositionChanged);
   layout->addWidget(new QLabel(QObject::tr("Position")));
   layout->addWidget(m_position);
 
-  m_rotation = new Vector3DEditWidget(toQtVector(component->getRotation()));
+  m_rotation = new Vector3DEditWidget(toQtVector(component->getRotation()), 3.0f);
   connect(m_rotation, &Vector3DEditWidget::vectorChanged, this, &ObjectInfoWidget::onRotationChanged);
   layout->addWidget(new QLabel(QObject::tr("Rotation")));
   layout->addWidget(m_rotation);
 
-  m_scale = new Vector3DEditWidget(toQtVector(component->getScale()));
+  m_scale = new Vector3DEditWidget(toQtVector(component->getScale()), 0.02f, false);
   connect(m_scale, &Vector3DEditWidget::vectorChanged, this, &ObjectInfoWidget::onScaleChanged);
   layout->addWidget(new QLabel(QObject::tr("Scale")));
   layout->addWidget(m_scale);
