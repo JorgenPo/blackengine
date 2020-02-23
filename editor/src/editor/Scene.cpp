@@ -3,7 +3,7 @@
 //
 
 #include "Scene.h"
-#include "SelectedShader.h"
+#include "MaskedShader.h"
 #include "common/Util.h"
 
 #include <renderwindow.h>
@@ -125,21 +125,27 @@ void Scene::updateSelection() {
   if (hoveredObject && !selected->isObjectSelected()) {
     selected->setObject(hoveredObject);
     input->setCursor(MainWindow::CURSOR_HAND);
-  } else if (selected->getObject() != nullptr && !hoveredObject && !selected->isObjectSelected()) {
-    selected->resetObject();
-    emit objectSelected(nullptr);
   } else if (!hoveredObject) {
+    if (!selected->isObjectSelected()) {
+      selected->resetObject();
+    }
+
     input->setCursor(MainWindow::CURSOR_NORMAL);
   }
 
-  if (selected->isObjectSelected() && mode == Mode::TRANSLATE) {
-    auto intersectPoints = this->terrain->getBounding()->getIntersectionsWith(ray);
-    if (!intersectPoints.empty()) {
-      auto point = intersectPoints[0];
-
-      auto position = glm::vec3(point.x, terrain->getTerrain()->getHeightAt(point.x, point.y), point.z);
-      selected->getObject()->transform->setPosition(position);
-      emit selectedObjectMoved(toQtVector(selected->getObject()->transform->getPosition()));
+  if (selected->isObjectSelected()) {
+    switch (mode) {
+    case Mode::TRANSLATE:
+      updateSelectionTranslate(ray);
+      break;
+    case Mode::SCALE:
+      updateSelectionScale();
+      break;
+    case Mode::ROTATE:
+      updateSelectionRotate();
+      break;
+    default:
+      break;
     }
   }
 
@@ -150,15 +156,15 @@ void Scene::updateSelection() {
 }
 
 void Scene::initializeShaders() {
-  auto selectedShader = black::util::ShaderManager::CreateApplicationShaderFromFile<SelectedShader>(
-      "resources/selected_vertex.glsl", "resources/selected_fragment.glsl");
-  auto hoveredShader = std::make_shared<SelectedShader>(selectedShader);
+  auto selectedShader = black::util::ShaderManager::CreateApplicationShaderFromFile<MaskedShader>(
+      "resources/masked_vertex.glsl", "resources/masked_fragment.glsl");
+  auto hoveredShader = std::make_shared<MaskedShader>(selectedShader);
 
   hoveredShader->use();
-  hoveredShader->setColor(Color::RED, 1.0f);
+  hoveredShader->setColorMask(Color::RED * 2.5f);
 
   selectedShader->use();
-  selectedShader->setColor(Color::GREEN, 1.0f);
+  selectedShader->setColorMask(Color::GREEN * 2.5f);
 
   this->selected = std::make_unique<SelectableGameObject>(std::move(hoveredShader), std::move(selectedShader));
 }
@@ -174,7 +180,7 @@ void Scene::initializeModels() {
   cottage->transform->scale(0.1f);
 
   auto spider = std::make_shared<GameObject>("Spider");
-  auto spiderModel = ModelManager::CreateFromFile("resources/spider/spider.obj");
+  auto spiderModel = ModelManager::CreateFromFile("resources/spider.obj");
   spider->add(spiderModel);
   spider->transform->setPosition({5.0f, 0.0f, 0.0f});
 
@@ -205,6 +211,10 @@ void Scene::mousePressedEvent(QMouseEvent *event) {
   if (event->button() == Qt::LeftButton) {
     if (selected->isObjectSelected()) {
       selected->unselect();
+      selected->resetObject();
+
+      mode = Mode::VIEW;
+      emit objectSelected(nullptr);
     } else {
       selected->select();
       emit objectSelected(selected->getObject());
@@ -230,7 +240,13 @@ void Scene::keyPressEvent(QKeyEvent *event) {
   case Qt::Key_T:
     mode = mode == Mode::TRANSLATE ? Mode::VIEW : Mode::TRANSLATE;
     break;
+  case Qt::Key_S:
+    mode = mode == Mode::SCALE ? Mode::VIEW : Mode::SCALE;
+    break;
   }
+
+  // Disable zoom when in scaling mode
+  camera->setZoomEnabled(mode != Mode::SCALE);
 }
 
 Color fromQt(const QColor &color) {
@@ -252,4 +268,33 @@ void Scene::onLightColorChanged(const QColor &color, LightType type) {
   default:
     return;
   }
+}
+
+void Scene::updateSelectionTranslate(const black::Ray &ray) {
+  auto intersectPoints = this->terrain->getBounding()->getIntersectionsWith(ray);
+  if (!intersectPoints.empty()) {
+    auto point = intersectPoints[0];
+
+    auto position = glm::vec3(point.x, terrain->getTerrain()->getHeightAt(point.x, point.y), point.z);
+    selected->getObject()->transform->setPosition(position);
+    emit selectedObjectMoved(toQtVector(selected->getObject()->transform->getPosition()));
+  }
+}
+
+void Scene::updateSelectionRotate() {
+
+}
+
+void Scene::updateSelectionScale() {
+  auto scroll = input->getScrollY();
+  if (scroll == 0) {
+    return;
+  }
+
+  auto transform = selected->getObject()->transform;
+
+  static auto scaleSpeed = 0.01f;
+
+  transform->setScale(transform->getScale() + scaleSpeed * scroll);
+  Logger::Get("Scene")->debug("Scroll = {}", scroll);
 }

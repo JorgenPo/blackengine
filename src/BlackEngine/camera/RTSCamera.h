@@ -21,6 +21,7 @@ class RTSCamera : public Camera, public MouseEventSubscriber {
   float zoomSpeed = 0.5f;
   float borderWidth = 50.0f;
   float rotationRadius = 6.0f;
+  bool enableZoom = true;
 
   enum class State {
     NORMAL,
@@ -51,9 +52,9 @@ public:
   void update() noexcept override;
 
   float getSpeed() const;
-
   void setSpeed(float speed);
 
+  void setZoomEnabled(bool enabled);
 protected:
   void strafeRight(float value);
   void strafeLeft(float value);

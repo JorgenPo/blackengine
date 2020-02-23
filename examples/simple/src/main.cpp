@@ -198,7 +198,7 @@ private:
 
   void loadShaders() {
     this->selectedShader = util::ShaderManager::CreateApplicationShaderFromFile<SelectedShader>(
-      "resources/selected_vertex.glsl", "resources/selected_fragment.glsl");
+      "resources/masked_vertex.glsl", "resources/masked_fragment.glsl");
     this->hoveredShader = std::make_shared<SelectedShader>(this->selectedShader);
 
     this->hoveredShader->use();

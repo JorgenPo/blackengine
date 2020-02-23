@@ -8,7 +8,7 @@ endmacro(install_symlink)
 macro(copy_resources_to_build_folder)
     # Copy shaders and resources to the binary dir to developing and testing
     file(GLOB SHADERS ${CMAKE_SOURCE_DIR}/plugins/gl/shaders/*.glsl ${CMAKE_SOURCE_DIR}/examples/simple/shaders/*.glsl)
-    file(GLOB RESOURCES ${CMAKE_SOURCE_DIR}/examples/simple/models/*)
+    file(GLOB_RECURSE RESOURCES ${CMAKE_SOURCE_DIR}/examples/simple/models/* ${CMAKE_SOURCE_DIR}/editor/resources/*)
 
     file(REMOVE_RECURSE ${CMAKE_CURRENT_BINARY_DIR}/lib/resources)
     file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/lib/resources)

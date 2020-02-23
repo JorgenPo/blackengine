@@ -12,9 +12,10 @@ namespace black {
 /**
  * Default simple shader with phong light and material
  */
-class SimpleShader final : public ApplicationShader {
+class SimpleShader : public ApplicationShader {
 public:
   explicit SimpleShader(const std::shared_ptr<ShaderProgram> &impl);
+  using ApplicationShader::ApplicationShader;
 
   void setCameraImpl(const std::shared_ptr<Camera> &camera) override;
 

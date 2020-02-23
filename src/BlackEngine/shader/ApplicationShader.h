@@ -35,7 +35,7 @@ public:
 
   virtual ~ApplicationShader();
 
-  void use();
+  virtual void use();
 
   void setCamera(const std::shared_ptr<Camera> &camera);
   void setModelMatrix(const glm::mat4 &model);

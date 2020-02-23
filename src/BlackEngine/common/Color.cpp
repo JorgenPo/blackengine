@@ -29,4 +29,8 @@ std::array<float, 4> Color::getRgba() const {
   return {r, g, b, a};
 }
 
+Color Color::operator*(float multiply) const {
+  return Color(r * multiply, g * multiply, b * multiply);
+}
+
 }

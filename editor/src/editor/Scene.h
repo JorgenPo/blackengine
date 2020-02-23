@@ -18,6 +18,7 @@ class SimpleScene;
 class Terrain;
 class AbstractRenderWindow;
 class RayTracer;
+class Ray;
 }
 
 namespace blackeditor {
@@ -79,6 +80,9 @@ public slots:
 
 private:
   void updateSelection();
+  void updateSelectionTranslate(const black::Ray &ray);
+  void updateSelectionRotate();
+  void updateSelectionScale();
 };
 
 }

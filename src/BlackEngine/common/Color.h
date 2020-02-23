@@ -22,7 +22,6 @@ public:
   explicit Color(std::array<float, 3> color);
   Color(float r, float g, float b, float a = 1.0f);
 
-
   static const Color RED;
   static const Color GREEN;
   static const Color BLUE;
@@ -33,6 +32,8 @@ public:
 
   [[nodiscard]] std::array<float, 3> getRgb() const;
   [[nodiscard]] std::array<float, 4> getRgba() const;
+
+  Color operator *(float multiply) const;
 };
 }
 

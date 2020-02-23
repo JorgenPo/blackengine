@@ -79,7 +79,7 @@ void RTSCamera::strafe(const glm::vec3 &vector, float value) {
 }
 
 void RTSCamera::handleMouseEvents() {
-  if (auto scrollY = data.input->getScrollY(); scrollY != 0) {
+  if (auto scrollY = data.input->getScrollY(); scrollY != 0 && enableZoom) {
     zoomIn(zoomSpeed * scrollY);
   }
 
@@ -171,6 +171,10 @@ void RTSCamera::calculateTerrainAnchor() {
   }
 
   terrainAnchorPoint = intersections[0];
+}
+
+void RTSCamera::setZoomEnabled(bool enabled) {
+  enableZoom = enabled;
 }
 
 std::shared_ptr<Camera> RTSCamera::Factory::create(const CameraData &cameraData) const {
