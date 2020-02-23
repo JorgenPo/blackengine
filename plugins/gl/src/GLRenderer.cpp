@@ -56,6 +56,7 @@ void GLRenderer::render(const std::shared_ptr<AbstractScene> &scene) {
 
 void GLRenderer::setViewPort(int x, int y, int width, int height) {
   glViewport(x, y, width, height);
+  this->logger->debug("Change viewport: [{},{}] {}x{}", x, y, width, height);
 }
 
 GLRenderer::GLRenderer()

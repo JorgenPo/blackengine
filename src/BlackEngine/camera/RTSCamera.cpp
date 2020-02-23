@@ -146,21 +146,14 @@ void RTSCamera::handleRotatingMouseEvents() {
   glm::vec2 currentPosition = {data.input->getMouseX(), data.input->getMouseY()};
   auto difference = anchorPoint - currentPosition;
   auto xDiff = difference.x;
-
-  xDiff = xDiff * speed / 8.0f;
-
-  setPosition({
-    rotationStartPosition.x + cos(xDiff) * rotationRadius,
-    rotationStartPosition.y,
-    rotationStartPosition.x + sin(xDiff) * rotationRadius});
 }
 
 void RTSCamera::handleMovingMouseEvents() {
   glm::vec2 currentPosition = {data.input->getMouseX(), data.input->getMouseY()};
   auto difference = anchorPoint - currentPosition;
+  anchorPoint = currentPosition;
 
   difference = difference * speed / 8.0f;
-  anchorPoint = currentPosition;
   setPosition(getPosition() + glm::vec3{difference.x, 0.0f, difference.y});
 }
 
@@ -191,6 +184,8 @@ std::shared_ptr<Camera> RTSCamera::Factory::create(const CameraData &cameraData)
 
   auto camera = std::make_shared<RTSCamera>(std::move(data));
   camera->data.input->subscribeForMouseEvents(camera);
+  camera->data.renderTarget->subscribe(camera);
+
   camera->tracer = std::make_shared<RayTracer>(camera, camera->data.renderTarget);
 
   return camera;
