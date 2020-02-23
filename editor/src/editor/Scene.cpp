@@ -130,7 +130,9 @@ void Scene::updateSelection() {
     emit objectSelected(nullptr);
   } else if (!hoveredObject) {
     input->setCursor(MainWindow::CURSOR_NORMAL);
-  } else if (selected->getObject() && selected->isObjectSelected() && mode == Mode::TRANSLATE) {
+  }
+
+  if (selected->isObjectSelected() && mode == Mode::TRANSLATE) {
     auto intersectPoints = this->terrain->getBounding()->getIntersectionsWith(ray);
     if (!intersectPoints.empty()) {
       auto point = intersectPoints[0];
@@ -190,7 +192,13 @@ void Scene::initializeModels() {
   dog->add(std::make_shared<BoundingComponent>(
       std::make_shared<Sphere>(dog->transform, 10.0f)));
 
-  scene->addObjects({std::move(cottage), std::move(spider), std::move(dog)});
+  auto sphere = std::make_shared<GameObject>("Sphere");
+  auto sphereModel = ModelManager::CreateFromFile("resources/sphere.obj");
+  sphere->add(sphereModel);
+  sphere->add(std::make_shared<BoundingComponent>(
+      std::make_shared<Sphere>(sphere->transform, 1.0f)));
+
+  scene->addObjects({std::move(cottage), std::move(spider), std::move(dog), std::move(sphere)});
 }
 
 void Scene::mousePressedEvent(QMouseEvent *event) {
@@ -218,18 +226,9 @@ void Scene::mouseReleasedEvent(QMouseEvent *event) {
 }
 
 void Scene::keyPressEvent(QKeyEvent *event) {
-  constexpr auto scaleFactor = 0.01f;
-
   switch (event->key()) {
-  case Qt::Key_Z:
-    if (selected->getObject()) {
-      selected->getObject()->transform->scale(1.0f + scaleFactor);
-    }
-    break;
-  case Qt::Key_X:
-    if (selected->getObject()) {
-      selected->getObject()->transform->scale(1.0f - scaleFactor);
-    }
+  case Qt::Key_T:
+    mode = mode == Mode::TRANSLATE ? Mode::VIEW : Mode::TRANSLATE;
     break;
   }
 }

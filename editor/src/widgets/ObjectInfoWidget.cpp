@@ -52,7 +52,7 @@ void ObjectInfoWidget::setUpLayout() {
   m_mainLayout->addWidget(m_componentsGB);
   m_mainLayout->addStretch(20);
 
-  setMinimumWidth(150);
+  setMinimumWidth(450);
   setLayout(m_mainLayout);
 }
 
@@ -127,7 +127,10 @@ void ObjectInfoWidget::updateObjectInfo() {
     return;
   }
 
-  auto transform = m_object->get<TransformComponent>();
+  auto transform = m_object->transform;
+  m_position->setVector(toQtVector(transform->getPosition()));
+  m_rotation->setVector(toQtVector(transform->getRotation()));
+  m_scale->setVector(toQtVector(transform->getScale()));
 }
 
 void ObjectInfoWidget::onPositionChanged(const QVector3D &position) {

@@ -60,19 +60,19 @@ void MainWindow::setUpSignals() {
 
 void MainWindow::setUpDocks() {
   auto lightDock = new QDockWidget(tr("Light settings"), this);
-  lightDock->setAllowedAreas(Qt::RightDockWidgetArea | Qt::LeftDockWidgetArea);
+  lightDock->setAllowedAreas(Qt::RightDockWidgetArea);
 
   lightSettings = new LightSettingsWidget(renderWindow);
   lightDock->setWidget(lightSettings);
   addDockWidget(Qt::RightDockWidgetArea, lightDock);
+  lightDock->hide();
 
   objectInfoDock = new QDockWidget(tr("Object info"), this);
-  objectInfoDock->setAllowedAreas(Qt::RightDockWidgetArea | Qt::LeftDockWidgetArea);
+  objectInfoDock->setAllowedAreas(Qt::RightDockWidgetArea);
 
   objectInfo = new ObjectInfoWidget();
   objectInfoDock->setWidget(objectInfo);
-  objectInfoDock->hide();
-  addDockWidget(Qt::LeftDockWidgetArea, objectInfoDock);
+  addDockWidget(Qt::RightDockWidgetArea, objectInfoDock);
 
   auto viewMenu = menuBar()->addMenu(tr("View"));
   viewMenu->addAction(lightDock->toggleViewAction());
@@ -224,7 +224,7 @@ void MainWindow::onSceneInitialized() {
   lightSettings->setLightIntensity(LightType::DIRECTED, 40);
 
   connect(renderWindow->getScene().get(), &Scene::objectSelected, this, &MainWindow::objectSelected);
-  connect(renderWindow->getScene().get(), &Scene::selectedObjectMoved, objectInfo, &ObjectInfoWidget::onPositionChanged);
+  connect(renderWindow->getScene().get(), &Scene::selectedObjectMoved, objectInfo, &ObjectInfoWidget::updateObjectInfo);
 }
 
 void MainWindow::wheelEvent(QWheelEvent *event) {
@@ -237,14 +237,10 @@ void MainWindow::resizeEvent(QResizeEvent *event) {
 }
 
 void MainWindow::objectSelected(std::shared_ptr<black::GameObject> object) {
-  objectInfoDock->hide();
-
   if (object == nullptr) {
     statusBar()->showMessage(tr("Ready"));
     return;
   }
-
-  objectInfoDock->show();
 
   statusBar()->showMessage(tr("Working with") + " " + object->getName().data());
   objectInfo->setObject(std::move(object));

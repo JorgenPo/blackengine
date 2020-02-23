@@ -54,7 +54,7 @@ void RenderWindow::resizeGL(int w, int h)
 
 void RenderWindow::paintGL()
 {
-    renderer->render(scene->get());
+  renderer->render(scene->get());
 }
 
 
