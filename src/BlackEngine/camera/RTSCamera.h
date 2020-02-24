@@ -8,15 +8,12 @@
 #include "Camera.h"
 #include "CameraFactory.h"
 
-#include <BlackEngine/input/MouseEventSubscriber.h>
-#include <BlackEngine/input/KeyboardEventSubscriber.h>
-
 namespace black {
 
 class RayTracer;
 class BoundingComponent;
 
-class RTSCamera : public Camera, public MouseEventSubscriber {
+class RTSCamera : public Camera {
   float speed = 0.2f;
   float zoomSpeed = 0.5f;
   float borderWidth = 50.0f;
@@ -55,6 +52,11 @@ public:
   void setSpeed(float speed);
 
   void setZoomEnabled(bool enabled);
+  float getBorderWidth() const;
+  void setBorderWidth(float newBorderWidth);
+  float getZoomSpeed() const;
+  void setZoomSpeed(float newZoomSpeed);
+
 protected:
   void strafeRight(float value);
   void strafeLeft(float value);

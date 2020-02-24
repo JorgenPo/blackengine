@@ -8,10 +8,12 @@
 #include "BlackEngine/common/CommonHeaders.h"
 
 #include <BlackEngine/render/RenderTargetInterface.h>
+#include <BlackEngine/input/MouseEventSubscriber.h>
 
 #include <glm/glm.hpp>
 
 #include <memory>
+
 
 namespace black {
 
@@ -46,6 +48,7 @@ struct CameraData {
  */
 class BLACK_EXPORTED Camera :
   public EventSubscriber<RenderTargetSizeChanged>,
+  public MouseEventSubscriber,
   public std::enable_shared_from_this<Camera> {
 
 protected:
@@ -59,7 +62,7 @@ public:
 
   explicit Camera(CameraData data);
 
-  virtual void update() noexcept = 0;
+  virtual void update() = 0;
 
   [[nodiscard]] const glm::mat4 &getViewMatrix() const;
   [[nodiscard]] const glm::mat4 &getProjectionMatrix() const;
@@ -79,6 +82,8 @@ public:
 
   void setProjection(ProjectionType projection);
 
+  void onMouseButtonPressed(const MouseButtonEvent &event) override {};
+  void onMouseButtonReleased(const MouseButtonEvent &event) override {};
 protected:
   void updateProjectionMatrix();
   void updateViewMatrix();

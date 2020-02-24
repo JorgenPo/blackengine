@@ -14,6 +14,7 @@
 
 namespace black {
 class RTSCamera;
+class ObjectCamera;
 class SimpleScene;
 class Terrain;
 class AbstractRenderWindow;
@@ -32,7 +33,9 @@ class Scene : public QObject {
   Q_OBJECT;
 
   std::shared_ptr<black::SimpleScene> scene;
-  std::shared_ptr<black::RTSCamera> camera;
+  std::shared_ptr<black::Camera> currentCamera;
+  std::shared_ptr<black::RTSCamera> rtsCamera;
+  std::shared_ptr<black::ObjectCamera> objectCamera;
   std::shared_ptr<black::Terrain> terrain;
   std::shared_ptr<black::GameObject> mainLight;
   std::shared_ptr<black::AbstractRenderWindow> window;
@@ -65,7 +68,7 @@ public:
 
 signals:
   void objectSelected(std::shared_ptr<black::GameObject> object);
-  void selectedObjectMoved(const QVector3D &newPosition);
+  void selectedObjectTransformed();
 
 public slots:
   void onLightIntensityChanged(double newIntensity);

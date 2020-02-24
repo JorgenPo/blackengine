@@ -6,6 +6,7 @@
 
 #include <BlackEngine/render/RenderTargetInterface.h>
 #include <BlackEngine/camera/Camera.h>
+#include <BlackEngine/input/InputSystemInterface.h>
 
 #include <memory>
 #include <unordered_map>
@@ -163,8 +164,13 @@ std::shared_ptr<CameraType> Engine::CreateCamera(const CameraData &data) {
   auto name = CameraType::Factory::GetName();
 
   try {
-    return std::dynamic_pointer_cast<CameraType>(
+    auto camera = std::dynamic_pointer_cast<CameraType>(
       Engine::GetInstance()->cameraFactories.at(name)->create(data));
+
+    data.input->subscribeForMouseEvents(camera);
+    data.renderTarget->subscribe(camera);
+
+    return camera;
   } catch (const std::out_of_range &e) {
     throw FactoryNotFoundException(name);
   }

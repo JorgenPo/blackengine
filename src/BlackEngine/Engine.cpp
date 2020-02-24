@@ -9,6 +9,7 @@
 #include "terrain/FlatTerrainBuilder.h"
 #include "camera/CameraFactory.h"
 #include "camera/RTSCamera.h"
+#include "camera/ObjectCamera.h"
 
 #include <memory>
 
@@ -58,6 +59,7 @@ void Engine::Initialize() {
 
   RegisterTerrainBuilder(FlatTerrainBuilder::GetName(), std::make_shared<FlatTerrainBuilder>());
   RegisterCameraFactory(RTSCamera::Factory::GetName(), std::make_shared<RTSCamera::Factory>());
+  RegisterCameraFactory(ObjectCamera::Factory::GetName(), std::make_shared<ObjectCamera::Factory>());
 }
 
 void Engine::UnregisterPlugin(const std::shared_ptr<PluginInterface>& plugin) {

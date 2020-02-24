@@ -11,6 +11,8 @@
 #include <BlackEngine/Engine.h>
 #include <BlackEngine/log/Logger.h>
 #include <BlackEngine/camera/Camera.h>
+#include <BlackEngine/camera/RTSCamera.h>
+#include <BlackEngine/camera/ObjectCamera.h>
 #include <BlackEngine/util/ModelManager.h>
 #include <BlackEngine/components/TerrainComponent.h>
 #include <BlackEngine/components/BoundingComponent.h>
@@ -18,7 +20,6 @@
 #include <BlackEngine/components/TransformComponent.h>
 #include <BlackEngine/components/LightComponent.h>
 #include <BlackEngine/terrain/TerrainBuilder.h>
-#include <BlackEngine/camera/RTSCamera.h>
 #include <BlackEngine/tracer/RayTracer.h>
 
 #include <memory>
@@ -61,7 +62,12 @@ void Scene::initialize() {
       ProjectionType::PERSPECTIVE,
       {0.0f, 10.0f, 0.0f});
 
-  camera = Engine::CreateCamera<RTSCamera>(cameraData);
+  rtsCamera = Engine::CreateCamera<RTSCamera>(cameraData);
+
+  // Disable move border at all
+  rtsCamera->setBorderWidth(0);
+
+  objectCamera = Engine::CreateCamera<ObjectCamera>(cameraData);
 
   // Create models
   initializeModels();
@@ -81,10 +87,10 @@ void Scene::initialize() {
   ambientLight.intensity = 0.2f;
   scene->setAmbientLight(ambientLight);
 
-  scene->setCurrentCamera(this->camera);
+  scene->setCurrentCamera(this->rtsCamera);
 
   // Init raytracer
-  this->tracer = std::make_unique<black::RayTracer>(camera, window);
+  this->tracer = std::make_unique<black::RayTracer>(rtsCamera, window);
 
   // Init shaders
   initializeShaders();
@@ -107,11 +113,14 @@ void Scene::onAmbientIntensityChanged(double newIntensity) {
 }
 
 void Scene::update(bool focus) {
-  updateSelection();
-
   if (focus) {
-    this->camera->update();
+    updateSelection();
+
+    // Disable zoom when in scaling mode
+    rtsCamera->setZoomEnabled(mode != Mode::SCALE);
   }
+
+  scene->getCurrentCamera()->update();
 }
 
 void Scene::updateSelection() {
@@ -210,20 +219,21 @@ void Scene::initializeModels() {
 void Scene::mousePressedEvent(QMouseEvent *event) {
   if (event->button() == Qt::LeftButton) {
     if (selected->isObjectSelected()) {
-      selected->unselect();
       selected->resetObject();
-
       mode = Mode::VIEW;
+      scene->setCurrentCamera(rtsCamera);
       emit objectSelected(nullptr);
-    } else {
+    } else if (selected->getObject() != nullptr) {
       selected->select();
+      objectCamera->setObject(selected->getObject());
+      scene->setCurrentCamera(objectCamera);
       emit objectSelected(selected->getObject());
     }
   }
 
   auto blackEvent = toBlackengineMouseButtonEvent(event);
   if (blackEvent) {
-    camera->onMouseButtonPressed(blackEvent.value());
+    rtsCamera->onMouseButtonPressed(blackEvent.value());
   }
 }
 
@@ -231,7 +241,7 @@ void Scene::mousePressedEvent(QMouseEvent *event) {
 void Scene::mouseReleasedEvent(QMouseEvent *event) {
   auto blackEvent = toBlackengineMouseButtonEvent(event);
   if (blackEvent) {
-    camera->onMouseButtonReleased(blackEvent.value());
+    rtsCamera->onMouseButtonReleased(blackEvent.value());
   }
 }
 
@@ -244,9 +254,6 @@ void Scene::keyPressEvent(QKeyEvent *event) {
     mode = mode == Mode::SCALE ? Mode::VIEW : Mode::SCALE;
     break;
   }
-
-  // Disable zoom when in scaling mode
-  camera->setZoomEnabled(mode != Mode::SCALE);
 }
 
 Color fromQt(const QColor &color) {
@@ -277,7 +284,7 @@ void Scene::updateSelectionTranslate(const black::Ray &ray) {
 
     auto position = glm::vec3(point.x, terrain->getTerrain()->getHeightAt(point.x, point.y), point.z);
     selected->getObject()->transform->setPosition(position);
-    emit selectedObjectMoved(toQtVector(selected->getObject()->transform->getPosition()));
+    emit selectedObjectTransformed();
   }
 }
 
@@ -296,5 +303,6 @@ void Scene::updateSelectionScale() {
   static auto scaleSpeed = 0.01f;
 
   transform->setScale(transform->getScale() + scaleSpeed * scroll);
-  Logger::Get("Scene")->debug("Scroll = {}", scroll);
+
+  emit selectedObjectTransformed();
 }

@@ -30,7 +30,7 @@ uniform struct Material {
 } material;
 
 vec3 calculateDiffuseColor(vec3 normal, vec3 lightDir) {
-    float diffuseFactor = max(dot(normal, lightDir), 0.0) * light.diffuseIntensity;
+    float diffuseFactor = max(dot(normal, lightDir), 0.0) * 0.3f;
     return light.color * diffuseFactor;
 }
 

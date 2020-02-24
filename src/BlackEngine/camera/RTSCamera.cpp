@@ -177,6 +177,22 @@ void RTSCamera::setZoomEnabled(bool enabled) {
   enableZoom = enabled;
 }
 
+float RTSCamera::getBorderWidth() const {
+  return borderWidth;
+}
+
+void RTSCamera::setBorderWidth(float newBorderWidth) {
+  borderWidth = newBorderWidth;
+}
+
+float RTSCamera::getZoomSpeed() const {
+  return zoomSpeed;
+}
+
+void RTSCamera::setZoomSpeed(float newZoomSpeed) {
+  zoomSpeed = newZoomSpeed;
+}
+
 std::shared_ptr<Camera> RTSCamera::Factory::create(const CameraData &cameraData) const {
   auto data = cameraData;
 
@@ -187,9 +203,6 @@ std::shared_ptr<Camera> RTSCamera::Factory::create(const CameraData &cameraData)
   data.right = {1.0f, 0.0f, 0.0f};
 
   auto camera = std::make_shared<RTSCamera>(std::move(data));
-  camera->data.input->subscribeForMouseEvents(camera);
-  camera->data.renderTarget->subscribe(camera);
-
   camera->tracer = std::make_shared<RayTracer>(camera, camera->data.renderTarget);
 
   return camera;
